@@ -34,7 +34,8 @@ defmodule IpfsConnection do
         res = requests("/ls?arg=", multihash)
         res
     end
-
+    
+    ##Currently throws an error due to the size of JSON response. 
     def repo_verify do
         requests("/repo/verify", "")
     end
