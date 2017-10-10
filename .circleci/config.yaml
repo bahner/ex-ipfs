@@ -2,12 +2,11 @@ version: 1
 jobs:
   build: 
     docker:
-
       - image: circleci/elixir:1.5.2
     working_directory: ~/ipfs_elixir_api
     dependencies: 
       pre: 
-        - script/ci/prepare.sh
+        - sh ./script/ci/prepare.sh
       cache_directories:
         - ~/dependencies
         - ~/.mix
@@ -15,7 +14,7 @@ jobs:
         - deps
     test: 
       override:
-        - script/ci/tests.sh    
+        - sh ./script/ci/tests.sh    
     steps: 
     - checkout
     - run: ./script/ci/prepare.sh
