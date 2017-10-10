@@ -3,7 +3,7 @@ defmodule IpfsConnection do
     defstruct host: "localhost", port: 5001, base: "api/v0", protocol: "http" 
     use Tesla
     
-    #boundary for add_cmd function Todo: implement add_cmd funciton. 
+    #boundary for add_cmd function TODO: implement add_cmd funciton. 
     @boundary "7MA4YWxkTrZu0gW"
 
     plug Tesla.Middleware.BaseUrl, "http://localhost:5001/api/v0"
@@ -20,20 +20,41 @@ defmodule IpfsConnection do
         res
     end
 
-    def swarm_peers() do
+    def swarm_peers do
         requests("/swarm/peers", "")
     end
 
-    #Ls cmd Todo  Implement proper Json Format. 
+    def swarm_disconnect(multihash) do
+        res = request("/swarm/disconnect?arg=", multihash)
+        res
+    end
+
+    #Ls cmd TODO  Implement proper Json Format. 
     def ls_cmd(multihash) do
         res = requests("/ls?arg=", multihash)
         res
     end
 
-    #Update function - Todo (correctly format res.body string)
+    def repo_verify do
+        requests("/repo/verify")
+    end
+
+    #Update function - TODO (correctly format res.body string)
     def update(args) do
         res = requests("/update?arg=", args)
         String.replace(res, "\n", " ")
+    end
+
+    def tour_list do
+        requests("/tour/list", "")
+    end
+
+    def tour_next do
+        requests("/tour/next", "")
+    end
+
+    def tour_restart do
+        requests("/tour/restart", "")
     end
 
 
@@ -61,10 +82,14 @@ defmodule IpfsConnection do
         end)
     end
 
+    # TODO: implment requests/1
+
     defp requests(path, multihash) do
         case get(path <> multihash) do
+            ## TODO: add more cases. 
             %Tesla.Env{status: 200, body: body} -> body
             %Tesla.Env{status: 500, body: body} -> body 
+            %Tesla.Env{status: 404} -> "Error page not found."
         end 
     end
 
