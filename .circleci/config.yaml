@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build: 
+    docker:
+
+      - image: circleci/elixir:1.5.2
+    working_directory: ~/ipfs_elixir_api
+    steps: 
+      - checkout
+      - run: mix deps.get
+      - run: mix test
