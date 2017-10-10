@@ -13,15 +13,14 @@ defmodule IpfsConnection do
     ## files, id, key, log, mount, name, object, pin, ping, p2p, pubsub, 
     ## bitswap, filestore, shutdown, refs, repo, resolve, stats, tar, file)
     
+    ## TODO: add get_cmd for output, archive, compress and compression level
     def get_cmd(multihash) do
-        res = requests("/get?arg=", multihash)
-        res
+        requests("/get?arg=", multihash)
         ##TODO add optional file writing funcitonality. 
     end
 
     def cat_cmd(multihash) do
-        res = requests("/cat?arg=", multihash)
-        res
+        requests("/cat?arg=", multihash)
     end
 
     def swarm_peers do
@@ -30,13 +29,12 @@ defmodule IpfsConnection do
 
     def swarm_disconnect(multihash) do
         res = request("/swarm/disconnect?arg=", multihash)
-        res
+        res.body
     end
 
     #Ls cmd TODO  Implement proper Json Format. 
     def ls_cmd(multihash) do
-        res = requests("/ls?arg=", multihash)
-        res
+        requests("/ls?arg=", multihash)
     end
     
     ##Currently throws an error due to the size of JSON response. 
@@ -47,7 +45,7 @@ defmodule IpfsConnection do
     #Update function - TODO (correctly format res.body string)
     def update(args) do
         res = requests("/update?arg=", args)
-        String.replace(res, "\n", " ")
+        String.replace(res.body, "\n", " ")
     end
 
     def tour_list do
@@ -92,9 +90,9 @@ defmodule IpfsConnection do
     defp requests(path, multihash) do
         case get(path <> multihash) do
             ## TODO: add more cases. 
-            %Tesla.Env{status: 200, body: body} -> body
-            %Tesla.Env{status: 500, body: body} -> body 
-            %Tesla.Env{status: 404} -> "Error page not found."
+            %Tesla.Env{status: 200, headers: headers, body: body} -> %{:headers => headers, :body => body}
+            %Tesla.Env{status: 500, headers: headers, body: body} -> %{:headers => headers, :body => body}
+            %Tesla.Env{status: 404, headers: headers} -> %{:headers=> headers, :error => "Error: 404 page not found."}
         end 
     end
 
