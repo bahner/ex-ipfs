@@ -36,7 +36,7 @@ defmodule IpfsConnection do
     end
 
     def repo_verify do
-        requests("/repo/verify")
+        requests("/repo/verify", "")
     end
 
     #Update function - TODO (correctly format res.body string)
