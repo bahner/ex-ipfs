@@ -13,11 +13,19 @@ jobs:
         - ~/.mix
         - _build
         - deps
-    test: 
-      override:
-        - script/ci/tests.sh
-    
     steps: 
-      - checkout
-      - run: mix deps.get
-      - run: mix test
+    - checkout
+    - run: ./script/ci/prepare.sh
+    - run: mix deps.get
+    - run: mix test
+
+  test: 
+    override:
+      - script/ci/tests.sh
+  
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+     - build
+     - test
