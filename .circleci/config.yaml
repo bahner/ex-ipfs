@@ -1,4 +1,4 @@
-version: 2
+version: 1
 jobs:
   build: 
     docker:
@@ -8,24 +8,16 @@ jobs:
     dependencies: 
       pre: 
         - script/ci/prepare.sh
-        cache_directories:
+      cache_directories:
         - ~/dependencies
         - ~/.mix
         - _build
         - deps
+    test: 
+      override:
+        - script/ci/tests.sh    
     steps: 
     - checkout
     - run: ./script/ci/prepare.sh
     - run: mix deps.get
     - run: mix test
-
-  test: 
-    override:
-      - script/ci/tests.sh
-  
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-     - build
-     - test
