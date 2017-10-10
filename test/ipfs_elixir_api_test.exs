@@ -2,7 +2,10 @@ defmodule IpfsElixirApiTest do
   use ExUnit.Case
   doctest IpfsElixirApi
 
-  test "greets the world" do
-    assert IpfsElixirApi.hello() == :world
+  import IpfsConnection
+
+  test "" do
   end
+
+  ##TODO: add Unit testing
 end

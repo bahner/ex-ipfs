@@ -9,10 +9,14 @@ defmodule IpfsConnection do
     plug Tesla.Middleware.BaseUrl, "http://localhost:5001/api/v0"
     plug Tesla.Middleware.JSON
 
+    ## TODO: add (add_cmd, block, bootstrap, config, dag, dht, diag, dns, 
+    ## files, id, key, log, mount, name, object, pin, ping, p2p, pubsub, 
+    ## bitswap, filestore, shutdown, refs, repo, resolve, stats, tar, file)
     
     def get_cmd(multihash) do
         res = requests("/get?arg=", multihash)
-        res |> write_file(multihash)
+        res
+        ##TODO add optional file writing funcitonality. 
     end
 
     def cat_cmd(multihash) do
