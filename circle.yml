@@ -1,31 +1,12 @@
 machine:
   timezone:
     America/Los_Angeles
-
-  environment:
-    GOROOT: ""
-    PATH: "/usr/local/go/bin:/usr/local/go/bin:~/.go_workspace/bin:${PATH}"
-    GOPATH: "/usr/local/go"
-
-dependencies:
-  pre:
-    - go get -u -d github.com/ipfs/go-ipfs
-    - cd $GOPATH/src/github.com/ipfs/go-ipfs
-    - make install
-    - ipfs daemon
-
-
 version: 2
 jobs:
   build: 
     docker:
-      - image: circleci/golang:1.9
       - image: circleci/elixir:1.5.2
       steps: 
-        - run: go get -u -d github.com/ipfs/go-ipfs
-        - run: cd $GOPATH/src/github.com/ipfs/go-ipfs
-        - run: make install
-        - run: ipfs daemon
         - checkout
         - run: mix deps.get
         - run: mix test
