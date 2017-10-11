@@ -1,4 +1,21 @@
-version: 1
+machine:
+  timezone:
+    America/Los_Angeles
+
+  environment:
+    GOROOT: ""
+    PATH: "/usr/local/go/bin:/usr/local/go_workspace/bin:~/.go_workspace/bin:${PATH}"
+    GOPATH: "${HOME}/.go_workspace:/usr/local/go_workspace:${HOME}/.go_project"
+
+dependencies:
+  pre:
+    - go get -u -d github.com/ipfs/go-ipfs
+    - cd $GOPATH/src/github.com/ipfs/go-ipfs
+    - make install
+    - ipfs daemon
+
+
+version: 2
 jobs:
   build: 
     docker:
@@ -6,10 +23,6 @@ jobs:
       - image: circleci/golang:1.9
     steps: 
     - checkout
-    - run: go get -u -d github.com/ipfs/go-ipfs
-    - run: cd $GOPATH/src/github.com/ipfs/go-ipfs
-    - run: make install
-    - run: ipfs daemon
     - run: mix local.rebar --force
     - run: mix local.hex --force
     - run: mix deps.get
