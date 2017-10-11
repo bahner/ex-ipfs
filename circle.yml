@@ -4,8 +4,8 @@ machine:
 
   environment:
     GOROOT: ""
-    PATH: "/usr/local/go/bin:/usr/local/go_workspace/bin:~/.go_workspace/bin:${PATH}"
-    GOPATH: "${HOME}/.go_workspace:/usr/local/go_workspace:${HOME}/.go_project"
+    PATH: "/usr/local/go/bin:/usr/local/go/bin:~/.go_workspace/bin:${PATH}"
+    GOPATH: "/usr/local/go"
 
 dependencies:
   pre:
@@ -20,16 +20,13 @@ jobs:
   build: 
     docker:
       - image: circleci/golang:1.9
+      - image: circleci/elixir:1.5.2
       steps: 
         - run: go get -u -d github.com/ipfs/go-ipfs
         - run: cd $GOPATH/src/github.com/ipfs/go-ipfs
         - run: make install
         - run: ipfs daemon
-      - image: circleci/elixir:1.5.2
-      steps: 
         - checkout
-        - run: mix local.rebar --force
-        - run: mix local.hex --force
         - run: mix deps.get
         - run: mix test
 
