@@ -6,9 +6,9 @@ jobs:
       - image: circleci/golang:1.9
     steps: 
     - checkout
-    - run: curl https://dist.ipfs.io/go-ipfs/v0.4.11/go-ipfs_v0.4.11_linux-amd64.tar.gz
-    - run: tar -xzf go-ipfs_v0.4.11_linux-amd64.tar.gz
-    - run: mv go-ipfs/ipfs /usr/local/bin/ipfs
+    - run: go get -u -d github.com/ipfs/go-ipfs
+    - run: cd $GOPATH/src/github.com/ipfs/go-ipfs
+    - run: make install
     - run: ipfs daemon
     - run: mix local.rebar --force
     - run: mix local.hex --force
