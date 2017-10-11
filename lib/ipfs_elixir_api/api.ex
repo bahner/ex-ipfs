@@ -6,18 +6,26 @@ defmodule IpfsElixir.Api do
 
     import IpfsConnection
 
+    
+    # starts the ipfs daemon asynchronously on a elixir thread. 
+    # recall this function with the flag of false and a opt of :normal or :kill to shutdown the process.
+    def start_shell(flag \\ true, opt \\ []) do
+        {:ok, pid} = Task.start(fn -> System.cmd("ipfs", ["daemon"]) end) 
+        if flag == false do
+           pid |> shutdown(opt)
+        else
+            pid
+        end
+    end
+
+    
+
     ## TODO: add get_cmd for output, archive, compress and compression level
     def get_cmd(multihash) when is_bitstring(multihash) do
         requests("/get?arg=", multihash)
         ##TODO add optional file writing funcitonality.
     end
 
-    # starts the ipfs daemon. TODO: Make this asynchronous. 
-    def start do
-        System.cmd("ipfs", ["daemon"])
-    end
-
-    
 
     def cat_cmd(multihash) when is_bitstring(multihash) do
         requests("/cat?arg=", multihash)
@@ -66,7 +74,9 @@ defmodule IpfsElixir.Api do
         requests("/tour/restart", "")
     end
     
-
+    defp shutdown(pid, term \\ []) do
+        Process.exit(pid, term)
+    end
 
     defp build_url(conn, path) do
         "#{conn.protocol}://#{conn.host}:#{conn.port}/#{conn.base}/#{path}"
