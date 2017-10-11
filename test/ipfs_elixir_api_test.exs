@@ -2,7 +2,6 @@ defmodule IpfsElixirApiTest do
   use ExUnit.Case, async: true
   doctest IpfsConnection
 
-  import IpfsConnection
   alias IpfsElixir.Api
 
   test "get_cmd should return a map when passed a valid key" do
