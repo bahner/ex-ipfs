@@ -7,12 +7,12 @@ defmodule IpfsElixir.Api do
     import IpfsConnection
     
     ## TODO: add get_cmd for output, archive, compress and compression level
-    def get_cmd(multihash) do
+    def get_cmd(multihash) when is_bitstring(multihash) do
         requests("/get?arg=", multihash)
         ##TODO add optional file writing funcitonality. 
     end
 
-    def cat_cmd(multihash) do
+    def cat_cmd(multihash) when is_bitstring(multihash) do
         requests("/cat?arg=", multihash)
     end
 
@@ -20,13 +20,13 @@ defmodule IpfsElixir.Api do
         requests("/swarm/peers", "")
     end
 
-    def swarm_disconnect(multihash) do
+    def swarm_disconnect(multihash) when is_bitstring(multihash) do
         res = request("/swarm/disconnect?arg=", multihash)
         res.body
     end
 
     #Ls cmd TODO  Implement proper Json Format. 
-    def ls_cmd(multihash) do
+    def ls_cmd(multihash) when is_bitstring(multihash) do
         requests("/ls?arg=", multihash)
     end
     
@@ -35,10 +35,16 @@ defmodule IpfsElixir.Api do
         requests("/repo/verify", "")
     end
 
-    #Update function - TODO (correctly format res.body string)
-    def update(args) do
+    #Update function  - takes in the current args for update. 
+    def update(args) when is_bitstring(args) do
         res = requests("/update?arg=", args)
-        String.replace(res.body, "\n", " ")
+        res.body|> String.replace(~r/\r|\n/, "")
+    end
+
+    #version function - does not currently accept the optional arguments on golang client. 
+    def version(num \\ false, comm \\ false, repo \\ false, all \\ false) do
+       res = requests("/version?number=" <> to_string(num) <> "&commit=" <> to_string(comm) <> "&repo=" <> to_string(repo) <> "&all=" <> to_string(all) , "")
+       res.body
     end
 
     def tour_list do

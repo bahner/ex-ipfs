@@ -8,7 +8,7 @@ defmodule IpfsConnection do
     plug Tesla.Middleware.BaseUrl, "http://localhost:5001/api/v0"
     plug Tesla.Middleware.JSON
 
-    defp set_headers(head) do
+    def set_headers(head) do
         Tesla.build_client([
             Tesla.Middleware.Headers, %{"Content-Type" => head}
         ])
