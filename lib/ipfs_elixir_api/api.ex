@@ -1,7 +1,7 @@
 defmodule IpfsElixir.Api do
 
     ## TODO: add (add_cmd, block, bootstrap, config, dag, dht, diag,
-    ## files, key, log, mount, name, object, pin, p2p,
+    ## files, key, name, object, pin, p2p,
     ## bitswap, filestore, shutdown, repo, resolve, stats, tar, file)
 
     import IpfsConnection
@@ -62,6 +62,26 @@ defmodule IpfsElixir.Api do
 
     def ping(id) do
         res = request("/ping?arg=", id)
+        res.body
+    end
+
+    def log_level(subsys, level) do
+        res = requests("/log/level?arg=" <> subsys <> "&arg=" <> level)
+        res.body
+    end
+
+    def log_ls do
+        res = requests("/log/ls")
+        res.body
+    end
+
+    def log_tail do
+        res = requests("/log/tail")
+        res.body
+    end
+
+    def mount do
+        res = requests("/mount")
         res.body
     end
 
