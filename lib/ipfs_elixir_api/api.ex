@@ -18,8 +18,11 @@ defmodule IpfsElixir.Api do
         end
     end
 
-    
-
+    def dns(arg) when is_bitstring(arg) do
+        res = requests("/dns?arg=", arg)
+        res.body
+    end
+ 
     ## TODO: add get_cmd for output, archive, compress and compression level
     def get_cmd(multihash) when is_bitstring(multihash) do
         requests("/get?arg=", multihash)
@@ -32,7 +35,7 @@ defmodule IpfsElixir.Api do
     end
 
     def swarm_peers do
-        requests("/swarm/peers", "")
+        requests("/swarm/peers")
     end
 
     def swarm_disconnect(multihash) when is_bitstring(multihash) do
@@ -47,7 +50,7 @@ defmodule IpfsElixir.Api do
 
     ##Currently throws an error due to the size of JSON response.
     def repo_verify do
-        requests("/repo/verify", "")
+        requests("/repo/verify")
     end
 
     #Update function  - takes in the current args for update.
@@ -63,15 +66,15 @@ defmodule IpfsElixir.Api do
     end
 
     def tour_list do
-        requests("/tour/list", "")
+        requests("/tour/list")
     end
 
     def tour_next do
-        requests("/tour/next", "")
+        requests("/tour/next")
     end
 
     def tour_restart do
-        requests("/tour/restart", "")
+        requests("/tour/restart")
     end
     
     defp shutdown(pid, term \\ []) do
@@ -97,6 +100,7 @@ defmodule IpfsElixir.Api do
 
     defp requests(path) do
         case get(path) do
+            ## TODO: add more cases.
             %Tesla.Env{status: 200, headers: headers, body: body} -> %{:headers => headers, :body => body}
             %Tesla.Env{status: 500, headers: headers, body: body} -> %{:headers => headers, :body => body}
             %Tesla.Env{status: 404, headers: headers} -> %{:headers=> headers, :error => "Error: 404 page not found."}
