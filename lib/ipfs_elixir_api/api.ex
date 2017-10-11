@@ -1,8 +1,8 @@
 defmodule IpfsElixir.Api do
 
     ## TODO: add (add_cmd, block, bootstrap, config, dag, dht, diag,
-    ## files, key, log, mount, name, object, pin, ping, p2p, pubsub,
-    ## bitswap, filestore, shutdown, refs, repo, resolve, stats, tar, file)
+    ## files, key, log, mount, name, object, pin, p2p,
+    ## bitswap, filestore, shutdown, repo, resolve, stats, tar, file)
 
     import IpfsConnection
 
@@ -58,6 +58,36 @@ defmodule IpfsElixir.Api do
     ##Currently throws an error due to the size of JSON response.
     def repo_verify do
         requests("/repo/verify")
+    end
+
+    def ping(id) do
+        res = request("/ping?arg=", id)
+        res.body
+    end
+
+    def pubsub_ls do
+        res = requests("/pubsub/ls")
+        res.body
+    end
+
+    def pubsub_peers do
+        res = requests("/pubsub/pub")
+        res.body
+    end
+
+    def pubsub_pub(topic, data) do
+        res = requests("/pubsub/pub?arg=" <> topic <> "&arg=" <> data)
+        res.body
+    end
+
+    def pubsub_sub(topic) do
+        res = requests("/pubsub/sub?arg=", topic)
+        res.body
+    end
+
+    def refs_local do
+        res = request("/refs/local")
+        res.body
     end
 
     #Update function  - takes in the current args for update.
