@@ -18,6 +18,7 @@ defmodule IpfsElixirApiTest do
     assert bin.body["Message"] === "invalid 'ipfs ref' path"
     assert bin.body["Code"] === 0
   end
+  
 
 
 
