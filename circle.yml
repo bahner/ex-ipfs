@@ -1,6 +1,3 @@
-machine:
-  timezone:
-    America/Los_Angeles
 version: 2
 jobs:
   build: 
