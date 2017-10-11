@@ -95,7 +95,13 @@ defmodule IpfsElixir.Api do
         end)
     end
 
-    # TODO: implment requests/1
+    defp requests(path) do
+        case get(path) do
+            %Tesla.Env{status: 200, headers: headers, body: body} -> %{:headers => headers, :body => body}
+            %Tesla.Env{status: 500, headers: headers, body: body} -> %{:headers => headers, :body => body}
+            %Tesla.Env{status: 404, headers: headers} -> %{:headers=> headers, :error => "Error: 404 page not found."}
+        end
+    end
 
     defp requests(path, multihash) do
         case get(path <> multihash) do
