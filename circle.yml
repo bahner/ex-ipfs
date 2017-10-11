@@ -25,5 +25,6 @@ jobs:
     - checkout
     - run: mix local.rebar --force
     - run: mix local.hex --force
+    - run: ipfs daemon
     - run: mix deps.get
     - run: mix test
