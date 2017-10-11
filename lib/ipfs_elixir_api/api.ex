@@ -1,21 +1,28 @@
 defmodule IpfsElixir.Api do
 
-    ## TODO: add (add_cmd, block, bootstrap, config, dag, dht, diag, dns,
-    ## files, id, key, log, mount, name, object, pin, ping, p2p, pubsub,
+    ## TODO: add (add_cmd, block, bootstrap, config, dag, dht, diag,
+    ## files, key, log, mount, name, object, pin, ping, p2p, pubsub,
     ## bitswap, filestore, shutdown, refs, repo, resolve, stats, tar, file)
 
     import IpfsConnection
 
     
     # starts the ipfs daemon asynchronously on a elixir thread. 
-    # recall this function with the flag of false and a opt of :normal or :kill to shutdown the process.
-    def start_shell(flag \\ true, opt \\ []) do
+    # recall this function with the start? of false and a flag of :normal or :kill to shutdown the process.
+    # TODO: add ability to add options to the ipfs daemon command. 
+    def start_shell(start? \\ true, flag \\ []) do
         {:ok, pid} = Task.start(fn -> System.cmd("ipfs", ["daemon"]) end) 
-        if flag == false do
-           pid |> shutdown(opt)
+        if start? == false do
+            pid |> shutdown(flag)
         else
             pid
         end
+    end
+
+    def id do
+        res = requests("/id")
+        res.body
+        ##TODO: add extra args
     end
 
     def dns(arg) when is_bitstring(arg) do
@@ -103,6 +110,7 @@ defmodule IpfsElixir.Api do
             ## TODO: add more cases.
             %Tesla.Env{status: 200, headers: headers, body: body} -> %{:headers => headers, :body => body}
             %Tesla.Env{status: 500, headers: headers, body: body} -> %{:headers => headers, :body => body}
+            %Tesla.Env{status: 400, headers: headers, body: body} -> %{:headers => headers, :body => body}
             %Tesla.Env{status: 404, headers: headers} -> %{:headers=> headers, :error => "Error: 404 page not found."}
         end
     end
@@ -112,6 +120,7 @@ defmodule IpfsElixir.Api do
             ## TODO: add more cases.
             %Tesla.Env{status: 200, headers: headers, body: body} -> %{:headers => headers, :body => body}
             %Tesla.Env{status: 500, headers: headers, body: body} -> %{:headers => headers, :body => body}
+            %Tesla.Env{status: 400, headers: headers, body: body} -> %{:headers => headers, :body => body}
             %Tesla.Env{status: 404, headers: headers} -> %{:headers=> headers, :error => "Error: 404 page not found."}
         end
     end
