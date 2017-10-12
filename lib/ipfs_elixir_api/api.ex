@@ -9,6 +9,7 @@ defmodule IpfsElixir.Api do
     
     # starts the ipfs daemon asynchronously on a elixir thread. 
     # recall this function with the start? of false and a flag of :normal or :kill to shutdown the process.
+
     # TODO: add ability to add options to the ipfs daemon command. 
     def start_shell(start? \\ true, flag \\ []) do
         {:ok, pid} = Task.start(fn -> System.cmd("ipfs", ["daemon"]) end) 
@@ -19,12 +20,27 @@ defmodule IpfsElixir.Api do
         end
     end
 
+
+    # TODO: add various flags to the add_cmd. 
     def add_cmd(file_path) do
         #file_data = file_path |> File.open!([:read, :binary]) |> IO.binread(:all)
         #req = HTTPoison.post!("http://localhost:5001/api/v0/add", {:multipart, [{:file, file_path, {["form-data"], [name: "\" file \"", filename: "\"" <> file_path <> "\""]},[]}]})
         req = setup_multipart_form(file_path)
         res = request_post("/add", req)
         res.body
+    end
+
+    def bitswap_ledger(peer_id) do
+        request_get("/bitswap/ledger?arg=", peer_id)
+    end
+
+    def bitswap_stat do
+        res = request_get("/bitswap/stat")
+        res.body
+    end 
+
+    def bitswap_unwant(keys) do
+        ##TODO: implment function
     end
 
     def id do
