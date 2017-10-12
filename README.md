@@ -9,5 +9,18 @@ Thus far 65% of the functionality has been implmented in this particular API.  M
 
 # Install
 
-Instructions will be added later. 
+Add Ipfs_elixir to your `mix.exs` dependencies:
+```elixir
+def deps do
+[
+    {:ipfs_elixir, "~> 0.0.4"},
+]
+end
+```
+
+and run `$ mix deps.get` to install the dependency.  
+
+## Usage
+
+WIP
 
