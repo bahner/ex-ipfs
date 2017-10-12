@@ -1,8 +1,8 @@
 defmodule IpfsElixir.Api do
 
-    ## TODO: add (block, bootstrap, config, dag, dht, diag,
+    ## TODO: add (block, bootstrap, config, dag, diag,
     ## files, key, name, object, pin, p2p,
-    ## bitswap, filestore, shutdown, repo, resolve, stats, tar, file)
+    ##  filestore, shutdown, repo, resolve, stats, tar, file)
 
     import IpfsConnection
 
@@ -40,7 +40,8 @@ defmodule IpfsElixir.Api do
     end 
 
     def bitswap_unwant(keys) do
-        ##TODO: implment function
+        res = request_get("/bitswap/unwant?arg=", keys)
+        res.body
     end
 
     def id do
@@ -77,6 +78,11 @@ defmodule IpfsElixir.Api do
     #Ls cmd TODO  Implement proper Json Format.
     def ls_cmd(multihash) when is_bitstring(multihash) do
         request_get("/ls?arg=", multihash)
+    end
+
+    def commands do
+        res = request_get("/commands")
+        res.body
     end
 
     ##Currently throws an error due to the size of JSON response.
@@ -157,6 +163,36 @@ defmodule IpfsElixir.Api do
     def tour_restart do
         request_get("/tour/restart")
     end
+
+    def dht_find_peer(arg) do
+        res = request_get("/dht/findpeer?arg=", arg)
+        res.body
+    end
+
+    def dht_find_provs(arg) do
+        res = request_get("/dht/findprovs?arg=", arg)
+        res.body
+    end
+
+    def dht_get(arg) do
+        res = request_get("/dht/get?arg=", arg)
+        res.body
+    end
+
+    def dht_provide(arg) do
+        res = request_get("/dht/provide?arg=", arg)
+        res.body
+    end
+
+    def dht_put(key, value) do  
+        res = request_get("/dht/put?arg=" <> key <> "&arg=" <> value)
+        res.body
+    end
+
+    def dht_query(peer_id) do
+        res = request_get("/dht/query?arg=", peer_id)
+        res.body
+    end
     
     defp shutdown(pid, term \\ []) do
         Process.exit(pid, term)
@@ -174,6 +210,7 @@ defmodule IpfsElixir.Api do
             end
         end)
     end
+
 
     defp request_post(path, data) do
         case post(path, data) do
@@ -194,8 +231,8 @@ defmodule IpfsElixir.Api do
         end
     end
 
-    defp request_get(path, multihash) do
-        case get(path <> multihash) do
+    defp request_get(path, arg) do
+        case get(path <> arg) do
             ## TODO: add more cases.
             %Tesla.Env{status: 200, headers: headers, body: body} -> %{:headers => headers, :body => body}
             %Tesla.Env{status: 500, headers: headers, body: body} -> %{:headers => headers, :body => body}
