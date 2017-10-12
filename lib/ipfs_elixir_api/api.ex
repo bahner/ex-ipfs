@@ -1,6 +1,6 @@
 defmodule IpfsElixir.Api do
 
-    ## TODO: add (add_cmd, block, bootstrap, config, dag, dht, diag,
+    ## TODO: add (block, bootstrap, config, dag, dht, diag,
     ## files, key, name, object, pin, p2p,
     ## bitswap, filestore, shutdown, repo, resolve, stats, tar, file)
 
@@ -24,7 +24,7 @@ defmodule IpfsElixir.Api do
         #req = HTTPoison.post!("http://localhost:5001/api/v0/add", {:multipart, [{:file, file_path, {["form-data"], [name: "\" file \"", filename: "\"" <> file_path <> "\""]},[]}]})
         req = setup_multipart_form(file_path)
         res = request_post("/add", req)
-        res.body["Hash"]
+        res.body
     end
 
     def id do
