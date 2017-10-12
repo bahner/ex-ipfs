@@ -146,10 +146,6 @@ defmodule IpfsElixir.Api do
         Process.exit(pid, term)
     end
 
-    defp build_url(conn, path) do
-        "#{conn.protocol}://#{conn.host}:#{conn.port}/#{conn.base}/#{path}"
-    end
-
     defp raw_bin_to_string(raw) do
         codepoints = String.codepoints(raw)
         val = Enum.reduce(codepoints, fn(w, r) ->
