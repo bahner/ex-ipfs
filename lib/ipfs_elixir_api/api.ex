@@ -1,7 +1,6 @@
 defmodule IpfsElixir.Api do
 
-    ## TODO: add (block, bootstrap, config, dag, diag,
-    ## files, key, name, object, pin, p2p,
+    ## TODO: add (files, name, object, pin, p2p,
     ##  filestore, shutdown, repo, resolve, stats, tar, file)
 
     import IpfsConnection
@@ -24,35 +23,16 @@ defmodule IpfsElixir.Api do
     # TODO: add various flags to the add_cmd. 
     def add_cmd(file_path) do
         #file_data = file_path |> File.open!([:read, :binary]) |> IO.binread(:all)
-        #req = HTTPoison.post!("http://localhost:5001/api/v0/add", {:multipart, [{:file, file_path, {["form-data"], [name: "\" file \"", filename: "\"" <> file_path <> "\""]},[]}]})
-        req = setup_multipart_form(file_path)
-        res = request_post("/add", req)
-        res.body
-    end
-
-    def bitswap_ledger(peer_id) do
-        request_get("/bitswap/ledger?arg=", peer_id)
-    end
-
-    def bitswap_stat do
-        res = request_get("/bitswap/stat")
-        res.body
-    end 
-
-    def bitswap_unwant(keys) do
-        res = request_get("/bitswap/unwant?arg=", keys)
-        res.body
+        setup_multipart_form(file_path) |> request_post("/add")
     end
 
     def id do
-        res = request_get("/id")
-        res.body
+        request_get("/id")
         ##TODO: add extra args
     end
 
     def dns(arg) when is_bitstring(arg) do
-        res = request_get("/dns?arg=", arg)
-        res.body
+        request_get("/dns?arg=", arg)
     end
  
     ## TODO: add get_cmd for output, archive, compress and compression level
@@ -61,18 +41,8 @@ defmodule IpfsElixir.Api do
         ##TODO add optional file writing funcitonality.
     end
 
-
     def cat_cmd(multihash) when is_bitstring(multihash) do
         request_get("/cat?arg=", multihash)
-    end
-
-    def swarm_peers do
-        request_get("/swarm/peers")
-    end
-
-    def swarm_disconnect(multihash) when is_bitstring(multihash) do
-        res = request("/swarm/disconnect?arg=", multihash)
-        res.body
     end
 
     #Ls cmd TODO  Implement proper Json Format.
@@ -80,9 +50,84 @@ defmodule IpfsElixir.Api do
         request_get("/ls?arg=", multihash)
     end
 
+    def bitswap_ledger(peer_id) do
+        request_get("/bitswap/ledger?arg=", peer_id)
+    end
+
+    def bitswap_stat do
+        request_get("/bitswap/stat")
+    end 
+
+    def bitswap_unwant(keys) do
+        request_get("/bitswap/unwant?arg=", keys)
+    end
+
+    def bitswap_wantlist(peer \\ "") do
+        if peer != "" do
+            request_get("/bitswap/wantlist?peer", peer)
+        else    
+            request_get("/bitswap/wantlist")
+        end
+    end
+
+    def block_get(arg) do
+        request_get("/block/get?arg=", arg)
+    end
+
+    def block_put(file_path) do
+        setup_multipart_form(file_path) |> request_post("/block/put")
+    end
+
+    def block_rm(multihash) do
+        request_get("/block/rm?arg=", multihash)
+    end
+
+    def block_stat(multihash) do
+        request_get("/block/stat?arg=", multihash)
+    end
+
+    def bootstrap_add_default do
+        request_get("/bootstrap/add/default")
+    end
+
+    def bootstrap_list do
+        request_get("/bootstrap/list")
+    end
+
+    def bootstrap_rm_all do
+        request_get("bootstrap/rm/all")
+    end
+
+    def config_edit do
+        request_get("/config/edit")
+    end
+
+    def config_replace(file_path) do
+        setup_multipart_form(file_path) |> request_post("/config/replace")        
+    end
+
+    def config_show do
+        request_get("/config/show")
+    end
+
+    def dag_get(object) do
+        request_get("/dag/get?arg=", object)
+    end
+
+    def dag_put(file_path) do
+        setup_multipart_form(file_path) |> request_post("/dag/put")
+    end
+
+    def swarm_peers do
+        request_get("/swarm/peers")
+    end
+
+    def swarm_disconnect(multihash) when is_bitstring(multihash) do
+        request("/swarm/disconnect?arg=", multihash)
+    end
+
     def commands do
-        res = request_get("/commands")
-        res.body
+        request_get("/commands")
     end
 
     ##Currently throws an error due to the size of JSON response.
@@ -91,53 +136,43 @@ defmodule IpfsElixir.Api do
     end
 
     def ping(id) do
-        res = request("/ping?arg=", id)
-        res.body
+        request("/ping?arg=", id)
     end
 
     def log_level(subsys, level) do
-        res = request_get("/log/level?arg=" <> subsys <> "&arg=" <> level)
-        res.body
+        request_get("/log/level?arg=" <> subsys <> "&arg=" <> level) 
     end
 
     def log_ls do
-        res = request_get("/log/ls")
-        res.body
+        request_get("/log/ls")
     end
 
     def log_tail do
-        res = request_get("/log/tail")
-        res.body
+        request_get("/log/tail")
     end
 
     def mount do
-        res = request_get("/mount")
-        res.body
+        request_get("/mount")
     end
 
     def pubsub_ls do
-        res = request_get("/pubsub/ls")
-        res.body
+        request_get("/pubsub/ls")
     end
 
     def pubsub_peers do
-        res = request_get("/pubsub/pub")
-        res.body
+        request_get("/pubsub/pub")
     end
 
     def pubsub_pub(topic, data) do
-        res = request_get("/pubsub/pub?arg=" <> topic <> "&arg=" <> data)
-        res.body
+        request_get("/pubsub/pub?arg=" <> topic <> "&arg=" <> data)
     end
 
     def pubsub_sub(topic) do
-        res = request_get("/pubsub/sub?arg=", topic)
-        res.body
+        request_get("/pubsub/sub?arg=", topic)
     end
 
     def refs_local do
-        res = request("/refs/local")
-        res.body
+        request_get("/refs/local")
     end
 
     #Update function  - takes in the current args for update.
@@ -148,8 +183,7 @@ defmodule IpfsElixir.Api do
 
     #version function - does not currently accept the optional arguments on golang client.
     def version(num \\ false, comm \\ false, repo \\ false, all \\ false) do
-       res = request_get("/version?number=" <> to_string(num) <> "&commit=" <> to_string(comm) <> "&repo=" <> to_string(repo) <> "&all=" <> to_string(all) , "")
-       res.body
+       request_get("/version?number=" <> to_string(num) <> "&commit=" <> to_string(comm) <> "&repo=" <> to_string(repo) <> "&all=" <> to_string(all) , "")
     end
 
     def tour_list do
@@ -165,33 +199,55 @@ defmodule IpfsElixir.Api do
     end
 
     def dht_find_peer(arg) do
-        res = request_get("/dht/findpeer?arg=", arg)
-        res.body
+        request_get("/dht/findpeer?arg=", arg)
     end
 
     def dht_find_provs(arg) do
-        res = request_get("/dht/findprovs?arg=", arg)
-        res.body
+        request_get("/dht/findprovs?arg=", arg)
     end
 
     def dht_get(arg) do
-        res = request_get("/dht/get?arg=", arg)
-        res.body
+        request_get("/dht/get?arg=", arg)
     end
 
     def dht_provide(arg) do
-        res = request_get("/dht/provide?arg=", arg)
-        res.body
+        request_get("/dht/provide?arg=", arg)
     end
 
     def dht_put(key, value) do  
-        res = request_get("/dht/put?arg=" <> key <> "&arg=" <> value)
-        res.body
+        request_get("/dht/put?arg=" <> key <> "&arg=" <> value)
     end
 
     def dht_query(peer_id) do
-        res = request_get("/dht/query?arg=", peer_id)
-        res.body
+        request_get("/dht/query?arg=", peer_id)
+    end
+
+    def cmds_clear do
+        request_get("/cmds/clear")
+    end
+
+    def cmds_set_time(time) do
+        request_get("/cmds/set-time?arg=", time)
+    end
+
+    def diag_net(vis \\ "") do
+        if vis != "" do
+            request_get("/diag/net?vis=", vis)
+        else
+            request_get("/diag/net")
+        end
+    end
+
+    def diag_sys do
+        request_get("/diag/sys")
+    end
+
+    def key_gen(key) do
+        request_get("/key/gen?arg=", key)
+    end
+
+    def key_list do
+        request_get("/key/list")
     end
     
     defp shutdown(pid, term \\ []) do
@@ -212,32 +268,32 @@ defmodule IpfsElixir.Api do
     end
 
 
-    defp request_post(path, data) do
-        case post(path, data) do
-            %Tesla.Env{status: 200, headers: headers, body: body} -> %{:headers => headers, :body => body}
-            %Tesla.Env{status: 500, headers: headers, body: body} -> %{:headers => headers, :body => body}
-            %Tesla.Env{status: 400, headers: headers, body: body} -> %{:headers => headers, :body => body}
-            %Tesla.Env{status: 404, headers: headers} -> %{:headers=> headers, :error => "Error: 404 page not found."}
+    defp request_post(file, path) do
+        case post(path, file) do
+            %Tesla.Env{status: 200, body: body} -> body
+            %Tesla.Env{status: 500, body: body} -> body
+            %Tesla.Env{status: 400, body: body} -> body
+            %Tesla.Env{status: 404} -> "Error: 404 page not found."
         end
     end
 
     defp request_get(path) do
         case get(path) do
             ## TODO: add more cases.
-            %Tesla.Env{status: 200, headers: headers, body: body} -> %{:headers => headers, :body => body}
-            %Tesla.Env{status: 500, headers: headers, body: body} -> %{:headers => headers, :body => body}
-            %Tesla.Env{status: 400, headers: headers, body: body} -> %{:headers => headers, :body => body}
-            %Tesla.Env{status: 404, headers: headers} -> %{:headers=> headers, :error => "Error: 404 page not found."}
+            %Tesla.Env{status: 200, body: body} -> body
+            %Tesla.Env{status: 500, body: body} -> body
+            %Tesla.Env{status: 400, body: body} -> body
+            %Tesla.Env{status: 404} -> "Error: 404 page not found."
         end
     end
 
     defp request_get(path, arg) do
         case get(path <> arg) do
             ## TODO: add more cases.
-            %Tesla.Env{status: 200, headers: headers, body: body} -> %{:headers => headers, :body => body}
-            %Tesla.Env{status: 500, headers: headers, body: body} -> %{:headers => headers, :body => body}
-            %Tesla.Env{status: 400, headers: headers, body: body} -> %{:headers => headers, :body => body}
-            %Tesla.Env{status: 404, headers: headers} -> %{:headers=> headers, :error => "Error: 404 page not found."}
+            %Tesla.Env{status: 200, body: body} -> body
+            %Tesla.Env{status: 500, body: body} -> body
+            %Tesla.Env{status: 400, body: body} -> body
+            %Tesla.Env{status: 404} -> "Error: 404 page not found."
         end
     end
 
