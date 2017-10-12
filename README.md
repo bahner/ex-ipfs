@@ -1,4 +1,7 @@
-# Ipfs Elixir Api
+# Ipfs Api wrapper library for Elixir
+
+![](https://ipfs.io/ipfs/QmQJ68PFMDdAsgCZvA1UVzzn18asVcf7HVvCDgpjiSCAse)
+
 
 ## This library is still a work in progress
 
