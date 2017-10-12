@@ -19,30 +19,38 @@ defmodule IpfsElixir.Api do
         end
     end
 
+    def add_cmd(file_path) do
+        #file_data = file_path |> File.open!([:read, :binary]) |> IO.binread(:all)
+        #req = HTTPoison.post!("http://localhost:5001/api/v0/add", {:multipart, [{:file, file_path, {["form-data"], [name: "\" file \"", filename: "\"" <> file_path <> "\""]},[]}]})
+        req = setup_multipart_form(file_path)
+        res = request_post("/add", req)
+        res.body["Hash"]
+    end
+
     def id do
-        res = requests("/id")
+        res = request_get("/id")
         res.body
         ##TODO: add extra args
     end
 
     def dns(arg) when is_bitstring(arg) do
-        res = requests("/dns?arg=", arg)
+        res = request_get("/dns?arg=", arg)
         res.body
     end
  
     ## TODO: add get_cmd for output, archive, compress and compression level
     def get_cmd(multihash) when is_bitstring(multihash) do
-        requests("/get?arg=", multihash)
+        request_get("/get?arg=", multihash)
         ##TODO add optional file writing funcitonality.
     end
 
 
     def cat_cmd(multihash) when is_bitstring(multihash) do
-        requests("/cat?arg=", multihash)
+        request_get("/cat?arg=", multihash)
     end
 
     def swarm_peers do
-        requests("/swarm/peers")
+        request_get("/swarm/peers")
     end
 
     def swarm_disconnect(multihash) when is_bitstring(multihash) do
@@ -52,12 +60,12 @@ defmodule IpfsElixir.Api do
 
     #Ls cmd TODO  Implement proper Json Format.
     def ls_cmd(multihash) when is_bitstring(multihash) do
-        requests("/ls?arg=", multihash)
+        request_get("/ls?arg=", multihash)
     end
 
     ##Currently throws an error due to the size of JSON response.
     def repo_verify do
-        requests("/repo/verify")
+        request_get("/repo/verify")
     end
 
     def ping(id) do
@@ -66,42 +74,42 @@ defmodule IpfsElixir.Api do
     end
 
     def log_level(subsys, level) do
-        res = requests("/log/level?arg=" <> subsys <> "&arg=" <> level)
+        res = request_get("/log/level?arg=" <> subsys <> "&arg=" <> level)
         res.body
     end
 
     def log_ls do
-        res = requests("/log/ls")
+        res = request_get("/log/ls")
         res.body
     end
 
     def log_tail do
-        res = requests("/log/tail")
+        res = request_get("/log/tail")
         res.body
     end
 
     def mount do
-        res = requests("/mount")
+        res = request_get("/mount")
         res.body
     end
 
     def pubsub_ls do
-        res = requests("/pubsub/ls")
+        res = request_get("/pubsub/ls")
         res.body
     end
 
     def pubsub_peers do
-        res = requests("/pubsub/pub")
+        res = request_get("/pubsub/pub")
         res.body
     end
 
     def pubsub_pub(topic, data) do
-        res = requests("/pubsub/pub?arg=" <> topic <> "&arg=" <> data)
+        res = request_get("/pubsub/pub?arg=" <> topic <> "&arg=" <> data)
         res.body
     end
 
     def pubsub_sub(topic) do
-        res = requests("/pubsub/sub?arg=", topic)
+        res = request_get("/pubsub/sub?arg=", topic)
         res.body
     end
 
@@ -112,26 +120,26 @@ defmodule IpfsElixir.Api do
 
     #Update function  - takes in the current args for update.
     def update(args) when is_bitstring(args) do
-        res = requests("/update?arg=", args)
+        res = request_get("/update?arg=", args)
         res.body|> String.replace(~r/\r|\n/, "")
     end
 
     #version function - does not currently accept the optional arguments on golang client.
     def version(num \\ false, comm \\ false, repo \\ false, all \\ false) do
-       res = requests("/version?number=" <> to_string(num) <> "&commit=" <> to_string(comm) <> "&repo=" <> to_string(repo) <> "&all=" <> to_string(all) , "")
+       res = request_get("/version?number=" <> to_string(num) <> "&commit=" <> to_string(comm) <> "&repo=" <> to_string(repo) <> "&all=" <> to_string(all) , "")
        res.body
     end
 
     def tour_list do
-        requests("/tour/list")
+        request_get("/tour/list")
     end
 
     def tour_next do
-        requests("/tour/next")
+        request_get("/tour/next")
     end
 
     def tour_restart do
-        requests("/tour/restart")
+        request_get("/tour/restart")
     end
     
     defp shutdown(pid, term \\ []) do
@@ -155,7 +163,16 @@ defmodule IpfsElixir.Api do
         end)
     end
 
-    defp requests(path) do
+    defp request_post(path, data) do
+        case post(path, data) do
+            %Tesla.Env{status: 200, headers: headers, body: body} -> %{:headers => headers, :body => body}
+            %Tesla.Env{status: 500, headers: headers, body: body} -> %{:headers => headers, :body => body}
+            %Tesla.Env{status: 400, headers: headers, body: body} -> %{:headers => headers, :body => body}
+            %Tesla.Env{status: 404, headers: headers} -> %{:headers=> headers, :error => "Error: 404 page not found."}
+        end
+    end
+
+    defp request_get(path) do
         case get(path) do
             ## TODO: add more cases.
             %Tesla.Env{status: 200, headers: headers, body: body} -> %{:headers => headers, :body => body}
@@ -165,7 +182,7 @@ defmodule IpfsElixir.Api do
         end
     end
 
-    defp requests(path, multihash) do
+    defp request_get(path, multihash) do
         case get(path <> multihash) do
             ## TODO: add more cases.
             %Tesla.Env{status: 200, headers: headers, body: body} -> %{:headers => headers, :body => body}

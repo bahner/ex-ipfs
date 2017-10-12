@@ -1,7 +1,7 @@
 defmodule IpfsConnection do
     use Tesla
+    alias Tesla.Multipart
     #add struct for later use. 
-    defstruct host: "localhost", port: 5001, base: "api/v0", protocol: "http" 
     
     #Connection manager.
     
@@ -14,4 +14,11 @@ defmodule IpfsConnection do
         ])
     end
 
+    def setup_multipart_form(file_path) do
+            Multipart.new
+            |> Multipart.add_file(file_path, [name: "\" file \"", filename: "\"" <> file_path <> "\"", detect_content_type: true])
+    end
+
 end
+
+
