@@ -4,12 +4,12 @@ defmodule IpfsElixir.Mixfile do
   def project do
     [
       app: :ipfs_elixir,
-      version: "0.0.4",
+      version: "0.0.5",
       elixir: "~> 1.5",
       name: "IPFS Elixir",
       start_permanent: Mix.env == :prod,
       deps: deps(),
-      package: package,
+      package: package(),
       description: description(),
       name: "Ipfs_Elixir_Api",
       source_url: "https://github.com/tensor-programming/Elixir-Ipfs-Api"

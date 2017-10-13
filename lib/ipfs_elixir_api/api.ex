@@ -1,10 +1,9 @@
 defmodule IpfsElixir.Api do
 
     ## TODO: add (files, name, object, pin, p2p,
-    ##  filestore, shutdown, repo, resolve, stats, tar, file)
+    ##  filestore, shutdown, repo, resolve, stats, tar)
 
     import IpfsConnection
-
     
     # starts the ipfs daemon asynchronously on a elixir thread. 
     # recall this function with the start? of false and a flag of :normal or :kill to shutdown the process.
@@ -18,7 +17,6 @@ defmodule IpfsElixir.Api do
             pid
         end
     end
-
 
     # TODO: add various flags to the add_cmd. 
     def add_cmd(file_path) do
@@ -248,6 +246,30 @@ defmodule IpfsElixir.Api do
 
     def key_list do
         request_get("/key/list")
+    end
+
+    def object_data(multihash) do
+        request_get("/object/data?arg=", multihash)
+    end
+
+    def object_diff(obj_a, obj_b) do
+        request_get("/object/diff?arg=" <> obj_a <> "&arg=" <> obj_b)
+    end
+
+    def object_get(multihash) do
+        request_get("/object/get?arg=", multihash)
+    end
+
+    def object_links(multihash) do
+        request_get("/object/links?arg=", multihash)
+    end
+
+    def object_new(template \\ "") do
+        if template != "" do
+            request_get("/object/new?arg=", template)
+        else
+            request_get("/object/new")
+        end
     end
     
     defp shutdown(pid, term \\ []) do
