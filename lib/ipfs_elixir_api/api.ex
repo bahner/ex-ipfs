@@ -182,7 +182,7 @@ defmodule IpfsElixir.Api do
     def object_patch_rm_link(multihash, name), do: request_get("/object/patch/rm-link?arg=" <> multihash <> "&arg=", name)
 
     def object_patch_set_data(multihash, data) do
-        setup_multipart_form(data) |> request_post("/object/patch/set-data?arg=", multihash)
+        setup_multipart_form(data) |> request_post("/object/patch/set-data?arg=" <> multihash)
     end
 
     def object_put(data), do: setup_multipart_form(data) |> request_post("/object/put")
