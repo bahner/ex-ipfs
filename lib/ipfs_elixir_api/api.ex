@@ -1,4 +1,15 @@
 defmodule IpfsElixir.Api do
+    @moduledoc """
+        IpfsElixir.Api is where the main commands of the 
+        IPFS API reside. Alias this library and you can run
+        the commands via Api.<cmd_name>.  
+
+        ## Examples
+
+        iex> alias IpfsElixir.Api
+        iex> Api.get_cmd("Multihash_key")
+        <<0, 19, 148, 0, ... >>
+  """
 
     ## TODO: add (files, name, object, pin, p2p,
     ##  filestore, shutdown, repo, resolve, stats, tar)

@@ -1,6 +1,12 @@
 defmodule IpfsConnection do
     use Tesla
     alias Tesla.Multipart
+
+    @moduledoc """
+        IpfsConnection is the main connector for the API.
+        This module is mainly in place to setup the Tesla Middleware
+        and the functions that modify the web responses and requests. 
+  """
     #add struct for later use. 
     
     #Connection manager.
