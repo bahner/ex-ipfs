@@ -10,7 +10,7 @@ defmodule IpfsElixir.Api do
         <<0, 19, 148, 0, ... >>
   """
 
-    ## TODO: add (files, name, p2p, filestore, shutdown, repo, resolve, stats, tar)
+    ## TODO: add (p2p, shutdown, stats, tar)
 
     import IpfsConnection
     
@@ -41,6 +41,8 @@ defmodule IpfsElixir.Api do
 
     #Ls cmd TODO  Implement proper Json Format.
     def ls_cmd(multihash) when is_bitstring(multihash), do: request_get("/ls?arg=", multihash)
+
+    def resolve(multihash), do: request_get("/resolve?arg=", multihash)
 
     def bitswap_ledger(peer_id), do: request_get("/bitswap/ledger?arg=", peer_id)
         
@@ -88,6 +90,14 @@ defmodule IpfsElixir.Api do
 
     ##Currently throws an error due to the size of JSON response.
     def repo_verify, do: request_get("/repo/verify")
+
+    def repo_version, do: request_get("/repo/version")
+
+    def repo_stat, do: request_get("/repo/stat")
+
+    def repo_gc, do: request_get("/repo/gc")
+
+    def repo_fsck, do: request_get("/repo/fsck")
 
     def ping(id), do: request("/ping?arg=", id)
 
@@ -199,7 +209,37 @@ defmodule IpfsElixir.Api do
     end
     
     def pin_rm(object), do: request_get("/pin/rm?arg=", object)
+
+    def file_ls(object), do: request_get("/file/ls?arg=", object)
+
+    def files_cp(source, dest), do: request_get("/files/cp?arg=" <> source <>  "&arg=" <> dest)
     
+    def files_flush, do: request_get("/files/flush")
+
+    def files_ls, do: request_get("/files/ls")
+
+    def files_mkdir(path), do: request_get("/files/mkdir?arg=", path)
+
+    def files_mv(source, dest), do: request_get("/files/mv?arg=" <> source <> "&arg=" <> dest)
+
+    def files_read(path), do: request_get("/files/read?arg=", path)
+
+    def files_rm(path), do: request_get("/files/rm?arg=", path)
+
+    def files_stat(path), do: request_get("/files/stat?arg=", path)
+
+    def files_write(path, data), do: setup_multipart_form(data) |> request_post("/files/write?arg=" <> path)
+
+    def filestore_dups, do: request_get("/filestore/dups")
+
+    def filestore_ls, do: request_get("/filestore/ls")
+
+    def filestore_verify, do: request_get("/filestore/verify")
+
+    def name_publish(path), do: request_get("/name/publish?arg=", path) 
+
+    def name_resolve, do: request_get("/name/resolve")
+
     defp shutdown(pid, term \\ []) do
         Process.exit(pid, term)
     end

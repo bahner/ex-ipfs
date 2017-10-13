@@ -4,7 +4,7 @@ defmodule IpfsElixir.Mixfile do
   def project do
     [
       app: :ipfs_elixir,
-      version: "0.0.6",
+      version: "0.0.7",
       elixir: "~> 1.5",
       name: "IPFS Elixir",
       start_permanent: Mix.env == :prod,
