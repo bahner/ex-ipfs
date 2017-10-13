@@ -1,8 +1,7 @@
 defmodule IpfsElixir.Api do
     @moduledoc """
-        IpfsElixir.Api is where the main commands of the 
-        IPFS API reside. Alias this library and you can run
-        the commands via Api.<cmd_name>.  
+  IpfsElixir.Api is where the main commands of the IPFS API reside. 
+  Alias this library and you can run the commands via Api.<cmd_name>.  
 
         ## Examples
 
