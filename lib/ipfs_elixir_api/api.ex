@@ -10,8 +10,6 @@ defmodule IpfsElixir.Api do
         <<0, 19, 148, 0, ... >>
   """
 
-    ## TODO: add (p2p, shutdown, stats, tar)
-
     import IpfsConnection
     
     # starts the ipfs daemon asynchronously on a elixir thread. 
@@ -83,6 +81,14 @@ defmodule IpfsElixir.Api do
     def dag_put(file_path), do: setup_multipart_form(file_path) |> request_post("/dag/put")
 
     def swarm_peers, do: request_get("/swarm/peers")
+
+    def swarm_addrs_local, do: request_get("/swarm/addrs/local")
+
+    def swarm_connect(multihash), do: request_get("/swarm/connect?arg=", multihash)
+
+    def swarm_filters_add(multihash), do: request_get("/swarm/filters/add?arg=", multihash)
+
+    def swarm_filters_rm(multihash), do: request_get("/swarm/filters/rm?arg=", multihash)
 
     def swarm_disconnect(multihash) when is_bitstring(multihash), do: request("/swarm/disconnect?arg=", multihash)
 
@@ -240,23 +246,19 @@ defmodule IpfsElixir.Api do
 
     def name_resolve, do: request_get("/name/resolve")
 
+    def tar_add(file), do: setup_multipart_form(file) |> request_post("/tar/add")
+
+    def tar_cat(path), do: request_get("/tar/cat?arg=", path)
+
+    def stats_bitswap, do: request_get("/stats/bitswap")
+
+    def stats_bw, do: request_get("/stats/bw")
+
+    def stats_repo, do: request_get("/stats/repo")
+
     defp shutdown(pid, term \\ []) do
         Process.exit(pid, term)
     end
-
-    defp raw_bin_to_string(raw) do
-        codepoints = String.codepoints(raw)
-        val = Enum.reduce(codepoints, fn(w, r) ->
-            cond do
-                String.valid?(w) ->
-                    r <> w
-                true ->
-                    << parsed :: 8 >> = w
-                    r <> << parsed :: utf8 >>
-            end
-        end)
-    end
-
 
     defp request_post(file, path) do
         case post(path, file) do
