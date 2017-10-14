@@ -13,7 +13,7 @@ Add Ipfs_elixir to your `mix.exs` dependencies:
 ```elixir
 def deps do
 [
-    {:ipfs_elixir, "~> 0.0.7"},
+    {:ipfs_elixir, "~> 0.1.0"},
 ]
 end
 ```
