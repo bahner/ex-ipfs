@@ -6,7 +6,7 @@ defmodule MyspaceIPFS.Api do
         ## Examples
 
         iex> alias MyspaceIPFS.Api
-        iex> Api.get_cmd("Multihash_key")
+        iex> Api.get("Multihash_key")
         <<0, 19, 148, 0, ... >>
   """
 
@@ -22,23 +22,23 @@ defmodule MyspaceIPFS.Api do
         end
     end
 
-    # TODO: add various flags to the add_cmd.
-    @spec add_cmd(binary) :: any
-    def add_cmd(file_path), do: setup_multipart_form(file_path) |> request_post("/add")
+    # TODO: add various flags to the add.
+    @spec add(binary) :: any
+    def add(file_path), do: setup_multipart_form(file_path) |> request_post("/add")
 
     @spec id :: any
     def id, do: request_get("/id")
 
-    ## TODO: add get_cmd for output, archive, compress and compression level
-    @spec get_cmd(binary) :: any
-    def get_cmd(multihash) when is_bitstring(multihash), do: request_get("/get?arg=", multihash)
+    ## TODO: add get for output, archive, compress and compression level
+    @spec get(binary) :: any
+    def get(multihash) when is_bitstring(multihash), do: request_get("/get?arg=", multihash)
 
-    @spec cat_cmd(binary) :: any
-    def cat_cmd(multihash) when is_bitstring(multihash), do: request_get("/cat?arg=", multihash)
+    @spec cat(binary) :: any
+    def cat(multihash) when is_bitstring(multihash), do: request_get("/cat?arg=", multihash)
 
     #Ls cmd TODO  Implement proper Json Format.
-    @spec ls_cmd(binary) :: any
-    def ls_cmd(multihash) when is_bitstring(multihash), do: request_get("/ls?arg=", multihash)
+    @spec ls(binary) :: any
+    def ls(multihash) when is_bitstring(multihash), do: request_get("/ls?arg=", multihash)
 
     @spec resolve(binary) :: any
     def resolve(multihash), do: request_get("/resolve?arg=", multihash)

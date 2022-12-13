@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure your application as:
 #
-#     config :ipfs_elixir_api, key: :value
+#     config :myspace_ipfs, key: :value
 #
 # and access this configuration in your application as:
 #
-#     Application.get_env(:ipfs_elixir_api, :key)
+#     Application.get_env(:myspace_ipfs, :key)
 #
 # You can also configure a 3rd-party app:
 #
@@ -28,3 +28,5 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+config :myspace_ipfs,
+  experimental: false
