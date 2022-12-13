@@ -353,27 +353,39 @@ defmodule MyspaceIPFS.Api do
         Process.exit(pid, term)
     end
 
-    defp request_post(file, path) do
-        case post(path, file) do
-            {:ok, result} -> result |> Map.fetch!(:body)
-            {:error, reason} -> reason
+    # IPCS API HTTP Status Codes
+    # Ref. https://docs.ipfs.tech/reference/kubo/rpc/#http-status-codes
+    #       for any other status codes.
+    # 200 - The request was processed or is being processed (streaming)
+    # 500 - RPC endpoint returned an error
+    # 400 - Malformed RPC, argument type error, etc
+    # 403 - RPC call forbidden
+    # 404 - RPC endpoint doesn't exist
+    # 405 - HTTP Method Not Allowed
+
+    defp handle_response(response) do
+        case response do
+            {:ok, %Tesla.Env{status: 200, body: body}} -> {:ok, body}
+            {:ok, %Tesla.Env{status: 500, body: body}} -> {:server_error, body}
+            {:ok, %Tesla.Env{status: 400, body: body}} -> {:client_error, body}
+            {:ok, %Tesla.Env{status: 403, body: body}} -> {:forbidden, body}
+            {:ok, %Tesla.Env{status: 404, body: body}} -> {:missing, body}
+            {:ok, %Tesla.Env{status: 405, body: body}} -> {:not_allowed, body}
         end
+    end
+
+    defp request_post(file, path) do
+        handle_response(post(path, file))
     end
 
     defp request_get(path) do
-        post(path, "")
-        case post(path, "") do
-            {:ok, result} -> result |> Map.fetch!(:body)
-            {:error, reason} -> reason
-        end
+        handle_response(post(path, ""))
     end
 
     defp request_get(path, arg) do
-        case post(path <> arg, "") do
-            {:ok, result} -> result |> Map.fetch!(:body)
-            {:error, reason} -> reason
-        end
+        handle_response(post(path <> arg, ""))
     end
+
 
     # defp write_file(raw, multihash) do
     #   File.write(multihash, raw, [:write, :utf8])
