@@ -259,30 +259,23 @@ defmodule MyspaceIPFS.Api do
 
     defp request_post(file, path) do
         case post(path, file) do
-            %Tesla.Env{status: 200, body: body} -> body
-            %Tesla.Env{status: 500, body: body} -> body
-            %Tesla.Env{status: 400, body: body} -> body
-            %Tesla.Env{status: 404} -> "Error: 404 page not found."
+            {:ok, result} -> result |> Map.fetch!(:body)
+            {:error, reason} -> reason
         end
     end
 
     defp request_get(path) do
+        post(path, "")
         case post(path, "") do
-            ## TODO: add more cases.
-            %Tesla.Env{status: 200, body: body} -> body
-            %Tesla.Env{status: 500, body: body} -> body
-            %Tesla.Env{status: 400, body: body} -> body
-            %Tesla.Env{status: 404} -> "Error: 404 page not found."
+            {:ok, result} -> result |> Map.fetch!(:body)
+            {:error, reason} -> reason
         end
     end
 
     defp request_get(path, arg) do
         case post(path <> arg, "") do
-            ## TODO: add more cases.
-            %Tesla.Env{status: 200, body: body} -> body
-            %Tesla.Env{status: 500, body: body} -> body
-            %Tesla.Env{status: 400, body: body} -> body
-            %Tesla.Env{status: 404} -> "Error: 404 page not found."
+            {:ok, result} -> result |> Map.fetch!(:body)
+            {:error, reason} -> reason
         end
     end
 
