@@ -29,9 +29,6 @@ defmodule MyspaceIPFS.Api do
     @spec id :: any
     def id, do: request_get("/id")
 
-    @spec dns(binary) :: any
-    def dns(arg) when is_bitstring(arg), do: request_get("/dns?arg=", arg)
-
     ## TODO: add get_cmd for output, archive, compress and compression level
     @spec get_cmd(binary) :: any
     def get_cmd(multihash) when is_bitstring(multihash), do: request_get("/get?arg=", multihash)
@@ -134,9 +131,6 @@ defmodule MyspaceIPFS.Api do
     @spec repo_gc :: any
     def repo_gc, do: request_get("/repo/gc")
 
-    @spec repo_fsck :: any
-    def repo_fsck, do: request_get("/repo/fsck")
-
     @spec ping(any) :: none
     def ping(id), do: request("/ping?arg=", id)
 
@@ -170,7 +164,7 @@ defmodule MyspaceIPFS.Api do
     #Update function  - takes in the current args for update.
     @spec update(binary) :: binary
     def update(args) when is_bitstring(args) do
-        res = request_get("/update?arg=", args)
+        {:ok, res} = request_get("/update?arg=", args)
         res.body|> String.replace(~r/\r|\n/, "")
     end
 
@@ -188,21 +182,6 @@ defmodule MyspaceIPFS.Api do
 
     @spec tour_restart :: any
     def tour_restart, do: request_get("/tour/restart")
-
-    @spec dht_find_peer(binary) :: any
-    def dht_find_peer(arg), do: request_get("/dht/findpeer?arg=", arg)
-
-    @spec dht_find_provs(binary) :: any
-    def dht_find_provs(arg), do: request_get("/dht/findprovs?arg=", arg)
-
-    @spec dht_get(binary) :: any
-    def dht_get(arg), do: request_get("/dht/get?arg=", arg)
-
-    @spec dht_provide(binary) :: any
-    def dht_provide(arg), do: request_get("/dht/provide?arg=", arg)
-
-    @spec dht_put(binary, binary) :: any
-    def dht_put(key, value), do: request_get("/dht/put?arg=" <> key <> "&arg=" <> value)
 
     @spec dht_query(binary) :: any
     def dht_query(peer_id), do: request_get("/dht/query?arg=", peer_id)
@@ -231,49 +210,6 @@ defmodule MyspaceIPFS.Api do
     @spec key_list :: any
     def key_list, do: request_get("/key/list")
 
-    @spec object_data(binary) :: any
-    def object_data(multihash), do: request_get("/object/data?arg=", multihash)
-
-    @spec object_diff(binary, binary) :: any
-    def object_diff(obj_a, obj_b), do: request_get("/object/diff?arg=" <> obj_a <> "&arg=" <> obj_b)
-
-    @spec object_get(binary) :: any
-    def object_get(multihash), do: request_get("/object/get?arg=", multihash)
-
-    @spec object_links(binary) :: any
-    def object_links(multihash), do: request_get("/object/links?arg=", multihash)
-
-    @spec object_new(any) :: any
-    def object_new(template \\ "") do
-        if template != "" do
-            request_get("/object/new?arg=", template)
-        else
-            request_get("/object/new")
-        end
-    end
-
-    @spec object_patch_add_link(binary, binary, binary) :: any
-    def object_patch_add_link(multihash, name, object), do: request_get("/object/patch/add-link?arg=" <> multihash <>
-                                                                   "&arg=" <> name <> "&arg=" <> object)
-    @spec object_patch_append_data(binary, binary) :: any
-    def object_patch_append_data(multihash, data) do
-        setup_multipart_form(data) |> request_post("/object/patch/append-data?arg=" <> multihash)
-    end
-
-    @spec object_patch_rm_link(binary, binary) :: any
-    def object_patch_rm_link(multihash, name), do: request_get("/object/patch/rm-link?arg=" <> multihash <> "&arg=", name)
-
-    @spec object_patch_set_data(binary, binary) :: any
-    def object_patch_set_data(multihash, data) do
-        setup_multipart_form(data) |> request_post("/object/patch/set-data?arg=" <> multihash)
-    end
-
-    @spec object_put(binary) :: any
-    def object_put(data), do: setup_multipart_form(data) |> request_post("/object/put")
-
-    @spec object_stat(binary) :: any
-    def object_stat(multihash), do: request_get("/object/stat?arg=", multihash)
-
     @spec pin_add(binary) :: any
     def pin_add(object), do: request_get("/pin/add?arg=", object)
 
@@ -288,9 +224,6 @@ defmodule MyspaceIPFS.Api do
 
     @spec pin_rm(binary) :: any
     def pin_rm(object), do: request_get("/pin/rm?arg=", object)
-
-    @spec file_ls(binary) :: any
-    def file_ls(object), do: request_get("/file/ls?arg=", object)
 
     @spec files_cp(binary, binary) :: any
     def files_cp(source, dest), do: request_get("/files/cp?arg=" <> source <>  "&arg=" <> dest)
@@ -333,12 +266,6 @@ defmodule MyspaceIPFS.Api do
 
     @spec name_resolve :: any
     def name_resolve, do: request_get("/name/resolve")
-
-    @spec tar_add(binary) :: any
-    def tar_add(file), do: setup_multipart_form(file) |> request_post("/tar/add")
-
-    @spec tar_cat(binary) :: any
-    def tar_cat(path), do: request_get("/tar/cat?arg=", path)
 
     @spec stats_bitswap :: any
     def stats_bitswap, do: request_get("/stats/bitswap")
