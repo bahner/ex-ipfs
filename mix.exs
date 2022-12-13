@@ -26,6 +26,7 @@ defmodule MyspaceIPFS.Mixfile do
     [
       {:tesla, "~> 1.4.4"},
       {:poison, "~> 5.0"},
+      {:jason, "~> 1.4.0"},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false}
     ]
   end
