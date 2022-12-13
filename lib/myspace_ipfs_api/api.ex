@@ -1,11 +1,11 @@
-defmodule MyspaceIPFS.Api do
+defmodule MyspaceIPFS.API do
     @moduledoc """
-  MyspaceIPFS.Api is where the main commands of the IPFS API reside.
-  Alias this library and you can run the commands via Api.<cmd_name>.
+  MyspaceIPFS.API is where the main commands of the IPFS API reside.
+  Alias this library and you can run the commands via API.<cmd_name>.
 
         ## Examples
 
-        iex> alias MyspaceIPFS.Api
+        iex> alias MyspaceIPFS.API, as: Api
         iex> Api.get("Multihash_key")
         <<0, 19, 148, 0, ... >>
   """
@@ -13,6 +13,7 @@ defmodule MyspaceIPFS.Api do
     import MyspaceIPFS.Connection
 
     # TODO: add ability to add options to the ipfs daemon command.
+    @spec start_shell(any, any) :: true | pid
     def start_shell(start? \\ true, flag \\ []) do
         {:ok, pid} = Task.start(fn -> System.cmd("ipfs", ["daemon"]) end)
         if start? == false do
