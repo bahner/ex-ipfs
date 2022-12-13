@@ -1,4 +1,4 @@
-defmodule IpfsConnection do
+defmodule MyspaceIPFS.Connection do
     use Tesla
     alias Tesla.Multipart
 

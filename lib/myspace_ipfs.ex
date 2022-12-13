@@ -1,4 +1,4 @@
-defmodule IpfsElixir do
+defmodule MyspaceIPFS do
    @moduledoc """
   IPFS (the InterPlanetary File Syste
   new hypermedia distribution protocol, addressed by 
