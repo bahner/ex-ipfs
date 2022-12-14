@@ -9,11 +9,11 @@ Thus far 65% of the functionality has been implmented in this particular API.  M
 
 # Install
 
-Add Ipfs_elixir to your `mix.exs` dependencies:
+Add myspace_ipfs to your `mix.exs` dependencies:
 ```elixir
 def deps do
 [
-    {:ipfs_elixir, "~> 0.1.0"},
+    {:myspace_ipfs, git: "https://github.com/bahner/myspace-ipfs.git"},
 ]
 end
 ```
