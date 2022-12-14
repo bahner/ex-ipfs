@@ -7,7 +7,7 @@ defmodule MyspaceIPFS.Mixfile do
       version: "0.1.0",
       elixir: "~> 1.4",
       name: "Myspace IPFS",
-      start_permanent: Mix.env == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
       description: description(),

@@ -9,7 +9,7 @@ defmodule MyspaceIPFSApiTest do
   """
   use ExUnit.Case, async: true
 
-  alias MyspaceIPFS.API, as: Api
+  alias MyspaceIPFS.Api, as: Api
 
   test "id should return a complete map" do
     {:ok, response} = Api.id()
@@ -34,10 +34,5 @@ defmodule MyspaceIPFSApiTest do
     assert bin["Code"] === 0
   end
 
-
-
-
-
-
-  ##TODO: add Unit testing
+  ## TODO: add Unit testing
 end

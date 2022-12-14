@@ -1,5 +1,5 @@
 defmodule MyspaceIPFS do
-   @moduledoc """
+  @moduledoc """
   IPFS (the InterPlanetary File Syste
   new hypermedia distribution protocol, addressed by 
   content and identities. IPFS enables the creation of 
