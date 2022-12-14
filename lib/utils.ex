@@ -39,14 +39,20 @@ defmodule MyspaceIPFS.Utils do
   #     File.write(multihash, raw, [:write, :utf8])
   # end
 
+  @spec request_post(any, binary) ::
+          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def request_post(file, path) do
     handle_response(post(path, file))
   end
 
+  @spec request_get(binary) ::
+          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def request_get(path) do
     handle_response(post(path, ""))
   end
 
+  @spec request_get(binary, binary) ::
+          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def request_get(path, arg) do
     handle_response(post(path <> arg, ""))
   end
