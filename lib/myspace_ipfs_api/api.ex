@@ -128,6 +128,4 @@ defmodule MyspaceIPFS.Api do
   defdelegate swarm_filters, to: Swarm, as: :filters
   defdelegate swarm_filters_add(addr), to: Swarm, as: :filters_add
   defdelegate swarm_filters_rm(addr), to: Swarm, as: :filters_rm
-
-
 end

@@ -11,7 +11,8 @@ defmodule MyspaceIPFS.Api.Swarm do
   @spec addrs :: {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def addrs, do: request_get("/swarm/addrs")
 
-  @spec addrs_listen :: {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
+  @spec addrs_listen ::
+          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def addrs_listen, do: request_get("/swarm/addrs/listen")
 
   @spec addrs_local ::
@@ -22,10 +23,10 @@ defmodule MyspaceIPFS.Api.Swarm do
           {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def connect(multihash), do: request_get("/swarm/connect?arg=", multihash)
 
-    @spec disconnect(binary) ::
-            {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
-    def disconnect(multihash) when is_bitstring(multihash),
-      do: request_get("/swarm/disconnect?arg=", multihash)
+  @spec disconnect(binary) ::
+          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
+  def disconnect(multihash) when is_bitstring(multihash),
+    do: request_get("/swarm/disconnect?arg=", multihash)
 
   @spec filters ::
           {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
