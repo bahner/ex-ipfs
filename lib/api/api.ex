@@ -29,10 +29,18 @@ defmodule MyspaceIPFS.Api do
   end
 
   alias MyspaceIPFS.Api.Bitswap
+  @spec bitswap_ledger(binary) ::
+          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   defdelegate bitswap_ledger(peer_id), to: Bitswap, as: :ledger
-  defdelegate bitswap_stat, to: Bitswap, as: :stat
-  defdelegate bitswap_unwant(keys), to: Bitswap, as: :unwant
+  @spec bitswap_stat(boolean, boolean) ::
+          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
+  defdelegate bitswap_stat(verbose, human), to: Bitswap, as: :stat
+  @spec bitswap_wantlist(any) ::
+          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   defdelegate bitswap_wantlist(peer), to: Bitswap, as: :wantlist
+  @spec bitswap_reprovide ::
+          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
+  defdelegate bitswap_reprovide, to: Bitswap, as: :reprovide
 
   alias MyspaceIPFS.Api.Block
   defdelegate block_get(multihash), to: Block, as: :get
