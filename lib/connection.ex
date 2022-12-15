@@ -12,7 +12,7 @@ defmodule MyspaceIPFS.Connection do
 
   # Connection manager.
 
-  plug(Tesla.Middleware.BaseUrl, "http://localhost:5001/api/v0")
+  plug(Tesla.Middleware.BaseUrl, Application.get_env(:myspace_ipfs, :baseurl))
   plug(Tesla.Middleware.JSON)
 
   def setup_multipart_form(file_path) do
