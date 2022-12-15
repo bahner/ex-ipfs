@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Dht do
+defmodule MyspaceIPFS.Api.Network.Dht do
   @moduledoc """
   MyspaceIPFS.Api.Dht is where the dht commands of the IPFS API reside.
   """

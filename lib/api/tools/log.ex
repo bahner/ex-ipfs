@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Log do
+defmodule MyspaceIPFS.Api.Tools.Log do
   @moduledoc """
   MyspaceIPFS.Api.Log is where the log commands of the IPFS API reside.
   """

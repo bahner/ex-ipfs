@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Bootstrap do
+defmodule MyspaceIPFS.Api.Network.Bootstrap do
   @moduledoc """
   MyspaceIPFS.Api is where the bootstrap commands of the IPFS API reside.
   """

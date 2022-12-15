@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Multilevel do
+defmodule MyspaceIPFS.Api.Codecs.Multilevel do
   @moduledoc """
   MyspaceIPFS.Api is where the multilevel commands of the IPFS API reside.
   """

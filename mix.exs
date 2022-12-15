@@ -4,8 +4,8 @@ defmodule MyspaceIPFS.Mixfile do
   def project do
     [
       app: :myspace_ipfs,
-      version: "0.1.0",
-      elixir: "~> 1.4",
+      version: "0.0.1",
+      elixir: "~> 1.12",
       name: "Myspace IPFS",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -26,19 +26,19 @@ defmodule MyspaceIPFS.Mixfile do
     [
       {:tesla, "~> 1.4.4"},
       {:jason, "~> 1.4.0"},
-      {:ex_doc, "~> 0.16", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.29", only: :dev, runtime: false}
     ]
   end
 
   defp description() do
-    "An IPFS API wrapper"
+    "An IPFS RPC API wrapper"
   end
 
   defp package do
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*", "AUTHORS*"],
       maintainers: ["Lars Bahner"],
-      licenses: ["Apache 2.0"],
+      licenses: ["Apache-2.0"],
       links: %{"GitHub" => "https://github.com/bahner/myspace-ipfs"}
     ]
   end
