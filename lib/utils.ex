@@ -22,26 +22,18 @@ defmodule MyspaceIPFS.Utils do
   # end
 
   # FIXME: Cleaup this mess.
-  @spec request_post(any, binary) ::
-          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def request_post(file, path) do
     post(path, file)
   end
 
-  @spec request_get(binary) ::
-          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def request_get(path) do
     post(path, "")
   end
 
-  @spec request_get(binary, binary) ::
-          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def request_get(path, arg) do
     post(path <> arg, "")
   end
 
-  @spec request_get(binary, binary, map) ::
-          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def request_get(path, arg, opts) do
     post(path <> arg, "", opts)
   end
