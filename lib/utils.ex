@@ -10,50 +10,39 @@ defmodule MyspaceIPFS.Utils do
       iex> Api.get("Multihash_key")
       <<0, 19, 148, 0, ... >>
   """
+  #alias Hex.Application
 
   import MyspaceIPFS.Connection
-
-  # IPCS API HTTP Status Codes
-  # Ref. https://docs.ipfs.tech/reference/kubo/rpc/#http-status-codes
-  #       for any other status codes.
-  # 200 - The request was processed or is being processed (streaming)
-  # 500 - RPC endpoint returned an error
-  # 400 - Malformed RPC, argument type error, etc
-  # 403 - RPC call forbidden
-  # 404 - RPC endpoint doesn't exist
-  # 405 - HTTP Method Not Allowed
-
-  defp handle_response(response) do
-    case response do
-      {:ok, %Tesla.Env{status: 200, body: body}} -> {:ok, body}
-      {:ok, %Tesla.Env{status: 500, body: body}} -> {:server_error, body}
-      {:ok, %Tesla.Env{status: 400, body: body}} -> {:client_error, body}
-      {:ok, %Tesla.Env{status: 403, body: body}} -> {:forbidden, body}
-      {:ok, %Tesla.Env{status: 404, body: body}} -> {:missing, body}
-      {:ok, %Tesla.Env{status: 405, body: body}} -> {:not_allowed, body}
-    end
-  end
+  @debug Application.get_env(:myspace_ipfs, :debug)
+  @baseurl Application.get_env(:myspace_ipfs, :baseurl)
 
   # Not sure how and when to use this.
-  # defp write_file(raw, multihash) do
+  # def write_file(raw, multihash) do
   #     File.write(multihash, raw, [:write, :utf8])
   # end
 
+  # FIXME: Cleaup this mess.
   @spec request_post(any, binary) ::
           {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def request_post(file, path) do
-    handle_response(post(path, file))
+    post(path, file)
   end
 
   @spec request_get(binary) ::
           {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def request_get(path) do
-    handle_response(post(path, ""))
+    post(path, "")
   end
 
   @spec request_get(binary, binary) ::
           {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def request_get(path, arg) do
-    handle_response(post(path <> arg, ""))
+    post(path <> arg, "")
+  end
+
+  @spec request_get(binary, binary, map) ::
+          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
+  def request_get(path, arg, opts) do
+    post(path <> arg, "", opts)
   end
 end

@@ -14,6 +14,7 @@ defmodule MyspaceIPFS.Connection do
 
   plug(Tesla.Middleware.BaseUrl, Application.get_env(:myspace_ipfs, :baseurl))
   plug(Tesla.Middleware.JSON)
+  plug(Tesla.Middleware.Logger)
 
   def setup_multipart_form(file_path) do
     Multipart.new()

@@ -4,5 +4,6 @@ config :myspace_ipfs,
   baseurl: "http://localhost:5001/api/v0",
   experimental: true,
   deprecated: false,
-  ipfs_path: "/ipfs",
-  ipns_path: "/ipns"
+  debug: false
+
+import_config "#{Mix.env}.exs"
