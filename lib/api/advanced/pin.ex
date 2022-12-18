@@ -4,18 +4,15 @@ defmodule MyspaceIPFS.Api.Advanced.Pin do
   """
   import MyspaceIPFS
 
-  @spec add(binary) :: any
-  def add(object), do: post_query("/pin/add?arg=", object)
+  def add(object), do: post_query("/pin/add?arg=" <> object)
 
-  @spec ls(any) :: any
   def ls(object \\ "") do
     if object != "" do
-      post_query("/pin/ls?arg=", object)
+      post_query("/pin/ls?arg=" <> object)
     else
       post_query("/pin/ls")
     end
   end
 
-  @spec rm(binary) :: any
-  def rm(object), do: post_query("/pin/rm?arg=", object)
+  def rm(object), do: post_query("/pin/rm?arg=" <> object)
 end

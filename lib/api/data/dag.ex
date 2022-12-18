@@ -4,7 +4,7 @@ defmodule MyspaceIPFS.Api.Data.Dag do
   """
   import MyspaceIPFS
 
-  def get(object), do: post_query("/dag/get?arg=", object)
+  def get(object), do: post_query("/dag/get?arg=" <> object)
 
   def put(filename, opts \\ []), do:
     post_file("/dag/put", filename, opts)

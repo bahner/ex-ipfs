@@ -41,7 +41,6 @@ defmodule MyspaceIPFS do
   dependent on the endpoint that will get hit.
   NB! This is not a GET request, but a POST request. IPFS uses POST requests.
   """
-  @spec post_query(path, list) :: result
   def post_query(path, params \\ []) do
     handle_response(post(@baseurl <> path, "", params))
   end
@@ -49,7 +48,6 @@ defmodule MyspaceIPFS do
   @doc """
   POST request without JSON Middleware.
   """
-  @spec post_query_plain(path, list) :: result
   def post_query_plain(path, params \\ []) do
     handle_response(Tesla.post(@baseurl <> path, "", params))
   end

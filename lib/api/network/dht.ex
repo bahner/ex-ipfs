@@ -11,6 +11,5 @@ defmodule MyspaceIPFS.Api.Network.Dht do
   # NB: provide is deprecated.
   # NB: put is deprecated.
 
-  @spec query(binary) :: any
-  def query(peer_id), do: post_query("/dht/query?arg=", peer_id)
+  def query(peer_id), do: post_query("/dht/query?arg=" <> peer_id)
 end

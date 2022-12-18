@@ -4,9 +4,7 @@ defmodule MyspaceIPFS.Api.Tools.Commands do
   """
   import MyspaceIPFS
 
-  @spec commands :: any
   def commands, do: post_query("/commands")
 
-  @spec completion(binary) :: any
   def completion(shell), do: post_query("/commands/completion/" <> shell)
 end

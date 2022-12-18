@@ -4,13 +4,10 @@ defmodule MyspaceIPFS.Api.Tools.Log do
   """
   import MyspaceIPFS
 
-  @spec level(binary, binary) :: any
   def level(subsys, level),
     do: post_query("/log/level?arg=" <> subsys <> "&arg=" <> level)
 
-  @spec ls :: any
   def ls, do: post_query("/log/ls")
 
-  @spec tail :: any
   def tail, do: post_query("/log/tail")
 end

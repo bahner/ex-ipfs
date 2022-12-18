@@ -4,9 +4,7 @@ defmodule MyspaceIPFS.Api.Advanced.Key do
   """
   import MyspaceIPFS
 
-  @spec gen(binary) :: any
-  def gen(key), do: post_query("/key/gen?arg=", key)
+  def gen(key), do: post_query("/key/gen?arg=" <> key)
 
-  @spec list :: any
   def list, do: post_query("/key/list")
 end

@@ -10,7 +10,6 @@ defmodule MyspaceIPFS.Api.Basic.Refs do
   @doc """
   Get a list of all local references.
   """
-  @spec local :: list
   def local,
     do:
       post_query_plain("/refs/local")

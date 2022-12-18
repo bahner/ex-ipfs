@@ -4,9 +4,7 @@ defmodule MyspaceIPFS.Api.Advanced.Name do
   """
   import MyspaceIPFS
 
-  @spec publish(binary) :: any
-  def publish(path), do: post_query("/name/publish?arg=", path)
+  def publish(path), do: post_query("/name/publish?arg=" <> path)
 
-  @spec resolve :: any
   def resolve, do: post_query("/name/resolve")
 end
