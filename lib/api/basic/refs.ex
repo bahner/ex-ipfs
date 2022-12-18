@@ -3,23 +3,28 @@ defmodule MyspaceIPFS.Api.Basic.Refs do
   MyspaceIPFS.Api is where the main commands of the IPFS API reside.
   """
 
-  import MyspaceIPFS.Utils
-  @refs_allowed_formats ["<dst>", "<src>", "<linkname>"]
+  import MyspaceIPFS
+
+  @type multipart :: Tesla.Multipart.t() | binary
 
   @doc """
   Get a list of all local references.
   """
-  @spec local :: {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
-  def local, do: request_get("/refs/local")
-
- defguardp is_allowed_refs_format(format)
-            when format in @refs_allowed_formats
+  @spec local :: list
+  def local,
+    do:
+      post_query_plain("/refs/local")
+      |> extract_refs()
 
   @doc """
   Get a list of all references from a given object.
 
-  ## Parameters
-  - `multihash`: The hash of the object to list references from.
+  # Parameters
+  multihash: The hash or IPNS name of the object to list references from.
+  opts: A list of options.
+
+  ## opts
+  opts is a list of tuples that can contain the following values:
   - `format`: The format in which the output should be returned.
     Allowed values are `<dst>`, `<src>` and `<linkname>`a.
   - `edges`: If true, the output will contain edge objects.
@@ -27,24 +32,45 @@ defmodule MyspaceIPFS.Api.Basic.Refs do
   - `recursive`: If true, the output will contain recursive objects.
   - `max_depth`: The maximum depth of the output.
   """
-  @spec refs(binary, binary, any, any, any, integer) ::
-          {:client_error | :forbidden | :missing | :not_allowed | :ok | :server_error, any}
   def refs(
         multihash,
-        format \\ "<dst>",
-        edges \\ true,
-        unique \\ true,
-        recursive \\ true,
-        max_depth \\ 1
+        opts \\ []
       )
-      when is_bitstring(multihash) and
-             is_bitstring(format) and
-             #is_allowed_refs_format(format) and
-             is_boolean(edges) and
-             is_boolean(unique) and
-             is_boolean(recursive) and
-             is_integer(max_depth) do
-    path = "/refs?arg=#{multihash}&format=#{format}&edges=#{to_string(edges)}&unique=#{to_string(unique)}&recursive=#{to_string(recursive)}&max-depth=#{to_string(max_depth)}"
-    request_get(path)
+      when is_binary(multihash) and
+             is_list(opts) do
+    path = "/refs?arg=" <> multihash
+
+    extract_refs(post_query_plain(path, query: opts))
+  end
+
+  defp is_allowed_ref(word) do
+    meta_chars = ["Ref", "u003e", "Err"]
+
+    if word in meta_chars do
+      false
+    else
+      true
+    end
+  end
+
+  defp extract_refs_from_list(list) do
+    list
+    |> Enum.filter(fn x -> is_allowed_ref(x) end)
+  end
+
+  defp extract_refs(binary) do
+    binary
+    # Each result is a line.
+    |> String.split("\n")
+    # Extract a list of all thge words in each line.
+    |> Enum.map(fn x -> Regex.scan(~r/\w+/, x) end)
+    # Now flatten the list, so we only have one list per line
+    |> Enum.map(fn x -> List.flatten(x) end)
+    # Extract the refs from the list.
+    |> Enum.map(fn x -> extract_refs_from_list(x) end)
+    # Convert each line to a tuple. Each tuple may contain multiple refs.
+    |> Enum.map(fn x -> List.to_tuple(x) end)
+    # Remove empty tuples.
+    |> Enum.filter(fn x -> x != {} end)
   end
 end

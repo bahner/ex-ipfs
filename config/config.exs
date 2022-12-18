@@ -6,4 +6,4 @@ config :myspace_ipfs,
   deprecated: false,
   debug: false
 
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"
