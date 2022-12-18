@@ -2,16 +2,15 @@ defmodule MyspaceIPFS.Api.Tools.Log do
   @moduledoc """
   MyspaceIPFS.Api.Log is where the log commands of the IPFS API reside.
   """
-
-  import MyspaceIPFS.Utils
+  import MyspaceIPFS
 
   @spec level(binary, binary) :: any
   def level(subsys, level),
-    do: request_get("/log/level?arg=" <> subsys <> "&arg=" <> level)
+    do: post_query("/log/level?arg=" <> subsys <> "&arg=" <> level)
 
   @spec ls :: any
-  def ls, do: request_get("/log/ls")
+  def ls, do: post_query("/log/ls")
 
   @spec tail :: any
-  def tail, do: request_get("/log/tail")
+  def tail, do: post_query("/log/tail")
 end

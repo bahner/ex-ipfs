@@ -102,7 +102,7 @@ defmodule MyspaceIPFS.Api do
 
   defdelegate refs_local, to: Refs, as: :local
 
-  defdelegate refs(multihash, format, edges, unique, recursive, max_depth), to: Refs, as: :refs
+  defdelegate refs(multihash, opts), to: Refs, as: :refs
 
   # alias MyspaceIPFS.Api.Codecs.Cid
   # alias MyspaceIPFS.Api.Codes.Multilevel

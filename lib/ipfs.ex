@@ -63,11 +63,11 @@ defmodule MyspaceIPFS do
     handle_response(post(path, multipart(filename), params))
   end
 
-  defp multipart(file_path) do
+  defp multipart(filename) do
     Multipart.new()
-    |> Multipart.add_file(file_path,
+    |> Multipart.add_file(filename,
       name: "\" file \"",
-      filename: "\"" <> file_path <> "\"",
+      filename: "\"" <> filename <> "\"",
       detect_content_type: true
     )
   end
