@@ -3,3 +3,5 @@ TODO
 
 Make experimental flag and make sure modules honour this
 QA commands against current API.
+
+parse result body when not JSON

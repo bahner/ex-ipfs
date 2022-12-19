@@ -18,18 +18,13 @@ defmodule MyspaceIPFS do
   use Tesla
   alias Tesla.Multipart
 
-  @typedoc "Represents an endpoint path to hit."
-  @type path :: String.t()
-  @typedoc "Identifies content on the IPFS network using a multihash string."
-  @type cid :: String.t()
-  @typedoc "Represents an absolute filename existing on disk."
-  @type filename :: String.t()
-  @typedoc "Models the result of most of the functions accessible in this module."
-  @type result :: {:ok, any} | {:error, any}
-
   @baseurl Application.get_env(:myspace_ipfs, :baseurl)
 
-  # Connection manager.
+  @type path :: String.t()
+  @type fspath :: String.t()
+  @type opts :: List.t()
+  @type name :: String.t()
+  @type result :: {:ok, any} | {:error, Tesla.Env.t()}
 
   plug(Tesla.Middleware.BaseUrl, @baseurl)
   plug(Tesla.Middleware.Logger)
@@ -37,44 +32,66 @@ defmodule MyspaceIPFS do
 
   @doc """
   High level function allowing to perform POST requests to the node.
-  A `path` has to be provided, along with an optional list of `params` that are
+  A `path` has to be provided, along with an optional list of `opts` that are
   dependent on the endpoint that will get hit.
   NB! This is not a GET request, but a POST request. IPFS uses POST requests.
   """
-  def post_query(path, params \\ []) do
-    handle_response(post(@baseurl <> path, "", params))
+  @spec post_query(path, opts) :: result
+  def post_query(path, opts \\ []) do
+    handle_response(post(@baseurl <> path, "", opts))
   end
 
   @doc """
   POST request without JSON Middleware.
   """
-  def post_query_plain(path, params \\ []) do
-    handle_response(Tesla.post(@baseurl <> path, "", params))
+  @spec post_query_plain(path, opts) :: result
+  def post_query_plain(path, opts \\ []) do
+    handle_response(Tesla.post(@baseurl <> path, "", opts))
   end
 
   @doc """
   High level function allowing to send file contents to the node.
-  A `path` has to be specified along with the `filename` to be sent. Also, a list
-  of `params` can be optionally sent.
+  A `path` has to be specified along with the `fspath` to be sent. Also, a list
+  of `opts` can be optionally sent.
   """
-  def post_file(path, filename, params \\ []) do
-    handle_response(post(path, multipart(filename), params))
+  @spec post_file(path, fspath, opts) :: result
+  def post_file(path, fspath, opts \\ []) do
+    handle_response(post(path, multipart(fspath), opts))
   end
 
-  defp multipart(filename) do
+  @doc """
+  Post file without JSON Middleware.
+  High level function allowing to send file contents to the node.
+  A `path` has to be specified along with the `fspath` to be sent. Also, a list
+  of `opts` can be optionally sent.
+
+  """
+  @spec post_file_plain(path, fspath, opts) :: result
+  def post_file_plain(path, fspath, opts \\ []) do
+    handle_response(Tesla.post(@baseurl <> path, multipart(fspath), opts))
+  end
+
+  defp multipart(fspath) do
     Multipart.new()
-    |> Multipart.add_file(filename,
-      name: "\" file \"",
-      filename: "\"" <> filename <> "\"",
+    |> Multipart.add_file(fspath,
+      name: "file",
+      filename: "#{fspath}",
       detect_content_type: true
     )
   end
 
   defp handle_response(response) do
     case response do
-      {:ok, %Tesla.Env{status: 200, body: body}} -> body
-      {:ok, %Tesla.Env{status: 404}} -> {:error, response}
-      {:error, response} -> response
+      {:ok, %Tesla.Env{status: 200, body: body}} -> {:ok, body}
+      {:ok, response} -> response
+    end
+  end
+
+  def error_response_to_map(response) do
+    with {:error, %Tesla.Env{body: body}} <- response do
+      body
+    else
+      _ -> response
     end
   end
 end
