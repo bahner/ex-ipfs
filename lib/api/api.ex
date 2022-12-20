@@ -27,11 +27,10 @@ defmodule MyspaceIPFS.Api do
     Process.exit(pid, term)
   end
 
-  @type result :: MyspaceIPFS.result
-  @type path :: MyspaceIPFS.path
-  @type opts :: MyspaceIPFS.opts
-  @type cid :: MyspaceIPFS.cid
-
+  @type result :: MyspaceIPFS.result()
+  @type path :: MyspaceIPFS.path()
+  @type opts :: MyspaceIPFS.opts()
+  @type cid :: MyspaceIPFS.cid()
 
   # Advanced commands
   alias MyspaceIPFS.Api.Advanced
@@ -110,7 +109,7 @@ defmodule MyspaceIPFS.Api do
   defdelegate refs_local, to: Refs, as: :local
 
   # @spec refs(path)        :: result
-  @spec refs(path, opts)  :: result
+  @spec refs(path, opts) :: result
   defdelegate refs(cid, opts \\ []), to: Refs, as: :refs
 
   # alias MyspaceIPFS.Api.Codecs.Cid

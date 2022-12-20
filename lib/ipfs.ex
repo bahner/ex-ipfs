@@ -17,6 +17,7 @@ defmodule MyspaceIPFS do
   """
   use Tesla
   alias Tesla.Multipart
+  import MyspaceIPFS.Utils
 
   @baseurl Application.get_env(:myspace_ipfs, :baseurl)
 
@@ -42,14 +43,6 @@ defmodule MyspaceIPFS do
   end
 
   @doc """
-  POST request without JSON Middleware.
-  """
-  @spec post_query_plain(path, opts) :: result
-  def post_query_plain(path, opts \\ []) do
-    handle_response(Tesla.post(@baseurl <> path, "", opts))
-  end
-
-  @doc """
   High level function allowing to send file contents to the node.
   A `path` has to be specified along with the `fspath` to be sent. Also, a list
   of `opts` can be optionally sent.
@@ -59,16 +52,20 @@ defmodule MyspaceIPFS do
     handle_response(post(path, multipart(fspath), opts))
   end
 
-  @doc """
-  Post file without JSON Middleware.
-  High level function allowing to send file contents to the node.
-  A `path` has to be specified along with the `fspath` to be sent. Also, a list
-  of `opts` can be optionally sent.
+  defp handle_response(response) do
+    case response do
+      {:ok, %Tesla.Env{status: 200, body: body}} ->
+        {:ok, body}
 
-  """
-  @spec post_file_plain(path, fspath, opts) :: result
-  def post_file_plain(path, fspath, opts \\ []) do
-    handle_response(Tesla.post(@baseurl <> path, multipart(fspath), opts))
+      # When Tesla can't decode the response body because it's not JSON
+      # it returns an error map. We need to handle this case, because
+      # the IPFS API returns a lot of non-JSON responses.
+      {:error, {Tesla.Middleware.JSON, :decode, %Jason.DecodeError{data: data}}} ->
+        {:ok, map_plain_response_data(data)}
+
+      {:ok, response} ->
+        response
+    end
   end
 
   defp multipart(fspath) do
@@ -78,20 +75,5 @@ defmodule MyspaceIPFS do
       filename: "#{fspath}",
       detect_content_type: true
     )
-  end
-
-  defp handle_response(response) do
-    case response do
-      {:ok, %Tesla.Env{status: 200, body: body}} -> {:ok, body}
-      {:ok, response} -> response
-    end
-  end
-
-  def error_response_to_map(response) do
-    with {:error, %Tesla.Env{body: body}} <- response do
-      body
-    else
-      _ -> response
-    end
   end
 end

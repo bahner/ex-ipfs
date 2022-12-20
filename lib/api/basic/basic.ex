@@ -4,17 +4,16 @@ defmodule MyspaceIPFS.Api.Basic do
   """
 
   import MyspaceIPFS
-  @type result :: MyspaceIPFS.result
-  @type opts :: MyspaceIPFS.opts
-  @type fspath :: MyspaceIPFS.fspath
-
+  @type result :: MyspaceIPFS.result()
+  @type opts :: MyspaceIPFS.opts()
+  @type fspath :: MyspaceIPFS.fspath()
 
   @doc """
   Add a file to IPFS. For options see the IPFS docs.
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
   """
   @spec add(fspath, opts) :: result
-  def add(fspath, opts \\ []), do: post_file_plain("/add", fspath, opts)
+  def add(fspath, opts \\ []), do: post_file("/add", fspath, opts)
 
   # TODO: add get for output, archive, compress and compression level
   @doc """
