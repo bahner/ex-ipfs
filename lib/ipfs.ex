@@ -52,7 +52,16 @@ defmodule MyspaceIPFS do
   """
   @spec post_file(path, fspath, opts) :: result
   def post_file(path, fspath, opts \\ []) do
-    handle_response(post(path, multipart(fspath), opts))
+    cond do
+      File.dir?(fspath) ->
+        {:error, "FIXME: Upload off directories not implented yet."}
+
+      not File.exists?(fspath) ->
+        {:error, "fspath does not exist"}
+
+      true ->
+        handle_response(post(path, multipart(fspath), opts))
+    end
   end
 
   defp handle_response(response) do
@@ -71,12 +80,12 @@ defmodule MyspaceIPFS do
     end
   end
 
-  defp multipart(fspath) do
+  def multipart(fspath) do
     Multipart.new()
     |> Multipart.add_file(fspath,
       name: "file",
       filename: "#{fspath}",
-      detect_content_type: true
+      detect_content_type: true,
     )
   end
 end

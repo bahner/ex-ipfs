@@ -3,5 +3,4 @@ TODO
 
 Make experimental flag and make sure modules honour this
 QA commands against current API.
-
-parse result body when not JSON
+add directories does not work. Elixir just hangs before trying to upload file.
