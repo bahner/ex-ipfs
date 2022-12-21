@@ -29,7 +29,6 @@ defmodule MyspaceIPFS.Api do
   @type result :: MyspaceIPFS.result()
   @type path :: MyspaceIPFS.path()
   @type opts :: MyspaceIPFS.opts()
-  @type cid :: MyspaceIPFS.cid()
 
   # Advanced commands
   alias MyspaceIPFS.Api.Advanced

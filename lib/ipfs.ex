@@ -13,9 +13,9 @@ defmodule MyspaceIPFS do
   is actually more similar to a single bittorrent swarm exchanging
   git objects.
 
-  # Code taken based on https://github.com/tableturn/ipfs/blob/master/lib/ipfs.ex
+  Some code based on https://github.com/tableturn/ipfs/blob/master/lib/ipfs.ex
   """
-  use Tesla
+  use Tesla, docs: false
   alias Tesla.Multipart
   import MyspaceIPFS.Utils, only: [map_response_data: 1]
 
@@ -24,14 +24,37 @@ defmodule MyspaceIPFS do
   @debug Application.get_env(:myspace_ipfs, :debug)
 
   # Types
+  @typedoc """
+  The path to the endpoint to be hit. For example, `/add` or `/cat`.
+  It's called path because sometimes the MultiHash is not enough to
+  identify the resource, and a path is needed, eg. /ipns/myspace.bahner.com
+  """
   @type path :: String.t()
+  @typedoc """
+  The file system path to the file to be sent to the node.
+  """
   @type fspath :: String.t()
+  @typedoc """
+  The name of the file or data to be sent to the node.
+  """
   @type name :: String.t()
-  @type opts :: List.t()
+  @typedoc """
+  The options to be sent to the node. These are dependent on the endpoint
+  """
+  @type opts :: list
 
+  @typedoc """
+  The structure of a normal error response from the node.
+  """
   @type error :: {:error, Tesla.Env.t()}
-  @type mapped :: {:ok, List.t()} | error
-  @type result :: {:ok, any} | error
+  @typedoc """
+  The structure of a normal response from the node.
+  """
+  @type mapped :: {:ok, list} | {:error, Tesla.Env.t()}
+  @typedoc """
+  The structure of a JSON response from the node.
+  """
+  @type result :: {:ok, any} | {:error, Tesla.Env.t()}
 
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @baseurl)
