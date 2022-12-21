@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Advanced.Stats do
+defmodule MyspaceIPFS.Api.Stats do
   @moduledoc """
   MyspaceIPFS.Api.Stats is where the stats commands of the IPFS API reside.
   """

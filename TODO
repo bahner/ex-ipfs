@@ -1,8 +1,5 @@
 TODO
 ===
 
-Make better groups
 QA commands against current API.
 add directories does not work. Elixir just hangs before trying to upload file.
-
-add helper structs for all responses. Is this helpful? Ref Refs.

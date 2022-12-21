@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Advanced.Key do
+defmodule MyspaceIPFS.Api.Key do
   @moduledoc """
   MyspaceIPFS.Api is where the key commands of the IPFS API reside.
   """

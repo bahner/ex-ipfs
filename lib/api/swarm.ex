@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Network.Swarm do
+defmodule MyspaceIPFS.Api.Swarm do
   @moduledoc """
   MyspaceIPFS.Api.Swarm is where the swarm commands of the IPFS API reside.
   """

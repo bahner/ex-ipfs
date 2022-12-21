@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Network.Bitswap do
+defmodule MyspaceIPFS.Api.Bitswap do
   @moduledoc """
   MyspaceIPFS.Api.Bitswap is where the bootstrap commands of the IPFS API reside.
   """

@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Tools.Config do
+defmodule MyspaceIPFS.Api.Config do
   @moduledoc """
   MyspaceIPFS.Api is where the main commands of the IPFS API reside.
   """
@@ -31,14 +31,17 @@ defmodule MyspaceIPFS.Api.Tools.Config do
   @spec config(name, name, opts) :: result
   @spec config(name, opts) :: result
   def config(key, value \\ nil, opts \\ [])
+
   def config(key, value, opts) when is_bitstring(key) and is_bitstring(value) do
     post_query("/config?arg=" <> key <> "&arg=" <> value, opts)
     |> map_response_data()
   end
+
   def config(key, value, opts) when is_bitstring(key) and is_nil(value) do
     post_query("/config?arg=" <> key, opts)
     |> Jason.decode()
   end
+
   def config(key, _value, opts) when is_bitstring(key) and is_list(opts) do
     post_query("/config?arg=" <> key, opts)
     |> Jason.decode()

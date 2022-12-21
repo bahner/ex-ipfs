@@ -10,6 +10,8 @@ defmodule MyspaceIPFS.Api do
         <<0, 19, 148, 0, ... >>
   """
 
+  import MyspaceIPFS
+
   # TODO: add ability to add options to the ipfs daemon command.
   # TODO: handle experimental and deprecated here.
   def start_shell(start? \\ true, flag \\ []) do
@@ -29,216 +31,88 @@ defmodule MyspaceIPFS.Api do
   @type result :: MyspaceIPFS.result()
   @type path :: MyspaceIPFS.path()
   @type opts :: MyspaceIPFS.opts()
+  @type fspath :: MyspaceIPFS.fspath()
 
-  # Advanced commands
-  alias MyspaceIPFS.Api.Advanced
 
-  @spec mount(opts) :: result
-  defdelegate mount(opts \\ []), to: Advanced, as: :mount
+    @doc """
+  Shutdown the IPFS daemon.
+  """
+  @spec shutdown :: result
+  def shutdown, do: post_query("/shutdown")
+  @doc """
+  Resolve the value of names to IPFS.
 
-  defdelegate shutdown, to: Advanced, as: :shutdown
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-resolve
+  Example of options:
+  ```
+  [
+    recursive: true,
+    nocache: true,
+    dht-record-count: 10,
+    dht-timeout: 10
+  ]
+  ```
+  """
+  @spec resolve(path, opts) :: result
+  def resolve(path, opts \\ []), do: post_query("/resolve?arg=" <> path, opts)
+  @doc """
+  Add a file to IPFS. For options see the IPFS docs.
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
+  """
+  @spec add(fspath, opts) :: result
+  def add(fspath, opts \\ []), do: post_file("/add", fspath, opts)
 
-  defdelegate resolve(multihash), to: Advanced, as: :resolve
+  # TODO: add get for output, archive, compress and compression level
+  @doc """
+  Get a file or directory from IPFS.
+  As it stands ipfs sends a text blob back, so we need to implement a way to
+  get the file extracted and saved to disk.
 
-  alias MyspaceIPFS.Api.Advanced.Filestore
-
-  defdelegate filestore_dups, to: Filestore, as: :dups
-
-  defdelegate filestore_ls, to: Filestore, as: :ls
-
-  defdelegate filestore_verify, to: Filestore, as: :verify
-
-  alias MyspaceIPFS.Api.Advanced.Key
-
-  defdelegate key_gen(name), to: Key, as: :gen
-
-  defdelegate key_list, to: Key, as: :list
-
-  alias MyspaceIPFS.Api.Advanced.Name
-
-  defdelegate name_publish(multihash), to: Name, as: :publish
-
-  defdelegate name_resolve, to: Name, as: :resolve
-
-  alias MyspaceIPFS.Api.Advanced.Pin
-
-  defdelegate pin_add(multihash), to: Pin, as: :add
-
-  defdelegate pin_ls(multihash), to: Pin, as: :ls
-
-  defdelegate pin_rm(multihash), to: Pin, as: :rm
-
-  alias MyspaceIPFS.Api.Advanced.Repo
-
-  defdelegate repo_gc, to: Repo, as: :gc
-
-  defdelegate repo_stat, to: Repo, as: :stat
-
-  defdelegate repo_verify, to: Repo, as: :verify
-
-  defdelegate repo_version, to: Repo, as: :version
-
-  alias MyspaceIPFS.Api.Advanced.Stats
-
-  defdelegate stats_bitswap, to: Stats, as: :bitswap
-
-  defdelegate stats_bw, to: Stats, as: :bw
-
-  defdelegate stats_dht, to: Stats, as: :dht
-
-  defdelegate stats_provide, to: Stats, as: :provide
-
-  defdelegate stats_repo, to: Stats, as: :repo
-
-  # Basic commands
-  alias MyspaceIPFS.Api.Basic
-
-  @spec add(path, opts) :: result
-  defdelegate add(path, opts \\ []), to: Basic, as: :add
-
-  @spec cat(path, opts) :: result
-  defdelegate cat(path, opts \\ []), to: Basic, as: :cat
+  For options see the IPFS docs.
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-get
+  """
 
   @spec get(path, opts) :: result
-  defdelegate get(path, opts \\ []), to: Basic, as: :get
+  # def get(path, opts \\ []), do: post_query("/get?arg=" <> path, opts)
+  def get(_, _ \\ []), do: {:error, "FIXME: Not implemented yet."}
+
+    @doc """
+  Get the contents of a file from ipfs.
+  Easy way to get the contents of a text file for instance.
+
+  For options see the IPFS docs.
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cat
+  """
+
+  @spec cat(path, opts) :: result
+  def cat(path, opts \\ []), do: post_query("/cat?arg=" <> path, opts)
+
+  @doc """
+    List the files in an IPFS object.
+  """
 
   @spec ls(path, opts) :: result
-  defdelegate ls(path, opts \\ []), to: Basic, as: :ls
-
-  alias MyspaceIPFS.Api.Basic.Refs
-
-  @spec refs_local :: result
-  defdelegate refs_local, to: Refs, as: :local
-
-  @spec refs(path, opts) :: result
-  defdelegate refs(path, opts \\ []), to: Refs, as: :refs
-
-  # alias MyspaceIPFS.Api.Codecs.Cid
-  # alias MyspaceIPFS.Api.Codes.Multilevel
-
-  alias MyspaceIPFS.Api.Data.Block
-
-  defdelegate block_get(multihash), to: Block, as: :get
-
-  defdelegate block_put(file_path), to: Block, as: :put
-
-  defdelegate block_rm(multihash), to: Block, as: :rm
-
-  defdelegate block_stat(multihash), to: Block, as: :stat
-
-  alias MyspaceIPFS.Api.Data.Dag
-
-  defdelegate dag_get(multihash), to: Dag, as: :get
-
-  defdelegate dag_put(file_path), to: Dag, as: :put
-
-  alias MyspaceIPFS.Api.Data.Files
-
-  defdelegate files_cp(from, to), to: Files, as: :cp
-
-  defdelegate files_flush, to: Files, as: :flush
-
-  defdelegate files_ls, to: Files, as: :ls
-
-  defdelegate files_mkdir(path), to: Files, as: :mkdir
-
-  defdelegate files_mv(from, to), to: Files, as: :mv
-
-  defdelegate files_read(path), to: Files, as: :read
-
-  defdelegate files_rm(path), to: Files, as: :rm
-
-  defdelegate files_stat(path), to: Files, as: :stat
-
-  defdelegate files_write(path, data), to: Files, as: :write
-
-  # Network commands
-  alias MyspaceIPFS.Api.Network
-  defdelegate id, to: Network, as: :id
-
-  defdelegate ping(peer_id), to: Network, as: :ping
-
-  alias MyspaceIPFS.Api.Network.Bitswap
-
-  defdelegate bitswap_ledger(peer_id), to: Bitswap, as: :ledger
-
-  defdelegate bitswap_stat(verbose, human), to: Bitswap, as: :stat
-
-  defdelegate bitswap_wantlist(peer), to: Bitswap, as: :wantlist
-
-  defdelegate bitswap_reprovide, to: Bitswap, as: :reprovide
-
-  alias MyspaceIPFS.Api.Network.Bootstrap
-
-  defdelegate bootstrap_add_default, to: Bootstrap, as: :add_default
-
-  defdelegate bootstrap_list, to: Bootstrap, as: :list
-
-  defdelegate bootstrap_rm_all, to: Bootstrap, as: :rm_all
-
-  alias MyspaceIPFS.Api.Network.Dht
-
-  defdelegate dht_query(peer_id), to: Dht, as: :query
-
-  alias MyspaceIPFS.Api.Network.PubSub
-
-  defdelegate pubsub_ls, to: PubSub, as: :ls
-
-  defdelegate pubsub_peers, to: PubSub, as: :peers
-
-  defdelegate pubsub_pub(topic, data), to: PubSub, as: :pub
-
-  defdelegate pubsub_sub(topic), to: PubSub, as: :sub
-
-  # alias MyspaceIPFS.Api.Network.Routing
-
-  alias MyspaceIPFS.Api.Network.Swarm
-
-  defdelegate swarm_peers, to: Swarm, as: :peers
-
-  defdelegate swarm_addrs, to: Swarm, as: :addrs
-
-  defdelegate swarm_addrs_local, to: Swarm, as: :addrs_local
-
-  defdelegate swarm_addrs_listen, to: Swarm, as: :addrs_listen
-
-  defdelegate swarm_connect(peer_id), to: Swarm, as: :connect
-
-  defdelegate swarm_disconnect(peer_id), to: Swarm, as: :disconnect
-
-  defdelegate swarm_filters, to: Swarm, as: :filters
-
-  defdelegate swarm_filters_add(addr), to: Swarm, as: :filters_add
-
-  defdelegate swarm_filters_rm(addr), to: Swarm, as: :filters_rm
-
-  # Tools commands
-  alias MyspaceIPFS.Api.Tools
-  defdelegate update(multihash), to: Tools, as: :update
-
-  defdelegate version(num, comm, repo, all), to: Tools, as: :version
-
-  alias MyspaceIPFS.Api.Tools.Commands
-
-  defdelegate commands, to: Commands, as: :commands
-
-  defdelegate commands_completion(shell), to: Commands, as: :completion
-
-  alias MyspaceIPFS.Api.Tools.Diag
-
-  defdelegate diag_cmds, to: Diag, as: :cmds
-
-  defdelegate diag_cmds_clear, to: Diag, as: :cmds_clear
-
-  defdelegate diag_cmds_set_time(time), to: Diag, as: :cmds_set_time
-
-  defdelegate diag_sys, to: Diag, as: :sys
-
-  alias MyspaceIPFS.Api.Tools.Log
-
-  defdelegate log_level(subsystem, level), to: Log, as: :level
-
-  defdelegate log_ls, to: Log, as: :ls
-
-  defdelegate log_tail, to: Log, as: :tail
+  def ls(path, opts \\ []), do: post_query("/ls?arg=" <> path, opts)
+
+  @doc """
+  Show the id of the IPFS node.
+  """
+  def id, do: post_query("/id")
+
+  @doc """
+  Ping a peer.
+  """
+  def ping(id), do: post_query("/ping?arg=" <> id)
+
+
+  @experimental Application.get_env(:myspace_ipfs, :experimental)
+
+  @spec mount(opts) :: result
+  def mount(opts \\ []) do
+    case @experimental do
+      true -> post_query("/mount", opts)
+      false -> raise "This command is experimental and must be enabled in the config."
+    end
+  end
 end

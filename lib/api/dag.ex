@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Data.Dag do
+defmodule MyspaceIPFS.Api.Dag do
   @moduledoc """
   MyspaceIPFS.Api.Dag is where the cid commands of the IPFS API reside.
   """

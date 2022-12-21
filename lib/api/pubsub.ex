@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Network.PubSub do
+defmodule MyspaceIPFS.Api.PubSub do
   @moduledoc """
   MyspaceIPFS.Api.PubSub is where the pubsub commands of the IPFS API reside.
   """

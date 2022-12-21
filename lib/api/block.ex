@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Data.Block do
+defmodule MyspaceIPFS.Api.Block do
   @moduledoc """
   MyspaceIPFS.Api.Blocki is where the commands commands of the IPFS API reside.
   """

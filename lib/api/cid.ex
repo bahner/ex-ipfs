@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Codecs.Cid do
+defmodule MyspaceIPFS.Api.Cid do
   @moduledoc """
   MyspaceIPFS.Api.Cid is where the cid commands of the IPFS API reside.
   """
