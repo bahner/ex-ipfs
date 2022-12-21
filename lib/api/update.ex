@@ -1,6 +1,5 @@
 defmodule MyspaceIPFS.Api.Update do
-
-  #FIXME: This is a stub.  It needs to be implemented.
+  # FIXME: This is a stub.  It needs to be implemented.
   @moduledoc false
   import MyspaceIPFS
 
@@ -15,5 +14,4 @@ defmodule MyspaceIPFS.Api.Update do
     post_query("/update?arg=", args)
     |> okify()
   end
-
 end
