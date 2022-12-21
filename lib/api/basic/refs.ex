@@ -4,48 +4,51 @@ defmodule MyspaceIPFS.Api.Basic.Refs do
   """
 
   import MyspaceIPFS
-  import MyspaceIPFS.Utils
 
-  @type multipart :: Tesla.Multipart.t() | binary
-  @type result :: MyspaceIPFS.result()
+  defstruct [
+    :Ref,
+    :Err
+  ]
+
+  @typedoc """
+    Type for the response of entries in the refs list.
+  """
+  @type t :: %__MODULE__{
+          Ref: String.t(),
+          Err: String.t()
+        }
+
+  @typep mapped :: MyspaceIPFS.plain()
+  @typep opts :: MyspaceIPFS.opts()
+  @typep path :: MyspaceIPFS.path()
 
   @doc """
   Get a list of all local references.
+
+  Response is a list of Refs.t().
   """
+  @spec local :: mapped
   def local,
-    do:
-      post_query("/refs/local")
-      |> map_plain_response_data()
+    do: post_query("/refs/local")
 
   @doc """
   Get a list of all references from a given object.
 
-  Return a list of tuples. Only one element without edges, but two
-  for edges. The first element is the source, the second is the
-  destination.
-
-  This way it is easy to match on the result.
+  Response is a list of Refs.t().
 
   # Parameters
-  multihash: The hash or IPNS name of the object to list references from.
+  path: The IPFS path name of the object to list references from.
   opts: A list of options.
 
   ## opts
-  opts is a list of tuples that can contain the following values:
-  - `format`: The format in which the output should be returned.
-    Allowed values are `<dst>`, `<src>` and `<linkname>`a.
-  - `edges`: If true, the output will contain edge objects.
-  - `unique`: If true, the output will contain unique objects.
-  - `recursive`: If true, the output will contain recursive objects.
-  - `max_depth`: The maximum depth of the output.
+  # https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-refs
+  Options are passed as a list of maps with the following format:
+  [format: "<string>", edges: <bool>, unique: <bool>, recursive: <bool>, max-depth: <int>]
   """
-  # @spec refs(binary) :: {:ok, list} | {:error, binary}
-  # @spec refs(binary, list) :: {:ok, list} | {:error, binary}
-  @spec refs(binary, list) :: {:ok, list} | result
-  def refs(cid, opts \\ []) do
-    path = "/refs?arg=" <> cid
+  @spec refs(path, opts) :: mapped
+  def refs(path, opts \\ []) do
+    path = "/refs?arg=" <> path
 
     post_query(path, query: opts)
-    # |> map_plain_response_data()
   end
 end

@@ -23,9 +23,12 @@ defmodule MyspaceIPFS do
 
   @type path :: String.t()
   @type fspath :: String.t()
-  @type opts :: List.t()
   @type name :: String.t()
-  @type result :: {:ok, any} | {:error, Tesla.Env.t()}
+  @type opts :: List.t()
+
+  @type error :: {:error, Tesla.Env.t()}
+  @type mapped :: {:ok, List.t()} | error
+  @type result :: {:ok, any} | error
 
   plug(Tesla.Middleware.BaseUrl, @baseurl)
   plug(Tesla.Middleware.Logger)
