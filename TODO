@@ -4,3 +4,5 @@ TODO
 Make experimental flag and make sure modules honour this
 QA commands against current API.
 add directories does not work. Elixir just hangs before trying to upload file.
+
+add helper structs for all responses. Is this helpful? Ref Refs.

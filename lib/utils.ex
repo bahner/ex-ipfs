@@ -1,11 +1,15 @@
 defmodule MyspaceIPFS.Utils do
-  @spec map_plain_response_data(any) :: any
-  def map_plain_response_data(response) do
+  @moduledoc """
+  MyspaceIPFS.Utils is a collection of helper functions for the MyspaceIPFS library.
+  """
+
+  @spec map_response_data(any) :: list
+  def map_response_data(response) do
     extract_data_from_plain_response(response)
     |> convert_list_of_tuples_to_map()
   end
 
-  @spec extract_data_from_plain_response(any) :: any
+  # Private functions
   defp extract_data_from_plain_response(binary) do
     binary
     |> split_string_by_newline()

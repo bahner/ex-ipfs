@@ -93,24 +93,25 @@ defmodule MyspaceIPFS.Api do
   # Basic commands
   alias MyspaceIPFS.Api.Basic
 
-  defdelegate add(file_path), to: Basic, as: :add
+  @spec add(path, opts) :: result
+  defdelegate add(path, opts \\ []), to: Basic, as: :add
 
-  defdelegate cat(multihash), to: Basic, as: :cat
+  @spec cat(path, opts) :: result
+  defdelegate cat(path, opts \\ []), to: Basic, as: :cat
 
-  defdelegate get(multihash), to: Basic, as: :get
+  @spec get(path, opts) :: result
+  defdelegate get(path, opts \\ []), to: Basic, as: :get
 
-  defdelegate ls(multihash), to: Basic, as: :ls
-
-  defdelegate init, to: Basic, as: :init
+  @spec ls(path, opts) :: result
+  defdelegate ls(path, opts \\ []), to: Basic, as: :ls
 
   alias MyspaceIPFS.Api.Basic.Refs
 
   @spec refs_local :: result
   defdelegate refs_local, to: Refs, as: :local
 
-  # @spec refs(path)        :: result
   @spec refs(path, opts) :: result
-  defdelegate refs(cid, opts \\ []), to: Refs, as: :refs
+  defdelegate refs(path, opts \\ []), to: Refs, as: :refs
 
   # alias MyspaceIPFS.Api.Codecs.Cid
   # alias MyspaceIPFS.Api.Codes.Multilevel

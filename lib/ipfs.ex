@@ -17,10 +17,13 @@ defmodule MyspaceIPFS do
   """
   use Tesla
   alias Tesla.Multipart
-  import MyspaceIPFS.Utils
+  import MyspaceIPFS.Utils, only: [map_response_data: 1]
 
+  # Config
   @baseurl Application.get_env(:myspace_ipfs, :baseurl)
+  @debug Application.get_env(:myspace_ipfs, :debug)
 
+  # Types
   @type path :: String.t()
   @type fspath :: String.t()
   @type name :: String.t()
@@ -30,8 +33,9 @@ defmodule MyspaceIPFS do
   @type mapped :: {:ok, List.t()} | error
   @type result :: {:ok, any} | error
 
+  # Middleware
   plug(Tesla.Middleware.BaseUrl, @baseurl)
-  plug(Tesla.Middleware.Logger)
+  @debug && plug(Tesla.Middleware.Logger)
   plug(Tesla.Middleware.JSON)
 
   @doc """
@@ -73,7 +77,7 @@ defmodule MyspaceIPFS do
       # it returns an error map. We need to handle this case, because
       # the IPFS API returns a lot of non-JSON responses.
       {:error, {Tesla.Middleware.JSON, :decode, %Jason.DecodeError{data: data}}} ->
-        {:ok, map_plain_response_data(data)}
+        {:ok, map_response_data(data)}
 
       {:ok, response} ->
         response
@@ -85,7 +89,7 @@ defmodule MyspaceIPFS do
     |> Multipart.add_file(fspath,
       name: "file",
       filename: "#{fspath}",
-      detect_content_type: true,
+      detect_content_type: true
     )
   end
 end

@@ -1,12 +1,18 @@
 defmodule MyspaceIPFS.Api.Basic do
   @moduledoc """
   MyspaceIPFS.Api is where the main commands of the IPFS API reside.
+
+  #TODO:
+    - Handle adding of directories.
+    - Getting files from IPFS.
   """
 
   import MyspaceIPFS
+
   @type result :: MyspaceIPFS.result()
   @type opts :: MyspaceIPFS.opts()
   @type fspath :: MyspaceIPFS.fspath()
+  @type path :: MyspaceIPFS.path()
 
   @doc """
   Add a file to IPFS. For options see the IPFS docs.
@@ -18,25 +24,29 @@ defmodule MyspaceIPFS.Api.Basic do
   # TODO: add get for output, archive, compress and compression level
   @doc """
   Get a file or directory from IPFS.
+  As it stands ipfs sends a text blob back, so we need to implement a way to
+  get the file extracted and saved to disk.
+
+  For options see the IPFS docs.
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-get
   """
-  def get(multihash) when is_bitstring(multihash), do: post_query("/get?arg=" <> multihash)
+  @spec get(path, opts) :: result
+  # def get(path, opts \\ []), do: post_query("/get?arg=" <> path, opts)
+  def get(_, _ \\ []), do: {:error, "FIXME: Not implemented yet."}
 
   @doc """
   Get the contents of a file from ipfs.
   Easy way to get the contents of a text file for instance.
-  """
-  def cat(multihash) when is_bitstring(multihash), do: post_query("/cat?arg=" <> multihash)
 
-  # TODO:  Implement proper Json Format.
+  For options see the IPFS docs.
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cat
+  """
+  @spec cat(path, opts) :: result
+  def cat(path, opts \\ []), do: post_query("/cat?arg=" <> path, opts)
+
   @doc """
     List the files in an IPFS object.
   """
-  def ls(multihash) when is_bitstring(multihash), do: post_query("/ls?arg=" <> multihash)
-
-  @doc """
-  Init a new repo. Required if you want to use IPFS as a library.
-  """
-  def init do
-    post_query("/init")
-  end
+  @spec ls(path, opts) :: result
+  def ls(path, opts \\ []), do: post_query("/ls?arg=" <> path, opts)
 end
