@@ -13,11 +13,12 @@ defmodule MyspaceIPFS do
   is actually more similar to a single bittorrent swarm exchanging
   git objects.
 
-  Some code based on https://github.com/tableturn/ipfs/blob/master/lib/ipfs.ex
+  Forked from https://github.com/tensor-programming/Elixir-Ipfs-Api
+
+  Based on https://github.com/tableturn/ipfs/blob/master/lib/ipfs.ex
   """
   use Tesla, docs: false
   alias Tesla.Multipart
-  import MyspaceIPFS.Utils, only: [map_response_data: 1]
 
   # Config
   @baseurl Application.get_env(:myspace_ipfs, :baseurl)
@@ -59,7 +60,6 @@ defmodule MyspaceIPFS do
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @baseurl)
   @debug && plug(Tesla.Middleware.Logger)
-  plug(Tesla.Middleware.JSON)
 
   @doc """
   High level function allowing to perform POST requests to the node.
@@ -91,23 +91,31 @@ defmodule MyspaceIPFS do
     end
   end
 
+  # Handles the response from the node. It returns the body of the response
+  # if the status code is 200, otherwise it returns an error tuple.
+
+  # ## Status codes that are handled
+  # https://docs.ipfs.tech/reference/kubo/rpc/#http-status-codes
+
+  #   - 200 - The request was processed or is being processed (streaming)
+  #   - 500 - RPC Endpoint returned an error
+  #   - 400 - Malformed RPC, argument type error, etc.
+  #   - 403 - RPC call forbidden
+  #   - 404 - RPC endpoint does not exist
+  #   - 405 - RPC endpoint exists but method is not allowed
   defp handle_response(response) do
     case response do
-      {:ok, %Tesla.Env{status: 200, body: body}} ->
-        {:ok, body}
-
-      # When Tesla can't decode the response body because it's not JSON
-      # it returns an error map. We need to handle this case, because
-      # the IPFS API returns a lot of non-JSON responses.
-      {:error, {Tesla.Middleware.JSON, :decode, %Jason.DecodeError{data: data}}} ->
-        {:ok, map_response_data(data)}
-
-      {:ok, response} ->
-        response
+      {:ok, %Tesla.Env{status: 200, body: body}} -> body
+      {:ok, %Tesla.Env{status: 500}} -> {:error, response}
+      {:ok, %Tesla.Env{status: 400}} -> {:error, response}
+      {:ok, %Tesla.Env{status: 403}} -> {:error, response}
+      {:ok, %Tesla.Env{status: 404}} -> {:error, response}
+      {:ok, %Tesla.Env{status: 405}} -> {:error, response}
+      {:error, _} -> {:error, response}
     end
   end
 
-  def multipart(fspath) do
+  defp multipart(fspath) do
     Multipart.new()
     |> Multipart.add_file(fspath,
       name: "file",
@@ -115,4 +123,14 @@ defmodule MyspaceIPFS do
       detect_content_type: true
     )
   end
+
+  @doc """
+  High level function which creates a list of maps from the response data.
+  """
+  @spec map_response_data(binary) :: mapped
+  defdelegate map_response_data(response), to: MyspaceIPFS.Utils
+
+  @spec okify(any) :: {:ok, any} | {:error, any}
+  def okify({:error, _} = err), do: err
+  def okify(res), do: {:ok, res}
 end

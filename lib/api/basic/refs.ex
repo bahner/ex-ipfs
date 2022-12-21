@@ -1,7 +1,8 @@
 defmodule MyspaceIPFS.Api.Basic.Refs do
-  @moduledoc """
-  MyspaceIPFS.Api is where the main commands of the IPFS API reside.
-  """
+  @moduledoc false
+  # @moduledoc """
+  # MyspaceIPFS.Api is where the main commands of the IPFS API reside.
+  # """
 
   import MyspaceIPFS
 
@@ -28,27 +29,14 @@ defmodule MyspaceIPFS.Api.Basic.Refs do
   Response is a list of Refs.t().
   """
   @spec local :: mapped
-  def local,
-    do: post_query("/refs/local")
+  def local,do:
+    post_query("/refs/local")
+    |> map_response_data()
 
-  @doc """
-  Get a list of all references from a given object.
-
-  Response is a list of Refs.t().
-
-  # Parameters
-  path: The IPFS path name of the object to list references from.
-  opts: A list of options.
-
-  ## opts
-  # https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-refs
-  Options are passed as a list of maps with the following format:
-  [format: "<string>", edges: <bool>, unique: <bool>, recursive: <bool>, max-depth: <int>]
-  """
   @spec refs(path, opts) :: mapped
-  def refs(path, opts \\ []) do
+  def refs(path, opts \\ []), do:
     path = "/refs?arg=" <> path
 
     post_query(path, query: opts)
-  end
+    |> map_response_data()
 end
