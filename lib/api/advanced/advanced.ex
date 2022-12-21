@@ -4,18 +4,53 @@ defmodule MyspaceIPFS.Api.Advanced do
   """
   import MyspaceIPFS
 
+  @type result :: MyspaceIPFS.result()
+  @type opts :: MyspaceIPFS.opts()
+  @type path :: MyspaceIPFS.path()
+
+  @experimental Application.get_env(:myspace_ipfs, :experimental)
+
   @doc """
   Shutdown the IPFS daemon.
   """
+  @spec shutdown :: result
   def shutdown, do: post_query("/shutdown")
 
   @doc """
-  Mounts IPFS and IPNS to the filesystem (read-only).
+  Instruct daemon to mount IPFS and IPNS to the filesystem (read-only).
 
-  Takes paths to mount IPFS and IPNS to as arguments.
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-mount
+  Example of options:
+  ```
+  [
+    ipfs-path: "/ipfs",
+    ipns-path: "/ipns"
+  ]
+  ```
   """
-  def mount(ipfs \\ "/ipfs", ipns \\ "/ipns"),
-    do: post_query("/mount?ipfs-path=#{ipfs}&ipns-path=#{ipns}")
+  def mount(opts \\ []) do
+    case @experimental do
+      true -> post_query("/mount", opts)
+      false -> raise "This command is experimental and must be enabled in the config."
+    end
+  end
 
-  def resolve(multihash), do: post_query("/resolve?arg=" <> multihash)
+  @doc """
+  Resolve the value of names to IPFS.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-resolve
+  Example of options:
+  ```
+  [
+    recursive: true,
+    nocache: true,
+    dht-record-count: 10,
+    dht-timeout: 10
+  ]
+  ```
+  """
+  @spec resolve(path, opts) :: result
+  def resolve(path, opts \\ []), do: post_query("/resolve?arg=" <> path, opts)
 end

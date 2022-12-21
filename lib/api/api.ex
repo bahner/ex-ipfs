@@ -11,7 +11,6 @@ defmodule MyspaceIPFS.Api do
   """
 
   # TODO: add ability to add options to the ipfs daemon command.
-  # TODO: read ipfs config from config file.
   # TODO: handle experimental and deprecated here.
   def start_shell(start? \\ true, flag \\ []) do
     {:ok, pid} = Task.start(fn -> System.cmd("ipfs", ["daemon"]) end)
@@ -34,7 +33,9 @@ defmodule MyspaceIPFS.Api do
 
   # Advanced commands
   alias MyspaceIPFS.Api.Advanced
-  defdelegate mount, to: Advanced, as: :mount
+
+  @spec mount(opts) :: result
+  defdelegate mount(opts \\ []), to: Advanced, as: :mount
 
   defdelegate shutdown, to: Advanced, as: :shutdown
 
