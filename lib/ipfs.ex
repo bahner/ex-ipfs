@@ -15,6 +15,45 @@ defmodule MyspaceIPFS do
 
   @experimental Application.get_env(:myspace_ipfs, :experimental)
 
+  # Types
+  @typedoc """
+  The path to the endpoint to be hit. For example, `/add` or `/cat`.
+  It's called path because sometimes the MultiHash is not enough to
+  identify the resource, and a path is needed, eg. /ipns/myspace.bahner.com
+  """
+  @type path :: String.t()
+  @typedoc """
+  The file system path to the file to be sent to the node.
+  """
+  @type fspath :: String.t()
+  @typedoc """
+  The name of the file or data to be sent to the node.
+  """
+  @type name :: String.t()
+  @typedoc """
+  The options to be sent to the node. These are dependent on the endpoint
+  """
+  @type opts :: list
+
+  @typedoc """
+  The structure of a normal error response from the node.
+  """
+  @type error ::
+          {:error, Tesla.Env.t()}
+          | {:eserver, Tesla.Env.t()}
+          | {:eclient, Tesla.Env.t()}
+          | {:eaccess, Tesla.Env.t()}
+          | {:emissing, Tesla.Env.t()}
+          | {:enoallow, Tesla.Env.t()}
+  @typedoc """
+  The structure of a normal response from the node.
+  """
+  @type mapped :: {:ok, list} | {:error, Tesla.Env.t()}
+  @typedoc """
+  The structure of a JSON response from the node.
+  """
+  @type result :: {:ok, any} | {:error, Tesla.Env.t()}
+
   # TODO: add ability to add options to the ipfs daemon command.
   # TODO: handle experimental.
   def start_shell(start? \\ true, flag \\ []) do
@@ -30,12 +69,6 @@ defmodule MyspaceIPFS do
   defp shutdown(pid, term) do
     Process.exit(pid, term)
   end
-
-  @type result :: MyspaceIPFS.result()
-  @type path :: MyspaceIPFS.path()
-  @type opts :: MyspaceIPFS.opts()
-  @type fspath :: MyspaceIPFS.fspath()
-  @type name :: MyspaceIPFS.name()
 
   @doc """
   Shutdown the IPFS daemon.
