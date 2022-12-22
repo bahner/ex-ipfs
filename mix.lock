@@ -1,4 +1,5 @@
 %{
+  "basefiftyeight": {:hex, :basefiftyeight, "0.1.0", "3d48544743bf9aab7ab02aed803ac42af77acf268c7d8c71d4f39e7fa85ee8d3", [:mix], [], "hexpm", "af12f551429528c711e98628c029ad48d1e5ba5a284f40b2d91029a65381837a"},
   "certifi": {:hex, :certifi, "2.0.0", "a0c0e475107135f76b8c1d5bc7efb33cd3815cb3cf3dea7aefdd174dabead064", [], [], "hexpm"},
   "earmark": {:hex, :earmark, "1.2.3", "206eb2e2ac1a794aa5256f3982de7a76bf4579ff91cb28d0e17ea2c9491e46a4", [:mix], [], "hexpm", "3b1dcad3067985dd8618c38399a8ee9c4e652d52a17a4aae7a6d6fc4fcc24856"},
   "earmark_parser": {:hex, :earmark_parser, "1.4.29", "149d50dcb3a93d9f3d6f3ecf18c918fb5a2d3c001b5d3305c926cddfbd33355b", [:mix], [], "hexpm", "4902af1b3eb139016aed210888748db8070b8125c2342ce3dcae4f38dcc63503"},
@@ -14,6 +15,7 @@
   "metrics": {:hex, :metrics, "1.0.1", "25f094dea2cda98213cecc3aeff09e940299d950904393b2a29d191c346a8486", [], [], "hexpm"},
   "mime": {:hex, :mime, "2.0.3", "3676436d3d1f7b81b5a2d2bd8405f412c677558c81b1c92be58c00562bb59095", [:mix], [], "hexpm", "27a30bf0db44d25eecba73755acf4068cbfe26a4372f9eb3e4ea3a45956bff6b"},
   "mimerl": {:hex, :mimerl, "1.0.2", "993f9b0e084083405ed8252b99460c4f0563e41729ab42d9074fd5e52439be88", [], [], "hexpm"},
+  "nanoid": {:hex, :nanoid, "2.0.5", "1d2948d8967ef2d948a58c3fef02385040bd9823fc6394bd604b8d98e5516b22", [:mix], [], "hexpm", "956e8876321104da72aa48770539ff26b36b744cd26753ec8e7a8a37e53d5f58"},
   "nimble_parsec": {:hex, :nimble_parsec, "1.2.3", "244836e6e3f1200c7f30cb56733fd808744eca61fd182f731eac4af635cc6d0b", [:mix], [], "hexpm", "c8d789e39b9131acf7b99291e93dae60ab48ef14a7ee9d58c6964f59efb570b0"},
   "ok": {:hex, :ok, "2.3.0", "0a3d513ec9038504dc5359d44e14fc14ef59179e625563a1a144199cdc3a6d30", [:mix], [], "hexpm", "f0347b3f8f115bf347c704184b33cf084f2943771273f2b98a3707a5fa43c4d5"},
   "poison": {:hex, :poison, "5.0.0", "d2b54589ab4157bbb82ec2050757779bfed724463a544b6e20d79855a9e43b24", [:mix], [{:decimal, "~> 2.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm", "11dc6117c501b80c62a7594f941d043982a1bd05a1184280c0d9166eb4d8d3fc"},

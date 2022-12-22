@@ -47,7 +47,13 @@ defmodule MyspaceIPFS do
   @typedoc """
   The structure of a normal error response from the node.
   """
-  @type error :: {:error, Tesla.Env.t()}
+  @type error ::
+          {:error, Tesla.Env.t()}
+          | {:eserver, Tesla.Env.t()}
+          | {:eclient, Tesla.Env.t()}
+          | {:eaccess, Tesla.Env.t()}
+          | {:emissing, Tesla.Env.t()}
+          | {:enoallow, Tesla.Env.t()}
   @typedoc """
   The structure of a normal response from the node.
   """
@@ -196,11 +202,11 @@ defmodule MyspaceIPFS do
     #   - 405 - RPC endpoint exists but method is not allowed
     case response do
       {:ok, %Tesla.Env{status: 200, body: body}} -> body
-      {:ok, %Tesla.Env{status: 500}} -> {:error, response}
-      {:ok, %Tesla.Env{status: 400}} -> {:error, response}
-      {:ok, %Tesla.Env{status: 403}} -> {:error, response}
-      {:ok, %Tesla.Env{status: 404}} -> {:error, response}
-      {:ok, %Tesla.Env{status: 405}} -> {:error, response}
+      {:ok, %Tesla.Env{status: 500}} -> {:eserver, response}
+      {:ok, %Tesla.Env{status: 400}} -> {:eclient, response}
+      {:ok, %Tesla.Env{status: 403}} -> {:eaccess, response}
+      {:ok, %Tesla.Env{status: 404}} -> {:emissing, response}
+      {:ok, %Tesla.Env{status: 405}} -> {:enoallow, response}
       {:error, _} -> {:error, response}
     end
   end

@@ -46,7 +46,6 @@ defmodule MyspaceIPFS.Api do
 
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-resolve
-  Example of options:
   ```
   [
     recursive: true,
@@ -64,7 +63,9 @@ defmodule MyspaceIPFS.Api do
       |> okify()
 
   @doc """
-  Add a file to IPFS. For options see the IPFS docs.
+  Add a file to IPFS.
+
+  ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
   """
   @spec add(fspath, opts) :: result
@@ -74,24 +75,41 @@ defmodule MyspaceIPFS.Api do
       |> map_response_data()
       |> okify()
 
-  # TODO: add get for output, archive, compress and compression level
   @doc """
   Get a file or directory from IPFS.
   As it stands ipfs sends a text blob back, so we need to implement a way to
   get the file extracted and saved to disk.
 
-  For options see the IPFS docs.
+  Compression is not implemented yet. IPFS sends a plain tarball anyhow, so there's
+  no serious need to compress it.
+
+  ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-get
+  ```
+  [
+    output: <string>, # Optional, default: Name of the object. CID or path basename.
+    archive: <bool>, # Optional, default: false
+    compress: <bool>, # NOT IMPLEMENTED
+    compression_level: <int> # NOT IMPLEMENTED
+  ]
+  ```
   """
+
   @spec get(path, opts) :: result
-  # def get(path, opts \\ []), do: post_query("/get?arg=" <> path, opts)
-  def get(_, _ \\ []), do: {:error, "FIXME: Not implemented yet."}
+  defdelegate get(path, opts \\ []), to: MyspaceIPFS.Api.Get
+  # defp handle_file_write(data, opts),
+  #   do:
+  #     with(
+  #       compress <- Keyword.get(opts, :compress, false),
+  #       compression_level <- Keyword.get(opts, :compression_level, 0),
+  #       do: File.write!(output, data)
+  #     )
 
   @doc """
   Get the contents of a file from ipfs.
   Easy way to get the contents of a text file for instance.
 
-  For options see the IPFS docs.
+  ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cat
   """
   @spec cat(path, opts) :: result
@@ -114,8 +132,14 @@ defmodule MyspaceIPFS.Api do
   @doc """
   Show the id of the IPFS node.
 
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-id
   Returns a map with the following keys:
-
+    - ID: the id of the node.
+    - PublicKey: the public key of the node.
+    - Addresses: the addresses of the node.
+    - AgentVersion: the version of the node.
+    - ProtocolVersion: the protocol version of the node.
+    - Protocols: the protocols of the node.
   """
   @spec id :: result
   def id,
@@ -148,6 +172,7 @@ defmodule MyspaceIPFS.Api do
   if @experimental do
     @doc """
     Mount an IPFS read-only mountpoint.
+
     ## Options
     https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-mount
     ```
