@@ -33,10 +33,12 @@ defmodule MyspaceIPFS.Refs do
     do:
       post_query("/refs/local")
       |> map_response_data()
+      |> okify()
 
   @spec refs(path, opts) :: mapped
   def refs(path, opts \\ []),
     do:
       post_query("/refs?arg=" <> path, query: opts)
       |> map_response_data()
+      |> okify()
 end
