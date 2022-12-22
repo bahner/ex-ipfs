@@ -33,4 +33,9 @@ To use do:
 ```elixir
 alias MyspaceIPFS, as: IPFS
 IPFS.id()
+
+MyspaceIPFS.Refs.refs("/ipns/myspace.bahner.com")
+
+alias MyspaceIPFS.Refs
+Refs.local()
 ```

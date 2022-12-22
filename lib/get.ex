@@ -2,41 +2,46 @@ defmodule MyspaceIPFS.Get do
   @moduledoc false
   import MyspaceIPFS.Api
 
-  @typep result :: MyspaceIPFS.result()
   @typep path :: MyspaceIPFS.path()
+  @typep fspath :: MyspaceIPFS.fspath()
   @typep opts :: MyspaceIPFS.opts()
 
-  # TODO: add get for compress and compression level
-
-  @spec get(path, opts) :: result
+  # FIXME: This is a hack to get around the fact that the IPFS API returns a tarball
+  #       of the file(s). This should be fixed in the API.
+  @spec get(path, opts) :: {:ok, fspath} | {:error, any}
   def get(path, opts \\ []) do
     with data <- post_query("/get?arg=" <> path, opts),
-         temp = write_to_temp_file(data),
-         content_name <- get_content_name(temp),
-         output <- Keyword.get(opts, :output, content_name),
-         archive <- Keyword.get(opts, :archive, false) do
+         name <- Path.basename(path),
+         output <- Keyword.get(opts, :output, name),
+         archive <- Keyword.get(opts, :archive, false),
+         tmp <- write_tmpfile(data) do
       if archive do
-        File.rename!(temp, output)
+        File.rename!(tmp, output)
         {:ok}
       else
-        extract_tar_to_path(temp, output)
-        File.rm_rf!(temp)
+        extract_elem_from_tar_to(tmp, name, output)
+        File.rm_rf!(tmp)
         {:ok}
       end
     end
   end
 
-  defp extract_tar_to_path(filename, output) do
-    with cwd <- mktempdir(),
-         name <- get_content_name(filename) do
-      :erl_tar.extract(filename, cwd: cwd)
-      File.rename!("#{cwd}/#{name}", output)
+  defp extract_elem_from_tar_to(file, elem, output) do
+    with cwd <- mktempdir("/tmp") do
+      case :erl_tar.extract(file, cwd: cwd) do
+        :ok ->
+          File.rename!("#{cwd}/#{elem}", output)
+
+        {:error, {msg, err}} ->
+          raise "Error extracting #{file}: #{msg} #{err}"
+      end
+
       File.rm_rf!(cwd)
     end
   end
 
-  defp write_to_temp_file(data) do
-    with dir <- mktempdir(),
+  defp write_tmpfile(data, dir \\ "/tmp") do
+    with dir <- mktempdir(dir),
          name <- Nanoid.generate(),
          file <- dir <> "/" <> name do
       File.write!(file, data)
@@ -44,14 +49,7 @@ defmodule MyspaceIPFS.Get do
     end
   end
 
-  def get_content_name(tarball) do
-    with {:ok, files} <- :erl_tar.table(tarball) do
-      files
-      |> List.first()
-    end
-  end
-
-  defp mktempdir(parent_dir \\ "/tmp") do
+  defp mktempdir(parent_dir) do
     with dir <- Nanoid.generate(),
          dir_path <- parent_dir <> "/" <> dir do
       File.mkdir_p(dir_path)

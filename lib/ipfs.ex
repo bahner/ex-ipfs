@@ -54,10 +54,36 @@ defmodule MyspaceIPFS do
   """
   @type result :: {:ok, any} | {:error, Tesla.Env.t()}
 
-  # TODO: add ability to add options to the ipfs daemon command.
-  # TODO: handle experimental.
-  def start_shell(start? \\ true, flag \\ []) do
-    {:ok, pid} = Task.start(fn -> System.cmd("ipfs", ["daemon"]) end)
+  @doc """
+  Start the IPFS daemon.
+
+  You should run this before any other command, but it's probably easier to do outside of the library.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/cli/#ipfs-daemon
+
+  ```
+  [
+    "--init", # <bool> Initialize IPFS with default settings, if not already initialized
+    "--migrate", # <bool> If answer yes to migration prompt
+    "--init-config <string>", # Path to the configuration file to use
+    "--init-profile <string>", # Apply profile settings to config
+    "--routing <string>", # Override the routing system
+    "--mount", # <bool> Mount IPFS to the filesystem (experimental)
+    "--writable", # <bool> Enable writing objects (with POST, PUT, DELETE)
+    "--mount-ipfs <string>", # Path to the mountpoint for IPFS (if using --mount)
+    "--mount-ipns <string>", # Path to the mountpoint for IPNS (if using --mount)
+    "--unrestricted-api", # <bool> Allow API access to unlisted hashes
+    "--disable-transport-encryption", # <bool> Disable transport encryption (for debugging)
+    "--enable-gc", # <bool> Enable automatic repo garbage collection
+    "--enable-pubsub-experiment", # <bool> Enable experimental pubsub
+    "--enable-namesys-pubsub", # <bool> Enable experimental namesys pubsub
+    "--agent-version-suffix <string>", # Suffix to append to the AgentVersion string for id()
+  ]
+  ```
+  """
+  def daemon(start? \\ true, flag \\ [], opts \\ []) do
+    {:ok, pid} = Task.start(fn -> System.cmd("ipfs", ["daemon"] ++ opts) end)
 
     if start? == false do
       pid |> shutdown(flag)
@@ -114,9 +140,11 @@ defmodule MyspaceIPFS do
   Get a file or directory from IPFS.
   As it stands ipfs sends a text blob back, so we need to implement a way to
   get the file extracted and saved to disk.
+  The default name is the CID or the basename of the IPNS or IPFS path.
 
-  Compression is not implemented yet. IPFS sends a plain tarball anyhow, so there's
-  no serious need to compress it.
+  *NB! Unsafe (relative symlinks) will raise an error.*
+
+  Compression is not implemented yet.
 
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-get
@@ -129,16 +157,8 @@ defmodule MyspaceIPFS do
   ]
   ```
   """
-
   @spec get(path, opts) :: result
   defdelegate get(path, opts \\ []), to: MyspaceIPFS.Get
-  # defp handle_file_write(data, opts),
-  #   do:
-  #     with(
-  #       compress <- Keyword.get(opts, :compress, false),
-  #       compression_level <- Keyword.get(opts, :compression_level, 0),
-  #       do: File.write!(output, data)
-  #     )
 
   @doc """
   Get the contents of a file from ipfs.
