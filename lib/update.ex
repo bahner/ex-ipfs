@@ -4,13 +4,13 @@ defmodule MyspaceIPFS.Update do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @type result :: MyspaceIPFS.result()
-  @type opts :: MyspaceIPFS.opts()
+  @typep result :: MyspaceIPFS.result()
+  @typep opts :: MyspaceIPFS.opts()
 
   # Update function  - takes in the current args for update.
   # This runs ipfs update with the given arguments.
   # You probably don't want to use this unless you know what you're doing.
-  @spec update(list) :: result
+  @spec update(opts) :: result
   def update(args) when is_bitstring(args) do
     post_query("/update?arg=", args)
     |> okify()

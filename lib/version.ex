@@ -5,8 +5,8 @@ defmodule MyspaceIPFS.Version do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @type result :: MyspaceIPFS.result()
-  @type opts :: MyspaceIPFS.opts()
+  @typep result :: MyspaceIPFS.result()
+  @typep opts :: MyspaceIPFS.opts()
 
   # version function - does not currently accept the optional arguments on golang client.
   @spec version(opts) :: result

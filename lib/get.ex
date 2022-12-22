@@ -2,11 +2,9 @@ defmodule MyspaceIPFS.Get do
   @moduledoc false
   import MyspaceIPFS.Api
 
-  @type result :: MyspaceIPFS.result()
-  @type path :: MyspaceIPFS.path()
-  @type opts :: MyspaceIPFS.opts()
-  @type fspath :: MyspaceIPFS.fspath()
-  @type name :: MyspaceIPFS.name()
+  @typep result :: MyspaceIPFS.result()
+  @typep path :: MyspaceIPFS.path()
+  @typep opts :: MyspaceIPFS.opts()
 
   # TODO: add get for compress and compression level
 

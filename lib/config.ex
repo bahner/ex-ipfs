@@ -5,10 +5,9 @@ defmodule MyspaceIPFS.Config do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @type name :: MyspaceIPFS.name()
-  @type result :: MyspaceIPFS.result()
-  @type opts :: MyspaceIPFS.opts()
-  @type path :: MyspaceIPFS.path()
+  @typep name :: MyspaceIPFS.name()
+  @typep result :: MyspaceIPFS.result()
+  @typep opts :: MyspaceIPFS.opts()
 
   @doc """
   Get the value of a config key.
