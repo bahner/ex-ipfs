@@ -3,6 +3,7 @@ defmodule MyspaceIPFS.Config do
   MyspaceIPFS.Api is where the main commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
   @type name :: MyspaceIPFS.name()
   @type result :: MyspaceIPFS.result()

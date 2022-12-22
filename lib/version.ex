@@ -3,6 +3,7 @@ defmodule MyspaceIPFS.Version do
   MyspaceIPFS.Api.Version is a collection of functions for the MyspaceIPFS library.
   """
   import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
   @type result :: MyspaceIPFS.result()
   @type opts :: MyspaceIPFS.opts()

@@ -11,6 +11,8 @@ defmodule MyspaceIPFS do
   """
 
   import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
+
   @experimental Application.get_env(:myspace_ipfs, :experimental)
 
   # TODO: add ability to add options to the ipfs daemon command.

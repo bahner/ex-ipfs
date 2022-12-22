@@ -4,6 +4,7 @@ defmodule MyspaceIPFS.Refs do
   # """
 
   import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
   defstruct [
     :Ref,
