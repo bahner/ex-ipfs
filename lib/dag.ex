@@ -2,7 +2,7 @@ defmodule MyspaceIPFS.Api.Dag do
   @moduledoc """
   MyspaceIPFS.Api.Dag is where the cid commands of the IPFS API reside.
   """
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   def get(object), do: post_query("/dag/get?arg=" <> object)
 

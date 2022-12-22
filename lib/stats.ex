@@ -2,7 +2,7 @@ defmodule MyspaceIPFS.Api.Stats do
   @moduledoc """
   MyspaceIPFS.Api.Stats is where the stats commands of the IPFS API reside.
   """
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   def bitswap, do: post_query("/stats/bitswap")
 

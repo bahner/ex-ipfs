@@ -2,7 +2,7 @@ defmodule MyspaceIPFS.Api.Filestore do
   @moduledoc """
   MyspaceIPFS.Api is where the filestore commands of the IPFS API reside.
   """
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   @doc """
   List blocks that are both in the filestore and standard block storage.

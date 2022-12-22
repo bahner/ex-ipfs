@@ -1,241 +1,198 @@
 defmodule MyspaceIPFS do
   @moduledoc """
-  IPFS (the InterPlanetary File Syste
-  new hypermedia distribution protocol, addressed by
-  content and identities. IPFS enables the creation of
-  completely distributed applications. It aims to make the web
-  faster, safer, and more open.
+  MyspaceIPFS.Api is where the main commands of the IPFS API reside.
+  Alias this library and you can run the commands via Api.<cmd_name>.
 
+        ## Examples
 
-  IPFS is a distributed file system that seeks to connect
-  all computing devices with the same system of files. In some
-  ways, this is similar to the original aims of the Web, but IPFS
-  is actually more similar to a single bittorrent swarm exchanging
-  git objects.
-
-  Forked from https://github.com/tensor-programming/Elixir-Ipfs-Api
-
-  Based on https://github.com/tableturn/ipfs/blob/master/lib/ipfs.ex
+        iex> alias MyspaceIPFS.API, as: Api
+        iex> Api.get("Multihash_key")
+        <<0, 19, 148, 0, ... >>
   """
-  use Tesla, docs: false
-  alias Tesla.Multipart
 
-  # Config
-  @baseurl Application.get_env(:myspace_ipfs, :baseurl)
-  @debug Application.get_env(:myspace_ipfs, :debug)
+  import MyspaceIPFS.Api
+  @experimental Application.get_env(:myspace_ipfs, :experimental)
 
-  # Types
-  @typedoc """
-  The path to the endpoint to be hit. For example, `/add` or `/cat`.
-  It's called path because sometimes the MultiHash is not enough to
-  identify the resource, and a path is needed, eg. /ipns/myspace.bahner.com
-  """
-  @type path :: String.t()
-  @typedoc """
-  The file system path to the file to be sent to the node.
-  """
-  @type fspath :: String.t()
-  @typedoc """
-  The name of the file or data to be sent to the node.
-  """
-  @type name :: String.t()
-  @typedoc """
-  The options to be sent to the node. These are dependent on the endpoint
-  """
-  @type opts :: list
+  # TODO: add ability to add options to the ipfs daemon command.
+  # TODO: handle experimental.
+  def start_shell(start? \\ true, flag \\ []) do
+    {:ok, pid} = Task.start(fn -> System.cmd("ipfs", ["daemon"]) end)
 
-  @typedoc """
-  The structure of a normal error response from the node.
-  """
-  @type error ::
-          {:error, Tesla.Env.t()}
-          | {:eserver, Tesla.Env.t()}
-          | {:eclient, Tesla.Env.t()}
-          | {:eaccess, Tesla.Env.t()}
-          | {:emissing, Tesla.Env.t()}
-          | {:enoallow, Tesla.Env.t()}
-  @typedoc """
-  The structure of a normal response from the node.
-  """
-  @type mapped :: {:ok, list} | {:error, Tesla.Env.t()}
-  @typedoc """
-  The structure of a JSON response from the node.
-  """
-  @type result :: {:ok, any} | {:error, Tesla.Env.t()}
-
-  # Middleware
-  plug(Tesla.Middleware.BaseUrl, @baseurl)
-  @debug && plug(Tesla.Middleware.Logger)
-
-  @doc """
-  Filter out any empty values from a list.
-  Removes nil, {}, [], and "".
-  """
-  @spec filter_empties(list) :: list
-  def filter_empties(list) do
-    list
-    |> Enum.filter(fn x -> x != nil end)
-    |> Enum.filter(fn x -> x != {} end)
-    |> Enum.filter(fn x -> x != [] end)
-    |> Enum.filter(fn x -> x != "" end)
-  end
-
-  @doc """
-  Extracts the data from a response. Given a response, it will structure the
-  data in a way that is easier to work with. IPFS only sends strings. This
-  function will convert the string to a list of maps.
-  """
-  @spec map_response_data(any) :: list
-  def map_response_data(response) do
-    extract_data_from_plain_response(response)
-    |> filter_empties()
-    |> convert_list_of_tuples_to_map()
-  end
-
-  @doc """
-  Wraps the data in an elixir standard response tuple.
-  {:ok, data} or {:error, data}
-  """
-  @spec okify(any) :: {:ok, any} | {:error, any}
-  def okify({:error, _} = err), do: err
-  def okify(res), do: {:ok, res}
-
-  @doc """
-  High level function allowing to perform POST requests to the node.
-  A `path` has to be provided, along with an optional list of `opts` that are
-  dependent on the endpoint that will get hit.
-  NB! This is not a GET request, but a POST request. IPFS uses POST requests.
-  """
-  @spec post_query(path, opts) :: result
-  def post_query(path, opts \\ []) do
-    handle_response(post(@baseurl <> path, "", opts))
-  end
-
-  @doc """
-  High level function allowing to send file contents to the node.
-  A `path` has to be specified along with the `fspath` to be sent. Also, a list
-  of `opts` can be optionally sent.
-  """
-  @spec post_file(path, fspath, opts) :: result
-  def post_file(path, fspath, opts \\ []) do
-    cond do
-      File.dir?(fspath) ->
-        {:error, "FIXME: Upload off directories not implented yet."}
-
-      not File.exists?(fspath) ->
-        {:error, "fspath does not exist"}
-
-      true ->
-        handle_response(post(path, multipart(fspath), opts))
-    end
-  end
-
-  @doc """
-  Unlists a list if it only contains one element.
-  """
-  @spec unlist(list) :: any
-  def unlist(list) do
-    case list do
-      [x] -> x
-      _ -> list
-    end
-  end
-
-  # Private functions
-
-  defp convert_list_of_tuples_to_map(list) do
-    list
-    |> filter_empties()
-    |> Enum.map(fn x -> list_of_tuples_to_map(x) end)
-  end
-
-  defp extract_data_from_plain_response(binary) do
-    binary
-    |> split_string_by_newline()
-    |> filter_empties()
-    |> Enum.map(fn x -> extract_tuples_from_string(x) end)
-  end
-
-  defp extract_tuples_from_string(string) do
-    string
-    |> split_string_by_comma()
-    |> filter_empties()
-    |> Enum.map(fn x -> tuplestring_to_tuple(x) end)
-  end
-
-  defp filter_empty_keys(map) do
-    map
-    |> Enum.reject(fn {x, _} -> is_nil(x) end)
-    |> Enum.reject(fn {x, _} -> x == "" end)
-  end
-
-  defp get_value_from_string(string) do
-    # IO.puts("ValueString: #{string}")
-    with data = Regex.run(~r/:"(.+?)"/, string),
-         true <- not is_nil(data) do
-      Enum.at(data, 1)
+    if start? == false do
+      pid |> shutdown(flag)
     else
-      _ -> nil
+      pid
     end
   end
 
-  defp get_name_from_string(string) do
-    # IO.puts("NameString: #{string}")
-    with data = Regex.run(~r/"(.+?)":/, string),
-         true <- not is_nil(data) do
-      Enum.at(data, 1)
-    else
-      _ -> nil
+  defp shutdown(pid, term) do
+    Process.exit(pid, term)
+  end
+
+  @type result :: MyspaceIPFS.result()
+  @type path :: MyspaceIPFS.path()
+  @type opts :: MyspaceIPFS.opts()
+  @type fspath :: MyspaceIPFS.fspath()
+  @type name :: MyspaceIPFS.name()
+
+  @doc """
+  Shutdown the IPFS daemon.
+  """
+  @spec shutdown :: result
+  def shutdown, do: post_query("/shutdown")
+
+  @doc """
+  Resolve the value of names to IPFS.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-resolve
+  ```
+  [
+    recursive: true,
+    nocache: true,
+    dht-record-count: 10,
+    dht-timeout: 10
+  ]
+  ```
+  """
+  @spec resolve(path, opts) :: result
+  def resolve(path, opts \\ []),
+    do:
+      post_query("/resolve?arg=" <> path, opts)
+      |> map_response_data()
+      |> okify()
+
+  @doc """
+  Add a file to IPFS.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
+  """
+  @spec add(fspath, opts) :: result
+  def add(fspath, opts \\ []),
+    do:
+      post_file("/add", fspath, opts)
+      |> map_response_data()
+      |> okify()
+
+  @doc """
+  Get a file or directory from IPFS.
+  As it stands ipfs sends a text blob back, so we need to implement a way to
+  get the file extracted and saved to disk.
+
+  Compression is not implemented yet. IPFS sends a plain tarball anyhow, so there's
+  no serious need to compress it.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-get
+  ```
+  [
+    output: <string>, # Optional, default: Name of the object. CID or path basename.
+    archive: <bool>, # Optional, default: false
+    compress: <bool>, # NOT IMPLEMENTED
+    compression_level: <int> # NOT IMPLEMENTED
+  ]
+  ```
+  """
+
+  @spec get(path, opts) :: result
+  defdelegate get(path, opts \\ []), to: MyspaceIPFS.Api.Get
+  # defp handle_file_write(data, opts),
+  #   do:
+  #     with(
+  #       compress <- Keyword.get(opts, :compress, false),
+  #       compression_level <- Keyword.get(opts, :compression_level, 0),
+  #       do: File.write!(output, data)
+  #     )
+
+  @doc """
+  Get the contents of a file from ipfs.
+  Easy way to get the contents of a text file for instance.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cat
+  """
+  @spec cat(path, opts) :: result
+  def cat(path, opts \\ []),
+    do:
+      post_query("/cat?arg=" <> path, opts)
+      |> map_response_data()
+      |> okify()
+
+  @doc """
+    List the files in an IPFS object.
+  """
+  @spec ls(path, opts) :: result
+  def ls(path, opts \\ []),
+    do:
+      post_query("/ls?arg=" <> path, opts)
+      |> map_response_data()
+      |> okify()
+
+  @doc """
+  Show the id of the IPFS node.
+
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-id
+  Returns a map with the following keys:
+    - ID: the id of the node.
+    - PublicKey: the public key of the node.
+    - Addresses: the addresses of the node.
+    - AgentVersion: the version of the node.
+    - ProtocolVersion: the protocol version of the node.
+    - Protocols: the protocols of the node.
+  """
+  @spec id :: result
+  def id,
+    do:
+      post_query("/id")
+      |> map_response_data()
+      |> filter_empties()
+      |> unlist()
+      |> okify()
+
+  @doc """
+  Ping a peer.
+  ## Parameters
+  - peer: the peer to ping.
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-ping
+  ```
+  [
+    n|count: <int>,
+  ]
+  ```
+  """
+  @spec ping(name, opts) :: result
+  def ping(peer, opts \\ []),
+    do:
+      post_query("/ping?arg=" <> peer, opts)
+      |> map_response_data()
+      |> okify()
+
+  if @experimental do
+    @doc """
+    Mount an IPFS read-only mountpoint.
+
+    ## Options
+    https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-mount
+    ```
+    [
+      ipfs-path: <string>, # default: /ipfs
+      ipns-path: <string>, # default: /ipns
+    ]
+    ```
+    """
+    @spec mount(opts) :: result
+    def mount(opts \\ []) do
+      case @experimental do
+        true ->
+          post_query("/mount", opts)
+          |> map_response_data()
+          |> okify()
+
+        false ->
+          raise "This command is experimental and must be enabled in the config."
+      end
     end
-  end
-
-  defp handle_response(response) do
-    # Handles the response from the node. It returns the body of the response
-    # if the status code is 200, otherwise it returns an error tuple.
-    # ## Status codes that are handled
-    # https://docs.ipfs.tech/reference/kubo/rpc/#http-status-codes
-    #   - 200 - The request was processed or is being processed (streaming)
-    #   - 500 - RPC Endpoint returned an error
-    #   - 400 - Malformed RPC, argument type error, etc.
-    #   - 403 - RPC call forbidden
-    #   - 404 - RPC endpoint does not exist
-    #   - 405 - RPC endpoint exists but method is not allowed
-    case response do
-      {:ok, %Tesla.Env{status: 200, body: body}} -> body
-      {:ok, %Tesla.Env{status: 500}} -> {:eserver, response}
-      {:ok, %Tesla.Env{status: 400}} -> {:eclient, response}
-      {:ok, %Tesla.Env{status: 403}} -> {:eaccess, response}
-      {:ok, %Tesla.Env{status: 404}} -> {:emissing, response}
-      {:ok, %Tesla.Env{status: 405}} -> {:enoallow, response}
-      {:error, _} -> {:error, response}
-    end
-  end
-
-  defp list_of_tuples_to_map(list) do
-    list
-    |> filter_empties()
-    |> Enum.into(%{})
-    |> filter_empty_keys()
-  end
-
-  defp multipart(fspath) do
-    Multipart.new()
-    |> Multipart.add_file(fspath,
-      name: "file",
-      filename: "#{fspath}",
-      detect_content_type: true
-    )
-  end
-
-  defp split_string_by_newline(string) do
-    Regex.split(~r/\n/, string)
-  end
-
-  defp split_string_by_comma(string) do
-    Regex.split(~r/,/, string)
-  end
-
-  defp tuplestring_to_tuple(string) do
-    {get_name_from_string(string), get_value_from_string(string)}
   end
 end

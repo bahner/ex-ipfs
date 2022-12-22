@@ -2,7 +2,7 @@ defmodule MyspaceIPFS.Api.Block do
   @moduledoc """
   MyspaceIPFS.Api.Blocki is where the commands commands of the IPFS API reside.
   """
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   def get(arg), do: post_query("/block/get?arg=" <> arg)
 

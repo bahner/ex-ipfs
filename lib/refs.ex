@@ -3,7 +3,7 @@ defmodule MyspaceIPFS.Api.Refs do
   # MyspaceIPFS.Api is where the main commands of the IPFS API reside.
   # """
 
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   defstruct [
     :Ref,

@@ -2,7 +2,7 @@ defmodule MyspaceIPFS.Api.Diag do
   @moduledoc """
   MyspaceIPFS.Api is where the diag commands of the IPFS API reside.
   """
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   # DIAG COMMANDS
   # NB: profile is not implemented yet.

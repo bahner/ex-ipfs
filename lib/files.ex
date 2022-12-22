@@ -3,7 +3,7 @@ defmodule MyspaceIPFS.Api.Files do
   MyspaceIPFS.Api is where the files commands of the IPFS API reside.
   """
 
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   def cp(source, dest), do: post_query("/files/cp?arg=" <> source <> "&arg=" <> dest)
 

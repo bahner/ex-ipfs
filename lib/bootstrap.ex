@@ -2,7 +2,7 @@ defmodule MyspaceIPFS.Api.Bootstrap do
   @moduledoc """
   MyspaceIPFS.Api is where the bootstrap commands of the IPFS API reside.
   """
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   # BOOTSTRAP COMMANDS
   # FIXME: bootstrap is not implemented yet.

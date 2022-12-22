@@ -2,7 +2,7 @@ defmodule MyspaceIPFS.Api.PubSub do
   @moduledoc """
   MyspaceIPFS.Api.PubSub is where the pubsub commands of the IPFS API reside.
   """
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   def ls, do: post_query("/pubsub/ls")
 

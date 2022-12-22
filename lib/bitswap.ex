@@ -2,7 +2,7 @@ defmodule MyspaceIPFS.Api.Bitswap do
   @moduledoc """
   MyspaceIPFS.Api.Bitswap is where the bootstrap commands of the IPFS API reside.
   """
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   @doc """
   Get the current bitswap ledger for a given peer.

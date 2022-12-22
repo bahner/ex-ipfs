@@ -1,7 +1,7 @@
 defmodule MyspaceIPFS.Api.Update do
   # FIXME: This is a stub.  It needs to be implemented.
   @moduledoc false
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   @type result :: MyspaceIPFS.result()
   @type opts :: MyspaceIPFS.opts()

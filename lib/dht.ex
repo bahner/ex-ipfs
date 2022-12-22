@@ -2,7 +2,7 @@ defmodule MyspaceIPFS.Api.Dht do
   @moduledoc """
   MyspaceIPFS.Api.Dht is where the dht commands of the IPFS API reside.
   """
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   # DHT COMMANDS
   # NB: findpeer is deprecated.

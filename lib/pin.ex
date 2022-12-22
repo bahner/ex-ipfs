@@ -2,7 +2,7 @@ defmodule MyspaceIPFS.Api.Pin do
   @moduledoc """
   MyspaceIPFS.Api.Pin is where the pin commands of the IPFS API reside.
   """
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   def add(object), do: post_query("/pin/add?arg=" <> object)
 

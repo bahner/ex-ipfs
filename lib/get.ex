@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS.Api.Get do
   @moduledoc false
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   @type result :: MyspaceIPFS.result()
   @type path :: MyspaceIPFS.path()

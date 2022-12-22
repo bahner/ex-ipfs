@@ -3,7 +3,7 @@ defmodule MyspaceIPFS.Api.Swarm do
   MyspaceIPFS.Api.Swarm is where the swarm commands of the IPFS API reside.
   """
 
-  import MyspaceIPFS
+  import MyspaceIPFS.Api
 
   def peers, do: post_query("/swarm/peers")
 

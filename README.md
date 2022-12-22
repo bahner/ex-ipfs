@@ -19,7 +19,7 @@ Add myspace_ipfs to your `mix.exs` dependencies:
 ```elixir
 def deps do
 [
-    {:myspace_ipfs, "~> 0.0.1"},
+    {:myspace_ipfs, "~> 1.0.0"},
 ]
 end
 ```
@@ -28,3 +28,9 @@ and run `$ mix deps.get` to install the dependency.
 
 ## Usage
 Make sure ipfs is running. Then you can start using the module. Documentation is picking up. And should be fairly decent, when I reach 1.0.0.
+
+To use do:
+```elixir
+alias MyspaceIPFS, as: IPFS
+IPFS.id()
+```
