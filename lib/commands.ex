@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Commands do
+defmodule MyspaceIPFS.Commands do
   @moduledoc """
   MyspaceIPFS.Api.Commands is where the commands commands of the IPFS API reside.
   """

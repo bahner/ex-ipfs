@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Diag do
+defmodule MyspaceIPFS.Diag do
   @moduledoc """
   MyspaceIPFS.Api is where the diag commands of the IPFS API reside.
   """

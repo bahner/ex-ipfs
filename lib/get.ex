@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Get do
+defmodule MyspaceIPFS.Get do
   @moduledoc false
   import MyspaceIPFS.Api
 

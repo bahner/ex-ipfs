@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Name do
+defmodule MyspaceIPFS.Name do
   @moduledoc """
   MyspaceIPFS.Api.Name is where the name commands of the IPFS API reside.
   """

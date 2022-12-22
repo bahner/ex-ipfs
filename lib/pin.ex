@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Pin do
+defmodule MyspaceIPFS.Pin do
   @moduledoc """
   MyspaceIPFS.Api.Pin is where the pin commands of the IPFS API reside.
   """

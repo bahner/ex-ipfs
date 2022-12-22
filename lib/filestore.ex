@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Filestore do
+defmodule MyspaceIPFS.Filestore do
   @moduledoc """
   MyspaceIPFS.Api is where the filestore commands of the IPFS API reside.
   """

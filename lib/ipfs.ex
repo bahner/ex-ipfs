@@ -96,7 +96,7 @@ defmodule MyspaceIPFS do
   """
 
   @spec get(path, opts) :: result
-  defdelegate get(path, opts \\ []), to: MyspaceIPFS.Api.Get
+  defdelegate get(path, opts \\ []), to: MyspaceIPFS.Get
   # defp handle_file_write(data, opts),
   #   do:
   #     with(

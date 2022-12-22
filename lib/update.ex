@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Update do
+defmodule MyspaceIPFS.Update do
   # FIXME: This is a stub.  It needs to be implemented.
   @moduledoc false
   import MyspaceIPFS.Api

@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api.Version do
+defmodule MyspaceIPFS.Version do
   @moduledoc """
   MyspaceIPFS.Api.Version is a collection of functions for the MyspaceIPFS library.
   """
