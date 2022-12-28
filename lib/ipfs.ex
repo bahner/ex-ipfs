@@ -52,7 +52,11 @@ defmodule MyspaceIPFS do
   @typedoc """
   The structure of a JSON response from the node.
   """
-  @type result :: {:ok, any} | {:error, Tesla.Env.t()}
+  @type okresult :: {:ok, any} | {:error, Tesla.Env.t()}
+  @typedoc """
+  The structure of a JSON response from the node.
+  """
+  @type result :: any | {:error, Tesla.Env.t()}
 
   @doc """
   Start the IPFS daemon.
@@ -166,22 +170,61 @@ defmodule MyspaceIPFS do
 
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cat
+  ```
+  [
+    offset: <int64>,
+    length: <int64>,
+    progress: <bool>
+  ]
+  ```
   """
   @spec cat(path, opts) :: result
   def cat(path, opts \\ []),
     do:
       post_query("/cat?arg=" <> path, opts)
-      |> map_response_data()
       |> okify()
 
   @doc """
-    List the files in an IPFS object.
+  List the files in an IPFS object.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-ls
+  ```
+  [
+    headers: <bool>,
+    resolve-type: <bool>,
+    stream: <bool>,
+    size: <bool>,
+  ]
+  ```
+
+  ## Response
+  ```
+  {
+    Objects: [
+      {
+        "Name": "string",
+        "Hash": "string",
+        "Size": 0,
+        "Type": 0,
+        "Links": [
+          {
+            "Name": "string",
+            "Hash": "string",
+            "Size": 0,
+            "Type": 0
+          }
+        ]
+      }
+    ]
+  }
+  ```
   """
   @spec ls(path, opts) :: result
   def ls(path, opts \\ []),
     do:
       post_query("/ls?arg=" <> path, opts)
-      |> map_response_data()
+      |> Jason.decode!()
       |> okify()
 
   @doc """
@@ -239,15 +282,9 @@ defmodule MyspaceIPFS do
     """
     @spec mount(opts) :: result
     def mount(opts \\ []) do
-      case @experimental do
-        true ->
-          post_query("/mount", opts)
-          |> map_response_data()
-          |> okify()
-
-        false ->
-          raise "This command is experimental and must be enabled in the config."
-      end
+      post_query("/mount", opts)
+      |> map_response_data()
+      |> okify()
     end
   end
 end

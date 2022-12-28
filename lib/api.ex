@@ -52,16 +52,7 @@ defmodule MyspaceIPFS.Api do
   """
   @spec post_file(path, fspath, opts) :: result
   def post_file(path, fspath, opts \\ []) do
-    cond do
-      File.dir?(fspath) ->
-        {:error, "FIXME: Upload off directories not implented yet."}
-
-      not File.exists?(fspath) ->
-        {:error, "fspath does not exist"}
-
-      true ->
-        handle_response(post(path, multipart(fspath), opts))
-    end
+    handle_response(post(path, multipart(fspath), opts))
   end
 
   defp handle_response(response) do
@@ -86,12 +77,47 @@ defmodule MyspaceIPFS.Api do
     end
   end
 
+  # Thanks to some forum :-)
+  defp ls_r(path \\ ".") do
+    cond do
+      File.regular?(path) ->
+        [path]
+
+      File.dir?(path) ->
+        File.ls!(path)
+        |> Enum.map(&Path.join(path, &1))
+        |> Enum.map(&ls_r/1)
+        |> Enum.concat()
+
+      true ->
+        []
+    end
+  end
+
+  # This function is written explicitly to remove the base directory from the
+  # file path. This is done so that the file path is relative to the base
+  # directory. This is to avoid leaking irrelevant paths to the server.
+  defp multipart_add_file(mp, fspath, basedir) do
+    with relative_filename = String.replace(fspath, basedir <> "/", "") do
+      Multipart.add_file(mp, fspath,
+        name: "file",
+        filename: "#{relative_filename}",
+        detect_content_type: true
+      )
+    end
+  end
+
+  defp multipart_add_files(multipart, fspath) do
+    with basedir = Path.dirname(fspath) do
+      ls_r(fspath)
+      |> Enum.reduce(multipart, fn fspath, multipart ->
+        multipart_add_file(multipart, fspath, basedir)
+      end)
+    end
+  end
+
   defp multipart(fspath) do
     Multipart.new()
-    |> Multipart.add_file(fspath,
-      name: "file",
-      filename: "#{fspath}",
-      detect_content_type: true
-    )
+    |> multipart_add_files(fspath)
   end
 end
