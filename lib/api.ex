@@ -32,7 +32,7 @@ defmodule MyspaceIPFS.Api do
 
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @baseurl)
-  @debug && plug(Tesla.Middleware.Logger)
+  plug(Tesla.Middleware.Logger)
 
   @doc """
   High level function allowing to perform POST requests to the node.
@@ -42,7 +42,17 @@ defmodule MyspaceIPFS.Api do
   """
   @spec post_query(path, opts) :: result
   def post_query(path, opts \\ []) do
-    handle_response(post(@baseurl <> path, "", opts))
+    handle_response(post(@baseurl <> path, "", query: opts))
+  end
+
+  @doc """
+  High level function allowing to send data to the node.
+  A `path` has to be specified along with the `data` to be sent. Also, a list
+  of `opts` can be optionally sent.
+  """
+  @spec post_data(path, any, opts) :: result
+  def post_data(path, data, opts \\ []) do
+    handle_response(post(@baseurl <> path, data, query: opts))
   end
 
   @doc """
@@ -62,7 +72,7 @@ defmodule MyspaceIPFS.Api do
   """
   @spec post_file(path, fspath, opts) :: result
   def post_file(path, fspath, opts \\ []) do
-    handle_response(post(path, multipart(fspath), opts))
+    handle_response(post(path, multipart(fspath), query: opts))
   end
 
   defp handle_response(response) do

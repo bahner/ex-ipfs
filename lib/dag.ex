@@ -38,15 +38,43 @@ defmodule MyspaceIPFS.Dag do
   end
 
   @doc """
-  Import the contents of .car files.
+  Import the contents of a DAG.
+
+  The IPFS API does not currently support posting data directly to the endpoint. So
+  we have to write the data to a temporary file and then post that file.
 
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-dag-import
   """
   @spec import(fspath, opts) :: okresult
-  def import(filename, opts \\ []) do
+  def import(data, opts \\ []) do
+    filename = write_tmpfile(data)
+    result = post_file("/dag/import", filename, opts)
+    File.rm(filename)
+    result
+    # |> map_response_data()
+    |> Jason.decode()
+  end
+
+  # WIP:
+  @doc """
+  Import the contents of .car files.
+
+  The IPFS API does not currently support posting data directly to the endpoint.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-dag-import
+  """
+  @spec import_file(fspath, opts) :: okresult
+  def import_file(filename, opts \\ []) do
+<<<<<<< Updated upstream
     post_file("/dag/import", filename, opts)
     |> okify()
+=======
+    IO.inspect(opts)
+    post_file("/dag/import", filename, opts)
+    # |> map_response_data()
+>>>>>>> Stashed changes
   end
 
   @doc """
