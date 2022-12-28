@@ -5,8 +5,8 @@ defmodule MyspaceIPFS do
 
         ## Examples
 
-        iex> alias MyspaceIPFS.API, as: Api
-        iex> Api.get("Multihash_key")
+        iex> alias MyspaceIPFS, as: Ipfs
+        iex> Ipfs.cat(QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
         <<0, 19, 148, 0, ... >>
   """
 
@@ -31,6 +31,10 @@ defmodule MyspaceIPFS do
   """
   @type name :: String.t()
   @typedoc """
+  The CID of the file or data to be sent to the node.
+  """
+  @type cid :: String.t()
+  @typedoc """
   The options to be sent to the node. These are dependent on the endpoint
   """
   @type opts :: list
@@ -50,18 +54,25 @@ defmodule MyspaceIPFS do
   """
   @type mapped :: {:ok, list} | {:error, Tesla.Env.t()}
   @typedoc """
-  The structure of a JSON response from the node.
+  The structure of a JSON response from the node with :ok or :error.
   """
   @type okresult :: {:ok, any} | {:error, Tesla.Env.t()}
   @typedoc """
   The structure of a JSON response from the node.
   """
   @type result :: any | {:error, Tesla.Env.t()}
+  @typedoc """
+  A simple :ok or :error response from the node.
+  """
+  @type ok :: {:ok} | {:error, Tesla.Env.t()}
 
   @doc """
   Start the IPFS daemon.
 
   You should run this before any other command, but it's probably easier to do outside of the library.
+
+  The flag is the signal to send to the daemon process when shutting it down, ie. when start? is false.
+  The default is `:normal`.
 
   ## Options
   https://docs.ipfs.tech/reference/kubo/cli/#ipfs-daemon
@@ -86,25 +97,29 @@ defmodule MyspaceIPFS do
   ]
   ```
   """
-  def daemon(start? \\ true, flag \\ [], opts \\ []) do
+  @spec daemon(boolean, atom, opts) :: pid
+  def daemon(start? \\ true, signal \\ :normal, opts \\ []) do
     {:ok, pid} = Task.start(fn -> System.cmd("ipfs", ["daemon"] ++ opts) end)
 
     if start? == false do
-      pid |> shutdown(flag)
+      pid |> shutdown_daemon_process(signal)
     else
       pid
     end
   end
 
-  defp shutdown(pid, term) do
+  defp shutdown_daemon_process(pid, term) do
     Process.exit(pid, term)
   end
 
   @doc """
   Shutdown the IPFS daemon.
   """
-  @spec shutdown :: result
-  def shutdown, do: post_query("/shutdown")
+  @spec shutdown :: okresult
+  def shutdown do
+    post_query("/shutdown")
+    {:ok}
+  end
 
   @doc """
   Resolve the value of names to IPFS.
@@ -120,7 +135,7 @@ defmodule MyspaceIPFS do
   ]
   ```
   """
-  @spec resolve(path, opts) :: result
+  @spec resolve(path, opts) :: okresult
   def resolve(path, opts \\ []),
     do:
       post_query("/resolve?arg=" <> path, opts)
@@ -161,7 +176,7 @@ defmodule MyspaceIPFS do
   ]
   ```
   """
-  @spec get(path, opts) :: result
+  @spec get(path, opts) :: okresult
   defdelegate get(path, opts \\ []), to: MyspaceIPFS.Get
 
   @doc """
@@ -182,7 +197,6 @@ defmodule MyspaceIPFS do
   def cat(path, opts \\ []),
     do:
       post_query("/cat?arg=" <> path, opts)
-      |> okify()
 
   @doc """
   List the files in an IPFS object.
@@ -220,7 +234,7 @@ defmodule MyspaceIPFS do
   }
   ```
   """
-  @spec ls(path, opts) :: result
+  @spec ls(path, opts) :: okresult
   def ls(path, opts \\ []),
     do:
       post_query("/ls?arg=" <> path, opts)
@@ -239,7 +253,7 @@ defmodule MyspaceIPFS do
     - ProtocolVersion: the protocol version of the node.
     - Protocols: the protocols of the node.
   """
-  @spec id :: result
+  @spec id :: okresult
   def id,
     do:
       post_query("/id")
@@ -260,7 +274,7 @@ defmodule MyspaceIPFS do
   ]
   ```
   """
-  @spec ping(name, opts) :: result
+  @spec ping(name, opts) :: okresult
   def ping(peer, opts \\ []),
     do:
       post_query("/ping?arg=" <> peer, opts)
@@ -280,7 +294,7 @@ defmodule MyspaceIPFS do
     ]
     ```
     """
-    @spec mount(opts) :: result
+    @spec mount(opts) :: okresult
     def mount(opts \\ []) do
       post_query("/mount", opts)
       |> map_response_data()
