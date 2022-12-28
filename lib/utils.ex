@@ -3,6 +3,7 @@ defmodule MyspaceIPFS.Utils do
   Some common functions that are used throughout the library.
   """
 
+  @type fspath :: MyspaceIPFS.fspath()
   @doc """
   Filter out any empty values from a list.
   Removes nil, {}, [], and "".
@@ -44,6 +45,26 @@ defmodule MyspaceIPFS.Utils do
     case list do
       [x] -> x
       _ -> list
+    end
+  end
+
+  @doc false
+  @spec write_tmpfile(binary, fspath) :: binary
+  def write_tmpfile(data, dir \\ "/tmp") do
+    with dir <- mktempdir(dir),
+         name <- Nanoid.generate(),
+         file <- dir <> "/" <> name do
+      File.write!(file, data)
+      file
+    end
+  end
+
+  @doc false
+  def mktempdir(parent_dir) do
+    with dir <- Nanoid.generate(),
+         dir_path <- parent_dir <> "/" <> dir do
+      File.mkdir_p(dir_path)
+      dir_path
     end
   end
 

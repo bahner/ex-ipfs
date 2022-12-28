@@ -1,6 +1,7 @@
 defmodule MyspaceIPFS.Get do
   @moduledoc false
   import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
   @typep path :: MyspaceIPFS.path()
   @typep fspath :: MyspaceIPFS.fspath()
@@ -37,23 +38,6 @@ defmodule MyspaceIPFS.Get do
       end
 
       File.rm_rf!(cwd)
-    end
-  end
-
-  defp write_tmpfile(data, dir \\ "/tmp") do
-    with dir <- mktempdir(dir),
-         name <- Nanoid.generate(),
-         file <- dir <> "/" <> name do
-      File.write!(file, data)
-      file
-    end
-  end
-
-  defp mktempdir(parent_dir) do
-    with dir <- Nanoid.generate(),
-         dir_path <- parent_dir <> "/" <> dir do
-      File.mkdir_p(dir_path)
-      dir_path
     end
   end
 end
