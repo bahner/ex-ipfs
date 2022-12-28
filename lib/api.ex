@@ -46,6 +46,16 @@ defmodule MyspaceIPFS.Api do
   end
 
   @doc """
+  High level function allowing to send data to the node.
+  A `path` has to be specified along with the `data` to be sent. Also, a list
+  of `opts` can be optionally sent.
+  """
+  @spec post_data(path, any, opts) :: result
+  def post_data(path, data, opts \\ []) do
+    handle_response(post(@baseurl <> path, data, opts))
+  end
+
+  @doc """
   High level function allowing to send file contents to the node.
   A `path` has to be specified along with the `fspath` to be sent. Also, a list
   of `opts` can be optionally sent.
@@ -78,7 +88,7 @@ defmodule MyspaceIPFS.Api do
   end
 
   # Thanks to some forum :-)
-  defp ls_r(path \\ ".") do
+  defp ls_r(path) do
     cond do
       File.regular?(path) ->
         [path]

@@ -17,27 +17,28 @@ defmodule MyspaceIPFS do
 
   # Types
   @typedoc """
+  The name of the file or data to be sent to the node.
+  """
+  @type cid :: atom
+
+  @typedoc """
+  The file system path to the file to be sent to the node.
+  Because <cid>, /ipfs/<cid> or /ipns/<cid> are all allowed it looks like a path.
+  """
+  @type fspath :: Path.t()
+
+  @typedoc """
+  The options to be sent to the node. These are dependent on the endpoint.
+  it's because prefixes like /ipfs/ or /ipns/ are not allowed.
+  """
+  @type opts :: list
+
+  @typedoc """
   The path to the endpoint to be hit. For example, `/add` or `/cat`.
   It's called path because sometimes the MultiHash is not enough to
   identify the resource, and a path is needed, eg. /ipns/myspace.bahner.com
   """
-  @type path :: String.t()
-  @typedoc """
-  The file system path to the file to be sent to the node.
-  """
-  @type fspath :: String.t()
-  @typedoc """
-  The name of the file or data to be sent to the node.
-  """
-  @type name :: String.t()
-  @typedoc """
-  The CID of the file or data to be sent to the node.
-  """
-  @type cid :: String.t()
-  @typedoc """
-  The options to be sent to the node. These are dependent on the endpoint
-  """
-  @type opts :: list
+  @type path :: Path.t()
 
   @typedoc """
   The structure of a normal error response from the node.
@@ -52,7 +53,7 @@ defmodule MyspaceIPFS do
   @typedoc """
   The structure of a normal response from the node.
   """
-  @type mapped :: {:ok, list} | {:error, Tesla.Env.t()}
+  @type okmapped :: {:ok, list} | {:error, Tesla.Env.t()}
   @typedoc """
   The structure of a JSON response from the node with :ok or :error.
   """
@@ -195,8 +196,7 @@ defmodule MyspaceIPFS do
   """
   @spec cat(path, opts) :: result
   def cat(path, opts \\ []),
-    do:
-      post_query("/cat?arg=" <> path, opts)
+    do: post_query("/cat?arg=" <> path, opts)
 
   @doc """
   List the files in an IPFS object.
@@ -274,7 +274,7 @@ defmodule MyspaceIPFS do
   ]
   ```
   """
-  @spec ping(name, opts) :: okresult
+  @spec ping(cid, opts) :: okresult
   def ping(peer, opts \\ []),
     do:
       post_query("/ping?arg=" <> peer, opts)

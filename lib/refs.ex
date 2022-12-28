@@ -13,13 +13,16 @@ defmodule MyspaceIPFS.Refs do
 
   @typedoc """
     Type for the response of entries in the refs list.
+
+    ## Options
+    https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-refs
   """
   @type t :: %__MODULE__{
           Ref: String.t(),
           Err: String.t()
         }
 
-  @typep mapped :: MyspaceIPFS.plain()
+  @typep okmapped :: MyspaceIPFS.okmapped()
   @typep opts :: MyspaceIPFS.opts()
   @typep path :: MyspaceIPFS.path()
 
@@ -28,14 +31,20 @@ defmodule MyspaceIPFS.Refs do
 
   Response is a list of Refs.t().
   """
-  @spec local :: mapped
+  @spec local :: okmapped
   def local,
     do:
       post_query("/refs/local")
       |> map_response_data()
       |> okify()
 
-  @spec refs(path, opts) :: mapped
+  @doc """
+  Get a list of all references from a given path.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-refs
+  """
+  @spec refs(path, opts) :: okmapped
   def refs(path, opts \\ []),
     do:
       post_query("/refs?arg=" <> path, query: opts)
