@@ -12,7 +12,7 @@ VALUE      = ([^"\n]|\\(.|\n))*
 COMMA           = \,
 COLON           = \:
 SEMICOLON       = \;
-DOUBLE_QUOTE    = \"
+DOUBLE_QUOTE    = ["]
 %% " The comment here is because of a bug in my editor.
 QUOTE     			= \'
 %% ' The comment here is because of a bug in my editor.
@@ -36,25 +36,25 @@ NEWLINE				 	= \n
 %% " The comment here is because of a bug in my editor.
 Rules.
 
-{COLON}         : {token, {colon,           TokenLine, ':'}}.
-{COMMA}         : {token, {comma,           TokenLine, ','}}.
-{SEMICOLON}     : {token, {semicolon,       TokenLine, ';'}}.
-{QUOTE}   			: {token, {quote,     TokenLine, "'"}}.
+{COLON}         : {token, {':',			TokenLine}}.
+{COMMA}         : {token, {',',			TokenLine}}.
+{SEMICOLON}     : {token, {';',			TokenLine}}.
+{QUOTE}   			: {token, {'\'',		TokenLine}}.
 
-{RIGHT_BRACKET} : {token, {rbracket,   TokenLine, ']'}}.
-{RIGHT_BRACE}   : {token, {rbrace,     TokenLine, '}'}}.
-{RIGHT_PAREN}   : {token, {rparen,     TokenLine, ')'}}.
-{LEFT_BRACKET}  : {token, {lbracket,    TokenLine, '['}}.
-{LEFT_BRACE}    : {token, {lbrace,      TokenLine, '{'}}.
-{LEFT_PAREN}    : {token, {lparen,      TokenLine, '('}}.
+{RIGHT_BRACKET} : {token, {']',			TokenLine}}.
+{RIGHT_BRACE}   : {token, {'}',			TokenLine}}.
+{RIGHT_PAREN}   : {token, {')',			TokenLine}}.
+{LEFT_BRACKET}  : {token, {'[',			TokenLine}}.
+{LEFT_BRACE}    : {token, {'{',			TokenLine}}.
+{LEFT_PAREN}    : {token, {'(',			TokenLine}}.
 
-{NEWLINE}       : {token, {newline,         TokenLine, '\n'}}.
+{NEWLINE}       : {token, {newline,	TokenLine}}.
 
-{DOUBLE_QUOTE}         : skip_token.
+{DOUBLE_QUOTE}   : skip_token.
 
-%% Data is so greedy, that it *MUST* be last.
-{KEY}    				: {token, {key,      				TokenLine, erlang:list_to_binary(TokenChars)}}.
-{VALUE}    			: {token, {value,      				TokenLine, erlang:list_to_binary(TokenChars)}}.
+%% VALUE is so greedy, that it *MUST* be last.
+{KEY}    				: {token, {key,			TokenLine, erlang:list_to_binary(TokenChars)}}.
+{VALUE}    			: {token, {value,		TokenLine, erlang:list_to_binary(TokenChars)}}.
 %% comments
 
 Erlang code.
