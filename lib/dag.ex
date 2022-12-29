@@ -67,14 +67,8 @@ defmodule MyspaceIPFS.Dag do
   """
   @spec import_file(fspath, opts) :: okresult
   def import_file(filename, opts \\ []) do
-<<<<<<< Updated upstream
     post_file("/dag/import", filename, opts)
     |> okify()
-=======
-    IO.inspect(opts)
-    post_file("/dag/import", filename, opts)
-    # |> map_response_data()
->>>>>>> Stashed changes
   end
 
   @doc """

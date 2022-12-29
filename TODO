@@ -2,4 +2,5 @@ TODO
 ===
 
 QA commands against current API.
-add directories does not work. Elixir just hangs before trying to upload file.
+
+Add lexer/parser to handle raw response data.

@@ -3,19 +3,18 @@
 %% tokens are needed, and what aren't. I'll clean this up later.
 Definitions.
 
-ALNUM 				 = [a-zA-Z0-9/]
-
-
-%% tokens
-IDENTIFIER      = ({ALNUM})+?
+% Keys are camelcased strings, and values are strings.
+KEY				= [A-Z][A-Za-z]*
+VALUE      = ([^"\n]|\\(.|\n))*
+% " The comment here is because of a bug in my editor.
 
 %% special characters and singletons
 COMMA           = \,
 COLON           = \:
 SEMICOLON       = \;
-FNUTT           = ["]
+DOUBLE_QUOTE    = \"
 %% " The comment here is because of a bug in my editor.
-ENKEL_FNUTT     = [']
+QUOTE     			= \'
 %% ' The comment here is because of a bug in my editor.
 SLASH           = \\
 
@@ -30,35 +29,32 @@ LEFT_BRACE      = \{
 LEFT_PAREN      = \(
 
 %% whitespace
-WHITESPACE      = [\s\n\r\t]+
-
-Rules.
+WHITESPACE      = [\s\t]
+NEWLINE				 	= \n
 
 %% tokens
-{IDENTIFIER}    : {token, {identifier,      TokenLine, erlang:list_to_binary(TokenChars)}}.
-
-%% special characters and singletons
+%% " The comment here is because of a bug in my editor.
+Rules.
 
 {COLON}         : {token, {colon,           TokenLine, ':'}}.
 {COMMA}         : {token, {comma,           TokenLine, ','}}.
 {SEMICOLON}     : {token, {semicolon,       TokenLine, ';'}}.
-{FNUTT}         : {token, {fnutt,           TokenLine, '"'}}.
-{ENKEL_FNUTT}   : {token, {enkel_fnutt,     TokenLine, "'"}}.
+{QUOTE}   			: {token, {quote,     TokenLine, "'"}}.
 
-%% terminals and start states
-{RIGHT_BRACKET} : {token, {right_bracket,   TokenLine, ']'}}.
-{RIGHT_BRACE}   : {token, {right_brace,     TokenLine, '}'}}.
-{RIGHT_PAREN}   : {token, {right_paren,     TokenLine, ')'}}.
+{RIGHT_BRACKET} : {token, {rbracket,   TokenLine, ']'}}.
+{RIGHT_BRACE}   : {token, {rbrace,     TokenLine, '}'}}.
+{RIGHT_PAREN}   : {token, {rparen,     TokenLine, ')'}}.
+{LEFT_BRACKET}  : {token, {lbracket,    TokenLine, '['}}.
+{LEFT_BRACE}    : {token, {lbrace,      TokenLine, '{'}}.
+{LEFT_PAREN}    : {token, {lparen,      TokenLine, '('}}.
 
-%% begin
-{LEFT_BRACKET}  : {token, {left_bracket,    TokenLine, '['}}.
-{LEFT_BRACE}    : {token, {left_brace,      TokenLine, '{'}}.
-{LEFT_PAREN}    : {token, {left_paren,      TokenLine, '('}}.
+{NEWLINE}       : {token, {newline,         TokenLine, '\n'}}.
 
-%% newlines
-{LINEFEED}+      : skip_token.
-{WHITESPACE}+    : skip_token.
+{DOUBLE_QUOTE}         : skip_token.
 
+%% Data is so greedy, that it *MUST* be last.
+{KEY}    				: {token, {key,      				TokenLine, erlang:list_to_binary(TokenChars)}}.
+{VALUE}    			: {token, {value,      				TokenLine, erlang:list_to_binary(TokenChars)}}.
 %% comments
 
 Erlang code.
