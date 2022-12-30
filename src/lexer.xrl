@@ -1,60 +1,61 @@
-%% NB! This file is substantially overloaded with tokens, that
-%% probably aren't needed. This is because I'm not sure what
-%% tokens are needed, and what aren't. I'll clean this up later.
+%%% File    : erlang_scan.xrl
+%%% Author  : Robert Virding
+%%% Purpose : Token definitions for Erlang.
+
 Definitions.
+U	= [A-Z]
+L	= [a-z]
+A	= ({U}|{L}|{D}|_|@)
+WS	= ([\000-\s]|%.*)
 
-% Keys are camelcased strings, and values are strings.
-KEY				= [A-Z][A-Za-z]*
-VALUE      = ([^"\n]|\\(.|\n))*
-% " The comment here is because of a bug in my editor.
-
-%% special characters and singletons
-COMMA           = \,
-COLON           = \:
-SEMICOLON       = \;
-DOUBLE_QUOTE    = ["]
-%% " The comment here is because of a bug in my editor.
-QUOTE     			= \'
-%% ' The comment here is because of a bug in my editor.
-SLASH           = \\
-
-%% terminals and start states
-RIGHT_BRACKET   = \]
-RIGHT_BRACE     = \}
-RIGHT_PAREN     = \)
-
-%% begin
-LEFT_BRACKET    = \[
-LEFT_BRACE      = \{
-LEFT_PAREN      = \(
-
-%% whitespace
-WHITESPACE      = [\s\t]
-NEWLINE				 	= \n
-
-%% tokens
-%% " The comment here is because of a bug in my editor.
 Rules.
-
-{COLON}         : {token, {':',			TokenLine}}.
-{COMMA}         : {token, {',',			TokenLine}}.
-{SEMICOLON}     : {token, {';',			TokenLine}}.
-{QUOTE}   			: {token, {'\'',		TokenLine}}.
-
-{RIGHT_BRACKET} : {token, {']',			TokenLine}}.
-{RIGHT_BRACE}   : {token, {'}',			TokenLine}}.
-{RIGHT_PAREN}   : {token, {')',			TokenLine}}.
-{LEFT_BRACKET}  : {token, {'[',			TokenLine}}.
-{LEFT_BRACE}    : {token, {'{',			TokenLine}}.
-{LEFT_PAREN}    : {token, {'(',			TokenLine}}.
-
-{NEWLINE}       : {token, {newline,	TokenLine}}.
-
-{DOUBLE_QUOTE}   : skip_token.
-
-%% VALUE is so greedy, that it *MUST* be last.
-{KEY}    				: {token, {key,			TokenLine, erlang:list_to_binary(TokenChars)}}.
-{VALUE}    			: {token, {value,		TokenLine, erlang:list_to_binary(TokenChars)}}.
-%% comments
+'(\\\^.|\\.|[^'])*' :
+			%% Strip quotes.
+			S = lists:sublist(TokenChars, 2, TokenLen - 2),
+			case catch list_to_atom(string_gen(S)) of
+			    {'EXIT',_} -> {error,"illegal atom " ++ TokenChars};
+			    Atom -> {token,{atom,TokenLine,Atom}}
+			end.
+"(\\\^.|\\.|[^"])*" :
+			%% Strip quotes.
+			S = lists:sublist(TokenChars, 2, TokenLen - 2),
+			{token,{string,TokenLine,string_gen(S)}}.
+\$(\\{O}{O}{O}|\\\^.|\\.|.) :
+			{token,{char,TokenLine,cc_convert(TokenChars)}}.
+[][}{;:,] :
+			{token,{list_to_atom(TokenChars),TokenLine}}.
+\.{WS}		:	{end_token,{dot,TokenLine}}.
+{WS}+		:	skip_token.
 
 Erlang code.
+
+cc_convert([$$,$\\|Cs]) ->
+    hd(string_escape(Cs));
+cc_convert([$$,C]) -> C.
+
+string_gen([$\\|Cs]) ->
+    string_escape(Cs);
+string_gen([C|Cs]) ->
+    [C|string_gen(Cs)];
+string_gen([]) -> [].
+
+string_escape([O1,O2,O3|S]) when
+  O1 >= $0, O1 =< $7, O2 >= $0, O2 =< $7, O3 >= $0, O3 =< $7 ->
+    [(O1*8 + O2)*8 + O3 - 73*$0|string_gen(S)];
+string_escape([$^,C|Cs]) ->
+    [C band 31|string_gen(Cs)];
+string_escape([C|Cs]) when C >= $\000, C =< $\s ->
+    string_gen(Cs);
+string_escape([C|Cs]) ->
+    [escape_char(C)|string_gen(Cs)].
+
+escape_char($n) -> $\n;				%\n = LF
+escape_char($r) -> $\r;				%\r = CR
+escape_char($t) -> $\t;				%\t = TAB
+escape_char($v) -> $\v;				%\v = VT
+escape_char($b) -> $\b;				%\b = BS
+escape_char($f) -> $\f;				%\f = FF
+escape_char($e) -> $\e;				%\e = ESC
+escape_char($s) -> $\s;				%\s = SPC
+escape_char($d) -> $\d;				%\d = DEL
+escape_char(C) -> C.

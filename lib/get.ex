@@ -2,6 +2,7 @@ defmodule MyspaceIPFS.Get do
   @moduledoc false
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
+  require Logger
 
   @typep path :: MyspaceIPFS.path()
   @typep fspath :: MyspaceIPFS.fspath()
@@ -27,17 +28,18 @@ defmodule MyspaceIPFS.Get do
     end
   end
 
-  defp extract_elem_from_tar_to(file, elem, output) do
-    with cwd <- mktempdir("/tmp") do
-      case :erl_tar.extract(file, cwd: cwd) do
-        :ok ->
+  @spec extract_elem_from_tar_to(fspath, fspath, fspath, fspath) :: :ok | {:error, any}
+  def extract_elem_from_tar_to(file, elem, output, parent_tmp_dir \\ "/tmp") do
+    with cwd when is_bitstring(cwd) <- mktempdir(parent_tmp_dir),
+         extract_result <- :erl_tar.extract(file, [{:cwd, ~c'#{cwd}'}]) do
+      if :ok == extract_result do
           File.rename!("#{cwd}/#{elem}", output)
-
-        {:error, {msg, err}} ->
-          raise "Error extracting #{file}: #{msg} #{err}"
+          File.rm_rf!(cwd)
+          :ok
+      else
+        File.rm_rf!(cwd)
+        extract_result
       end
-
-      File.rm_rf!(cwd)
     end
   end
 end

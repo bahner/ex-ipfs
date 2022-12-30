@@ -48,8 +48,8 @@ defmodule MyspaceIPFS.Config do
   end
 
   def show(args) when is_bitstring(args) do
-    {:ok, res} = post_query("/update?arg=", args)
-    res.body |> String.replace(~r/\r|\n/, "")
+    post_query("/update?arg=" <> args)
+    |> String.replace(~r/\r|\n/, "")
   end
 
   # version function - does not currently accept the optional arguments on golang client.

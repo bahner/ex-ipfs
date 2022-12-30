@@ -51,6 +51,7 @@ defmodule MyspaceIPFS.Dag do
     filename = write_tmpfile(data)
     result = post_file("/dag/import", filename, opts)
     File.rm(filename)
+
     result
     # |> map_response_data()
     |> Jason.decode()

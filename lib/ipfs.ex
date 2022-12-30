@@ -19,7 +19,7 @@ defmodule MyspaceIPFS do
   @typedoc """
   The name of the file or data to be sent to the node.
   """
-  @type cid :: atom
+  @type cid :: atom | binary
 
   @typedoc """
   The file system path to the file to be sent to the node.
@@ -116,7 +116,7 @@ defmodule MyspaceIPFS do
   @doc """
   Shutdown the IPFS daemon.
   """
-  @spec shutdown :: okresult
+  @spec shutdown() :: ok
   def shutdown do
     post_query("/shutdown")
     {:ok}

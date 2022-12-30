@@ -59,10 +59,11 @@ defmodule MyspaceIPFS.Utils do
     end
   end
 
+  @spec mktempdir(binary) :: binary
   @doc false
   def mktempdir(parent_dir) do
     with dir <- Nanoid.generate(),
-         dir_path <- parent_dir <> "/" <> dir do
+         dir_path <- parent_dir <> "/myspace-" <> dir do
       File.mkdir_p(dir_path)
       dir_path
     end
