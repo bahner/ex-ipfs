@@ -252,8 +252,6 @@ defmodule MyspaceIPFS do
     do:
       post_query("/id")
       |> map_response_data()
-      |> filter_empties()
-      |> unlist()
       |> okify()
 
   @doc """
@@ -292,7 +290,7 @@ defmodule MyspaceIPFS do
     def mount(opts \\ []) do
       post_query("/mount", opts)
       |> map_response_data()
-      |> okify()
+      # |> okify()
     end
   end
 end

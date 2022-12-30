@@ -1,1 +1,0 @@
-:yecc.file('parser.yrl')

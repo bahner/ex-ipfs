@@ -3,12 +3,17 @@ defmodule MyspaceIPFS.Stats do
   MyspaceIPFS.Api.Stats is where the stats commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
   def bitswap, do: post_query("/stats/bitswap")
 
   def bw, do: post_query("/stats/bw")
 
-  def dht, do: post_query("/stats/dht")
+  @spec dht() :: MyspaceIPFS.okmapped()
+  def dht do
+    post_query("/stats/dht")
+    |> map_response_data()
+  end
 
   # FIXME: bw_peer is not implemented yet.
   # def bw, do: post_query("/stats/bw")

@@ -1,14 +1,17 @@
 #!/usr/bin/make -ef
 
-default: clean lexer.erl parser.erl
+default: clean all
 
 clean:
 	rm -f lexer.dot lexer.erl parser.erl
 
 lexer.erl:
-	elixir lexer.exs
+	./compile.escript lexer
 
 parser.erl:
-	elixir parser.exs
+	./compile.escript parser
+
+all:
+	./compile.escript all
 
 .PHONY: clean default

@@ -2,7 +2,7 @@
 
 default: compile docs
 
-compile: format
+compile: format parser
 	mix compile
 
 format:
@@ -11,5 +11,8 @@ format:
 docs: compile
 	mix docs
 	xdg-open doc/index.html
+
+parser:
+	make -C src
 
 .PHONY: compile docs
