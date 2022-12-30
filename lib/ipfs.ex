@@ -158,24 +158,18 @@ defmodule MyspaceIPFS do
 
   @doc """
   Get a file or directory from IPFS.
-  As it stands ipfs sends a text blob back, so we need to implement a way to
-  get the file extracted and saved to disk.
-  The default name is the CID or the basename of the IPNS or IPFS path.
 
-  *NB! Unsafe (relative symlinks) will raise an error.*
-
-  Compression is not implemented yet.
+  *NB! Unsafe (relative symlinks) will raise an error.* This is a limitation of the underlying library.
 
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-get
   ```
   [
-    output: <string>, # Optional, default: Name of the object. CID or path basename.
-    archive: <bool>, # Optional, default: false
-    compress: <bool>, # NOT IMPLEMENTED
-    compression_level: <int> # NOT IMPLEMENTED
+    output: <string>, # Output to file or directory name. Optional, default: <cid-ipfs-or-ipns-path>
+    archive: <bool>, # Output as a tarball. Optional, default: false
   ]
   ```
+  Compression is not implemented.
   """
   @spec get(path, opts) :: okresult
   defdelegate get(path, opts \\ []), to: MyspaceIPFS.Get

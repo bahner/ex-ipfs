@@ -19,11 +19,11 @@ defmodule MyspaceIPFS.Get do
          tmp <- write_tmpfile(data) do
       if archive do
         File.rename!(tmp, output)
-        {:ok}
+        {:ok, output}
       else
         extract_elem_from_tar_to(tmp, name, output)
         File.rm_rf!(tmp)
-        {:ok}
+        {:ok, output}
       end
     end
   end
