@@ -51,14 +51,4 @@ defmodule MyspaceIPFS.Config do
     post_query("/update?arg=" <> args)
     |> String.replace(~r/\r|\n/, "")
   end
-
-  # version function - does not currently accept the optional arguments on golang client.
-  def version(num \\ false, comm \\ false, repo \\ false, all \\ false) do
-    post_query(
-      "/version?number=" <>
-        to_string(num) <>
-        "&commit=" <> to_string(comm) <> "&repo=" <> to_string(repo) <> "&all=" <> to_string(all),
-      ""
-    )
-  end
 end

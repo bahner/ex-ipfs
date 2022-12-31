@@ -49,9 +49,12 @@ defmodule MyspaceIPFS.Bootstrap do
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bootstrap-list
   """
   @spec list() :: okmapped()
-  def list, do: post_query("/bootstrap/list")
+  def list do
+    post_query("/bootstrap/list")
+    |> handle_data_response()
+  end
 
-    @doc """
+  @doc """
   Remove peer to the bootstrap list.
 
   ## Parameters
@@ -62,7 +65,7 @@ defmodule MyspaceIPFS.Bootstrap do
   """
   @spec rm(binary) :: okmapped()
   def rm(peer) do
-    post_query("bootstrap/rm?arg=" <> peer)
+    post_query("/bootstrap/rm?arg=" <> peer)
     |> handle_data_response()
   end
 
@@ -74,7 +77,7 @@ defmodule MyspaceIPFS.Bootstrap do
   """
   @spec rm_all() :: okmapped()
   def rm_all do
-    post_query("bootstrap/rm/all")
+    post_query("/bootstrap/rm/all")
     |> handle_data_response()
   end
 end

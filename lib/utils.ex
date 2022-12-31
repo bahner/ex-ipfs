@@ -41,9 +41,12 @@ defmodule MyspaceIPFS.Utils do
   # NB: There be dragons in here. This feels like a kludge.
   # But this is a chokepoint for all the errors so it's probably fine
   # and can be refactored later.
+  # The error response when status code is 500 can contain important
+  # information. This function will extract that information and return
+  # it as a tuple.
   @doc false
   @spec handle_data_response({atom, binary}) :: any
-  def handle_data_response({error, response}) do
+  def handle_data_response({:eserver, response}) do
     with {_, tokens, _} <- :lexer.string(~c'#{response}') do
       if tokens == [] do
         {:ok, []}
@@ -54,9 +57,15 @@ defmodule MyspaceIPFS.Utils do
         |> Tuple.to_list()
         |> List.first()
         |> List.first()
-        |> then(fn data -> {error, data} end)
+        |> then(fn data -> {:eserver, data} end)
       end
     end
+  end
+
+  @spec handle_data_response({atom, binary}) :: any
+  def handle_data_response(response) do
+    {error, {:ok, tesla_response}} = response
+    {error, tesla_response}
   end
 
   @doc false
