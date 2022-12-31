@@ -8,6 +8,7 @@ defmodule MyspaceIPFS.Config do
   @typep name :: MyspaceIPFS.name()
   @typep result :: MyspaceIPFS.result()
   @typep opts :: MyspaceIPFS.opts()
+  @typep fspath :: MyspaceIPFS.fspath()
 
   @doc """
   Get the value of a config key.
@@ -15,21 +16,15 @@ defmodule MyspaceIPFS.Config do
   ## Parameters
   key: The key to get the value of.
   value: the value to set the key to (optional).
-  opts: The options to pass to the command (optional).
 
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-config
   ```
-  [
-    arg: "<string>", # the value of the key to set
-    bool: "<bool>",
-    file: "<string>",
-    json: "<bool>",
-  ]
+    `bool` - <bool>, # Set a boolean value.
+    `json` - <bool>, # Parse stringified JSON.
   ```
   """
   @spec config(name, name, opts) :: result
-  @spec config(name, opts) :: result
   def config(key, value \\ nil, opts \\ [])
 
   def config(key, value, opts) when is_bitstring(key) and is_bitstring(value) do
@@ -39,16 +34,52 @@ defmodule MyspaceIPFS.Config do
 
   def config(key, value, opts) when is_bitstring(key) and is_nil(value) do
     post_query("/config?arg=" <> key, opts)
-    |> Jason.decode()
+    |> handle_json_response()
   end
 
   def config(key, _value, opts) when is_bitstring(key) and is_list(opts) do
     post_query("/config?arg=" <> key, opts)
-    |> Jason.decode()
+    |> handle_json_response()
   end
 
-  def show(args) when is_bitstring(args) do
-    post_query("/update?arg=" <> args)
-    |> String.replace(~r/\r|\n/, "")
+  @doc """
+  Apply profile to config.
+
+  ## Parameters
+  profile: The profile to apply.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-config-profile-apply
+  ```
+  [
+    `dry-run` - <bool>, # Dry run.
+  ]
+  ```
+  """
+  @spec profile_apply(name, opts) :: result
+  def profile_apply(profile, opts \\ []) when is_bitstring(profile) do
+    post_query("/config/profile/apply?arg=" <> profile, opts)
+    |> handle_json_response()
+  end
+
+  @doc """
+  Replace the config with the given JSON file.
+
+  ## Parameters
+  fspath: The path to the config file to use.
+  """
+  @spec replace(fspath) :: result
+  def replace(fspath) do
+    post_file("/config/replace", fspath)
+    |> handle_json_response()
+  end
+
+  @doc """
+  Show the current config.
+  """
+  @spec show() :: result
+  def show() do
+    post_query("/config/show")
+    |> handle_json_response()
   end
 end
