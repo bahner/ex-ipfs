@@ -6,6 +6,7 @@ defmodule MyspaceIPFS.Dht do
   import MyspaceIPFS.Utils
 
   @typep peer_id :: MyspaceIPFS.peer_id()
+  @typep okresult :: MyspaceIPFS.okresult()
 
   @doc """
   Find the closest peers to a given key.
@@ -21,6 +22,7 @@ defmodule MyspaceIPFS.Dht do
   ]
   ```
   """
+  @spec query(peer_id) :: okresult
   def query(peer_id) do
     post_query("/dht/query?arg=" <> peer_id)
     |> handle_data_response()
