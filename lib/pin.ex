@@ -103,7 +103,7 @@ defmodule MyspaceIPFS.Pin do
   """
   @spec update(path, path, opts) :: okmapped
   def update(old, new, opts \\ []) do
-    post_query("/pin/update?arg=" <> old <> "&arg=" <> new, opts)
+    post_query("/pin/update?arg=" <> old <> "&arg=" <> new, query: opts)
     |> handle_data_response()
   end
 
@@ -120,7 +120,7 @@ defmodule MyspaceIPFS.Pin do
   """
   @spec verify(opts) :: okmapped
   def verify(opts \\ []) do
-    post_query("/pin/verify", opts)
+    post_query("/pin/verify", query: opts)
     |> handle_data_response()
   end
 
@@ -144,7 +144,7 @@ defmodule MyspaceIPFS.Pin do
   """
   @spec remote_add(path, opts) :: okmapped
   def remote_add(path, opts \\ []) do
-    post_query("/pin/remote/add?arg=" <> path, opts)
+    post_query("/pin/remote/add?arg=" <> path, query: opts)
     |> handle_data_response()
   end
 
@@ -166,7 +166,7 @@ defmodule MyspaceIPFS.Pin do
   """
   @spec remote_ls(opts) :: okmapped
   def remote_ls(opts \\ []) do
-    post_query("/pin/remote/ls", opts)
+    post_query("/pin/remote/ls", query: opts)
     |> handle_data_response()
   end
 
@@ -189,7 +189,7 @@ defmodule MyspaceIPFS.Pin do
   """
   @spec remote_rm(opts) :: okmapped
   def remote_rm(opts \\ []) do
-    post_query("/pin/remote/rm", opts)
+    post_query("/pin/remote/rm", query: opts)
     |> handle_data_response()
   end
 
@@ -229,7 +229,7 @@ defmodule MyspaceIPFS.Pin do
   """
   @spec remote_service_ls(opts) :: okmapped
   def remote_service_ls(opts \\ []) do
-    post_query("/pin/remote/service/ls", opts)
+    post_query("/pin/remote/service/ls", query: opts)
     |> handle_data_response()
   end
 

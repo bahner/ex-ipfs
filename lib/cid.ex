@@ -35,7 +35,7 @@ defmodule MyspaceIPFS.Cid do
   """
   @spec bases(opts) :: okmapped()
   def bases(opts \\ []) do
-    post_query("/cid/bases", opts)
+    post_query("/cid/bases", query: opts)
     |> handle_json_response()
   end
 
@@ -50,7 +50,7 @@ defmodule MyspaceIPFS.Cid do
   """
   @spec codecs(opts) :: okmapped()
   def codecs(opts \\ []) do
-    post_query("/cid/codecs", opts)
+    post_query("/cid/codecs", query: opts)
     |> handle_json_response()
   end
 
@@ -69,7 +69,7 @@ defmodule MyspaceIPFS.Cid do
   """
   @spec format(cid, opts) :: okmapped()
   def format(cid, opts \\ []) do
-    post_query("/cid/format?arg=" <> cid, opts)
+    post_query("/cid/format?arg=" <> cid, query: opts)
     |> handle_json_response()
   end
 
@@ -84,7 +84,7 @@ defmodule MyspaceIPFS.Cid do
   """
   @spec hashes(opts) :: okmapped()
   def hashes(opts \\ []) do
-    post_query("/cid/hashes", opts)
+    post_query("/cid/hashes", query: opts)
     |> handle_json_response()
   end
 end

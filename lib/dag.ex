@@ -31,7 +31,7 @@ defmodule MyspaceIPFS.Dag do
   """
   @spec get(cid, opts) :: okresult
   def get(cid, opts \\ []) do
-    post_query("/dag/get?arg=" <> cid, opts)
+    post_query("/dag/get?arg=" <> cid, query: opts)
     |> handle_json_response()
   end
 
@@ -46,7 +46,7 @@ defmodule MyspaceIPFS.Dag do
   """
   @spec import(fspath, opts) :: okresult
   def import(filename, opts \\ []) do
-    post_file("/dag/import", filename, opts)
+    post_file("/dag/import", filename, query: opts)
     |> handle_json_response()
   end
 
@@ -68,7 +68,7 @@ defmodule MyspaceIPFS.Dag do
   """
   @spec put(fspath, opts) :: okresult
   def put(fspath, opts \\ []) do
-    post_file("/dag/put", fspath, opts)
+    post_file("/dag/put", fspath, query: opts)
     |> handle_json_response()
   end
 end

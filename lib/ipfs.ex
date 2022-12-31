@@ -147,7 +147,7 @@ defmodule MyspaceIPFS do
   @spec resolve(path, opts) :: okresult
   def resolve(path, opts \\ []),
     do:
-      post_query("/resolve?arg=" <> path, opts)
+      post_query("/resolve?arg=" <> path, query: opts)
       |> handle_data_response()
 
   @doc """
@@ -159,7 +159,7 @@ defmodule MyspaceIPFS do
   @spec add(fspath, opts) :: result
   def add(fspath, opts \\ []),
     do:
-      post_file("/add", fspath, opts)
+      post_file("/add", fspath, query: opts)
       |> handle_data_response()
 
   @doc """
@@ -196,7 +196,7 @@ defmodule MyspaceIPFS do
   """
   @spec cat(path, opts) :: result
   def cat(path, opts \\ []),
-    do: post_query("/cat?arg=" <> path, opts)
+    do: post_query("/cat?arg=" <> path, query: opts)
 
   @doc """
   List the files in an IPFS object.
@@ -237,7 +237,7 @@ defmodule MyspaceIPFS do
   @spec ls(path, opts) :: okresult
   def ls(path, opts \\ []),
     do:
-      post_query("/ls?arg=" <> path, opts)
+      post_query("/ls?arg=" <> path, query: opts)
       |> Jason.decode!()
       |> okify()
 
@@ -275,7 +275,7 @@ defmodule MyspaceIPFS do
   @spec ping(cid, opts) :: okresult
   def ping(peer, opts \\ []),
     do:
-      post_query("/ping?arg=" <> peer, opts)
+      post_query("/ping?arg=" <> peer, query: opts)
       |> handle_data_response()
       |> okify()
 
@@ -294,7 +294,7 @@ defmodule MyspaceIPFS do
     """
     @spec mount(opts) :: okresult
     def mount(opts \\ []) do
-      post_query("/mount", opts)
+      post_query("/mount", query: opts)
       |> handle_data_response()
 
       # |> okify()

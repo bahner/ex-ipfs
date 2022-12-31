@@ -37,7 +37,7 @@ defmodule MyspaceIPFS.Bitswap do
   """
   @spec stat(opts) :: okmapped()
   def stat(opts \\ []) do
-    post_query("/bitswap/stat", opts)
+    post_query("/bitswap/stat", query: opts)
     |> handle_data_response()
   end
 

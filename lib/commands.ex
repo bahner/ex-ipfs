@@ -17,7 +17,7 @@ defmodule MyspaceIPFS.Commands do
   """
   @spec commands(opts) :: okmapped()
   def commands(opts \\ []) do
-    post_query("/commands", opts)
+    post_query("/commands", query: opts)
     |> handle_json_response()
   end
 

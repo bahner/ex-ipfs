@@ -43,7 +43,7 @@ defmodule MyspaceIPFS.Block do
   """
   @spec put(fspath, opts) :: okmapped
   def put(fspath, opts \\ []) do
-    post_file("/block/put", fspath, opts)
+    post_file("/block/put", fspath, query: opts)
     |> handle_data_response()
   end
 

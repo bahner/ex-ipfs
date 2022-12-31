@@ -20,25 +20,27 @@ defmodule MyspaceIPFS.Config do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-config
   ```
-    `bool` - <bool>, # Set a boolean value.
-    `json` - <bool>, # Parse stringified JSON.
+  [
+    "bool" - <bool>, # Set a boolean value.
+    "json" - <bool>, # Parse stringified JSON.
+  ]
   ```
   """
   @spec config(name, name, opts) :: result
   def config(key, value \\ nil, opts \\ [])
 
   def config(key, value, opts) when is_bitstring(key) and is_bitstring(value) do
-    post_query("/config?arg=" <> key <> "&arg=" <> value, opts)
+    post_query("/config?arg=" <> key <> "&arg=" <> value, query: opts)
     |> handle_data_response()
   end
 
   def config(key, value, opts) when is_bitstring(key) and is_nil(value) do
-    post_query("/config?arg=" <> key, opts)
+    post_query("/config?arg=" <> key, query: opts)
     |> handle_json_response()
   end
 
   def config(key, _value, opts) when is_bitstring(key) and is_list(opts) do
-    post_query("/config?arg=" <> key, opts)
+    post_query("/config?arg=" <> key, query: opts)
     |> handle_json_response()
   end
 
@@ -58,7 +60,7 @@ defmodule MyspaceIPFS.Config do
   """
   @spec profile_apply(name, opts) :: result
   def profile_apply(profile, opts \\ []) when is_bitstring(profile) do
-    post_query("/config/profile/apply?arg=" <> profile, opts)
+    post_query("/config/profile/apply?arg=" <> profile, query: opts)
     |> handle_json_response()
   end
 

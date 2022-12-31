@@ -42,7 +42,7 @@ defmodule MyspaceIPFS.Api do
   """
   @spec post_query(path, opts) :: result
   def post_query(path, opts \\ []) do
-    handle_response(post(@baseurl <> path, "", query: opts))
+    handle_response(post(@baseurl <> path, "", opts))
   end
 
   @doc """
@@ -52,7 +52,7 @@ defmodule MyspaceIPFS.Api do
   """
   @spec post_data(path, any, opts) :: result
   def post_data(path, data, opts \\ []) do
-    handle_response(post(@baseurl <> path, data, query: opts))
+    handle_response(post(@baseurl <> path, data, opts))
   end
 
   @doc """
@@ -62,7 +62,7 @@ defmodule MyspaceIPFS.Api do
   """
   @spec post_file(path, fspath, opts) :: result
   def post_file(path, fspath, opts \\ []) do
-    handle_response(post(path, multipart(fspath), query: opts))
+    handle_response(post(path, multipart(fspath), opts))
   end
 
   defp handle_response(response) do
