@@ -1,15 +1,83 @@
 defmodule MyspaceIPFS.Block do
   @moduledoc """
-  MyspaceIPFS.Api.Blocki is where the commands commands of the IPFS API reside.
+  MyspaceIPFS.Block is where the block commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
-  def get(arg), do: post_query("/block/get?arg=" <> arg)
+  @typep okmapped :: MySpaceIPFS.okmapped()
+  @typep opts :: MySpaceIPFS.opts()
+  @typep cid :: MySpaceIPFS.cid()
+  @typep fspath :: MySpaceIPFS.fspath()
 
-  def put(file_path),
-    do: post_file("/block/put", file_path)
+  @doc """
+  Get a raw IPFS block.
 
-  def rm(multihash), do: post_query("/block/rm?arg=" <> multihash)
+  ## Parameters
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-get
+  `cid` - The CID of the block to get.
+  """
+  @spec get(cid) :: okmapped()
+  def get(cid) do
+    post_query("/block/get?arg=" <> cid)
+    |> handle_response_data()
+  end
 
-  def stat(multihash), do: post_query("/block/stat?arg=" <> multihash)
+  @doc """
+  Put file as an IPFS block.
+
+  ## Parameters
+  `fspath` - The path to the file to be stored as a block.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-put
+  ```
+  [
+    `cid-codec`: <string>, # CID codec to use.
+    `mhtype`: <string>, # Hash function to use.
+    `mhlen`: <int>, # Hash length.
+    `pin`: <bool>, # Pin added blocks recursively.
+    `allow-big-block`: <bool>, # Allow blocks larger than 1MiB.
+  ]
+  ```
+  """
+  @spec put(fspath, opts) :: okmapped
+  def put(fspath, opts \\ []) do
+    post_file("/block/put", fspath, opts)
+    |> handle_response_data()
+  end
+
+  @doc """
+  Remove a block from the blockstore.
+
+  ## Parameters
+  `cid` - The CID of the block to remove.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-rm
+  ```
+  [
+    `force`: <bool>, # Ignore nonexistent blocks.
+    `quiet`: <bool>, # Write minimal output.
+  ]
+  ```
+  """
+  @spec rm(cid) :: okmapped()
+  def rm(cid) do
+    post_query("/block/rm?arg=" <> cid)
+    |> handle_response_data()
+  end
+
+  @doc """
+  Get block stat.
+
+  ## Parameters
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-stat
+  `cid` - The CID of the block to stat.
+  """
+  @spec stat(cid) :: okmapped()
+  def stat(cid) do
+    post_query("/block/stat?arg=" <> cid)
+    |> handle_response_data()
+  end
 end
