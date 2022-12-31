@@ -3,35 +3,70 @@ defmodule MyspaceIPFS.Bitswap do
   MyspaceIPFS.Api.Bitswap is where the bootstrap commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
+
+  @typep okmapped :: MySpaceIPFS.okmapped()
+  @typep opts :: MySpaceIPFS.opts()
+  @typep peer_id :: MySpaceIPFS.peer_id()
 
   @doc """
   Get the current bitswap ledger for a given peer.
+
+  ## Parameters
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-ledger
+
+  `peer` - The peer ID to get the ledger for.
   """
-  def ledger(peer_id), do: post_query("/bitswap/ledger?arg=" <> peer_id)
+  @spec ledger(peer_id) :: okmapped()
+  def ledger(peer) do
+    post_query("/bitswap/ledger?arg=" <> peer)
+    |> handle_response_data()
+  end
 
   @doc """
-  Get the current bitswap stats.
+  Show some diagnostic information on the bitswap agent.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-stat
+  ```
+  [
+    `verbose`: <bool>, # Print extra information.
+    `human`: <bool>, # Print sizes in human readable format (e.g., 1.2K 234M 2G).
+  ]
+  ```
   """
-  def stat(verbose \\ false, human \\ false),
-    do:
-      post_query(
-        "/bitswap/stat?" <>
-          "verbose=" <> to_string(verbose) <> "&" <> "human=" <> to_string(human)
-      )
+  @spec stat(opts) :: okmapped()
+  def stat(opts \\ []) do
+    post_query("/bitswap/stat", opts)
+    |> handle_response_data()
+  end
 
   @doc """
   Reprovide blocks to the network.
   """
-  def reprovide, do: post_query("/bitswap/reprovide")
+  @spec reprovide() :: okmapped()
+  def reprovide do
+    post_query("/bitswap/reprovide")
+    |> handle_response_data()
+  end
 
   @doc """
   Get the current bitswap wantlist.
+
+  ## Parameters
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-wantlist
+
+  `peer` - The peer ID to get the wantlist for. Optional.
   """
-  def wantlist(peer \\ "") do
-    if peer != "" do
-      post_query("/bitswap/wantlist?peer", peer)
-    else
-      post_query("/bitswap/wantlist")
-    end
+  @spec wantlist() :: okmapped()
+  def wantlist() do
+    post_query("/bitswap/wantlist")
+    |> handle_response_data()
+  end
+
+  @spec wantlist(peer_id) :: okmapped()
+  def wantlist(peer) do
+    post_query("/bitswap/wantlist?peer=" <> peer)
+    |> handle_response_data()
   end
 end

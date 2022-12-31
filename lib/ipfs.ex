@@ -25,6 +25,11 @@ defmodule MyspaceIPFS do
   @type cid :: atom | String.t()
 
   @typedoc """
+  B58 encoded peer ID.
+  """
+  @type peer_id() :: <<_::48, _::_*8>>
+
+  @typedoc """
   The file system path to the file to be sent to the node.
   Because <cid>, /ipfs/<cid> or /ipns/<cid> are all allowed it looks like a path.
   """
