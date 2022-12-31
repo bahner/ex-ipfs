@@ -34,7 +34,7 @@ defmodule MyspaceIPFS.Config do
 
   def config(key, value, opts) when is_bitstring(key) and is_bitstring(value) do
     post_query("/config?arg=" <> key <> "&arg=" <> value, opts)
-    |> handle_response_data()
+    |> handle_data_response()
   end
 
   def config(key, value, opts) when is_bitstring(key) and is_nil(value) do

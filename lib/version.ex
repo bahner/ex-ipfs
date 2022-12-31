@@ -20,28 +20,27 @@ defmodule MyspaceIPFS.Version do
   @spec version(binary) :: result
   def version(name \\ "all") do
     post_query("/version")
-    |> handle_response_data()
+    |> handle_data_response()
+    |> then(fn {:ok, data} -> data end)
     |> List.flatten()
     |> return_version(name)
-    |> okify()
   end
 
   defp return_version(versions, key) do
     if key == "all" do
       versions
+      |> List.first()
+      |> okify()
     else
       get_version(versions, key)
+      |> okify()
     end
   end
 
   defp get_version(versions, key) do
-    with versions <- Enum.find(versions, fn {k, _v} -> k == key end) do
-      try do
-        versions |> elem(1)
-      rescue
-        _ in ArgumentError -> {:error, "Invalid key: #{key}"}
-      end
-    end
+    versions
+    |> List.first()
+    |> Map.fetch!(~c'#{key}')
   end
 
   @doc """
@@ -50,7 +49,6 @@ defmodule MyspaceIPFS.Version do
   @spec deps() :: result
   def deps() do
     post_query("/version/deps")
-    |> handle_response_data()
-    |> okify()
+    |> handle_data_response()
   end
 end

@@ -148,7 +148,7 @@ defmodule MyspaceIPFS do
   def resolve(path, opts \\ []),
     do:
       post_query("/resolve?arg=" <> path, opts)
-      |> handle_response_data()
+      |> handle_data_response()
 
   @doc """
   Add a file to IPFS.
@@ -160,7 +160,7 @@ defmodule MyspaceIPFS do
   def add(fspath, opts \\ []),
     do:
       post_file("/add", fspath, opts)
-      |> handle_response_data()
+      |> handle_data_response()
 
   @doc """
   Get a file or directory from IPFS.
@@ -257,7 +257,7 @@ defmodule MyspaceIPFS do
   def id,
     do:
       post_query("/id")
-      |> handle_response_data()
+      |> handle_data_response()
       |> okify()
 
   @doc """
@@ -276,7 +276,7 @@ defmodule MyspaceIPFS do
   def ping(peer, opts \\ []),
     do:
       post_query("/ping?arg=" <> peer, opts)
-      |> handle_response_data()
+      |> handle_data_response()
       |> okify()
 
   if @experimental do
@@ -295,7 +295,7 @@ defmodule MyspaceIPFS do
     @spec mount(opts) :: okresult
     def mount(opts \\ []) do
       post_query("/mount", opts)
-      |> handle_response_data()
+      |> handle_data_response()
 
       # |> okify()
     end

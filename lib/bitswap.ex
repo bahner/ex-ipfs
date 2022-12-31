@@ -20,7 +20,7 @@ defmodule MyspaceIPFS.Bitswap do
   @spec ledger(peer_id) :: okmapped()
   def ledger(peer) do
     post_query("/bitswap/ledger?arg=" <> peer)
-    |> handle_response_data()
+    |> handle_data_response()
   end
 
   @doc """
@@ -38,7 +38,7 @@ defmodule MyspaceIPFS.Bitswap do
   @spec stat(opts) :: okmapped()
   def stat(opts \\ []) do
     post_query("/bitswap/stat", opts)
-    |> handle_response_data()
+    |> handle_data_response()
   end
 
   @doc """
@@ -47,7 +47,7 @@ defmodule MyspaceIPFS.Bitswap do
   @spec reprovide() :: okmapped()
   def reprovide do
     post_query("/bitswap/reprovide")
-    |> handle_response_data()
+    |> handle_data_response()
   end
 
   @doc """
@@ -61,12 +61,12 @@ defmodule MyspaceIPFS.Bitswap do
   @spec wantlist() :: okmapped()
   def wantlist() do
     post_query("/bitswap/wantlist")
-    |> handle_response_data()
+    |> handle_data_response()
   end
 
   @spec wantlist(peer_id) :: okmapped()
   def wantlist(peer) do
     post_query("/bitswap/wantlist?peer=" <> peer)
-    |> handle_response_data()
+    |> handle_data_response()
   end
 end

@@ -35,8 +35,7 @@ defmodule MyspaceIPFS.Refs do
   def local,
     do:
       post_query("/refs/local")
-      |> handle_response_data()
-      |> okify()
+      |> handle_data_response()
 
   @doc """
   Get a list of all references from a given path.
@@ -48,6 +47,5 @@ defmodule MyspaceIPFS.Refs do
   def refs(path, opts \\ []),
     do:
       post_query("/refs?arg=" <> path, query: opts)
-      |> handle_response_data()
-      |> okify()
+      |> handle_data_response()
 end

@@ -5,14 +5,17 @@ defmodule MyspaceIPFS.Update do
   import MyspaceIPFS.Utils
 
   @typep result :: MyspaceIPFS.result()
-  @typep cid :: MyspaceIPFS.cid()
 
-  # Update function  - takes in the current args for update.
-  # This runs ipfs update with the given arguments.
-  # You probably don't want to use this unless you know what you're doing.
-  @spec update(cid) :: result
-  def update(args) when is_bitstring(args) do
+  @doc """
+  Update IPFS via IPFS.
+
+  ## Parameters
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-update
+  `args` - The arguments to pass to the update command.
+  """
+  @spec update(binary) :: result
+  def update(args) do
     post_query("/update?arg=" <> args)
-    |> okify()
+    |> handle_data_response()
   end
 end
