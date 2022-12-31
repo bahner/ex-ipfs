@@ -1,6 +1,7 @@
 import Config
 
-config :tesla, adapter: {Tesla.Adapter.Hackney, [max_body: 1_000_000_000]}
+config :tesla,
+  adapter: Tesla.Adapter.Hackney
 
 config :myspace_ipfs,
   baseurl: "http://localhost:5001/api/v0",

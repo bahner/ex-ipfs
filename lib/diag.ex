@@ -6,6 +6,7 @@ defmodule MyspaceIPFS.Diag do
   import MyspaceIPFS.Utils
 
   @typep okresult :: MyspaceIPFS.okresult()
+  @typep opts :: MyspaceIPFS.opts()
 
   @doc """
   List commands run by the daemon.
@@ -40,6 +41,13 @@ defmodule MyspaceIPFS.Diag do
   @doc """
   Collect a performance profile for debugging.
 
+  NB! The recv_timeout is set to 35s. This is because the profile can take a
+  while to generate. If you are getting a timeout error, try decreasing the
+  profile-time. The default is 30s.
+
+  ## Parameters
+  timeout: The timeout for the request. Default is 35_000 milliseonds.
+           This should be set to the profile-time + 5_000 milliseconds.
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-diag-profile
   ```
@@ -52,12 +60,14 @@ defmodule MyspaceIPFS.Diag do
   ]
   ```
   """
-  def profile(opts \\ []) do
+  @spec profile(integer, opts) :: any
+  def profile(timeout \\ 35_000, opts \\ []) do
     with output <- Keyword.get(opts, :output, "ipfs-profile-#{timestamp()}.zip") do
-      IO.puts("Getting profile...")
-      post_query("/diag/profile", query: opts)
+      post_query("/diag/profile",
+        opts: [adapter: [recv_timeout: timeout]],
+        query: opts
+      )
       |> handle_file_response(output)
-      IO.puts("Profile written to #{output}")
     end
   end
 

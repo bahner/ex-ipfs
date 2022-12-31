@@ -62,7 +62,7 @@ defmodule MyspaceIPFS.Utils do
     end
   end
 
-  @spec handle_data_response({atom, binary}) :: any
+  @spec handle_data_response(binary) :: any
   def handle_data_response(response) do
     {error, {:ok, tesla_response}} = response
     {error, tesla_response}
@@ -80,6 +80,32 @@ defmodule MyspaceIPFS.Utils do
   @spec handle_json_response({atom, binary}) :: any
   def handle_json_response({error, response}) do
     handle_data_response({error, response})
+  end
+
+  @doc false
+  # This function could be overloaded to extract data from response.
+  @spec handle_file_response({:ok, binary}, fspath) :: okmapped
+  def handle_file_response({:ok, response}, output) do
+    File.write!(output, response)
+    {:ok, output}
+  end
+
+  @spec timestamp :: integer
+  @doc """
+  Returns the current timestamp in unix time.
+  """
+  def timestamp() do
+    DateTime.utc_now()
+    |> DateTime.to_unix()
+  end
+
+  @doc """
+  Returns the current timestamp in iso8601 format.
+  """
+  @spec timestamp(:iso) :: binary
+  def timestamp(:iso) do
+    DateTime.utc_now()
+    |> DateTime.to_iso8601()
   end
 
   @doc """
