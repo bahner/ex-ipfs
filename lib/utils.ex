@@ -25,13 +25,14 @@ defmodule MyspaceIPFS.Utils do
   data in a way that is easier to work with. IPFS only sends strings. This
   function will convert the string to a list of maps.
   """
-  @spec handle_response_data({:ok, response}) :: okmapped
-  def handle_response_data({:ok, response}) do
+  @spec handle_data_response({:ok, response}) :: okmapped
+  def handle_data_response({:ok, response}) do
     with {_, tokens, _} <- :lexer.string(~c'#{response}') do
       if tokens == [] do
         {:ok, []}
       else
         tokens
+        # The parser returns a tuple, which means okify() is not needed.
         |> :parser.parse()
       end
     end
@@ -40,8 +41,9 @@ defmodule MyspaceIPFS.Utils do
   # NB: There be dragons in here. This feels like a kludge.
   # But this is a chokepoint for all the errors so it's probably fine
   # and can be refactored later.
-  @spec handle_response_data({atom, binary}) :: any
-  def handle_response_data({error, response}) do
+  @doc false
+  @spec handle_data_response({atom, binary}) :: any
+  def handle_data_response({error, response}) do
     with {_, tokens, _} <- :lexer.string(~c'#{response}') do
       if tokens == [] do
         {:ok, []}
@@ -55,6 +57,20 @@ defmodule MyspaceIPFS.Utils do
         |> then(fn data -> {error, data} end)
       end
     end
+  end
+
+  @doc false
+  @spec handle_json_response({:ok, response}) :: okmapped
+  def handle_json_response({:ok, response}) do
+    response
+    |> Jason.decode!()
+    |> okify()
+  end
+
+  @doc false
+  @spec handle_json_response({atom, binary}) :: any
+  def handle_json_response({error, response}) do
+    handle_data_response({error, response})
   end
 
   @doc """
@@ -87,8 +103,8 @@ defmodule MyspaceIPFS.Utils do
     end
   end
 
-  @spec mktempdir(binary) :: binary
   @doc false
+  @spec mktempdir(binary) :: binary
   def mktempdir(parent_dir) do
     with dir <- Nanoid.generate(),
          dir_path <- parent_dir <> "/myspace-" <> dir do
