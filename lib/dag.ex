@@ -53,7 +53,7 @@ defmodule MyspaceIPFS.Dag do
     File.rm(filename)
 
     result
-    # |> map_response_data()
+    # |> handle_response_data()
     |> Jason.decode()
   end
 

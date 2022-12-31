@@ -20,7 +20,7 @@ defmodule MyspaceIPFS.Version do
   @spec version(binary) :: result
   def version(name \\ "all") do
     post_query("/version")
-    |> map_response_data()
+    |> handle_response_data()
     |> List.flatten()
     |> return_version(name)
     |> okify()
@@ -50,7 +50,7 @@ defmodule MyspaceIPFS.Version do
   @spec deps() :: result
   def deps() do
     post_query("/version/deps")
-    |> map_response_data()
+    |> handle_response_data()
     |> okify()
   end
 end

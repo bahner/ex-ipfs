@@ -33,9 +33,9 @@ defmodule MyspaceIPFS.Get do
     with cwd when is_bitstring(cwd) <- mktempdir(parent_tmp_dir),
          extract_result <- :erl_tar.extract(file, [{:cwd, ~c'#{cwd}'}]) do
       if :ok == extract_result do
-          File.rename!("#{cwd}/#{elem}", output)
-          File.rm_rf!(cwd)
-          :ok
+        File.rename!("#{cwd}/#{elem}", output)
+        File.rm_rf!(cwd)
+        :ok
       else
         File.rm_rf!(cwd)
         extract_result

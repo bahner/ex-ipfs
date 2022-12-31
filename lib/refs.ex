@@ -35,7 +35,7 @@ defmodule MyspaceIPFS.Refs do
   def local,
     do:
       post_query("/refs/local")
-      |> map_response_data()
+      |> handle_response_data()
       |> okify()
 
   @doc """
@@ -48,6 +48,6 @@ defmodule MyspaceIPFS.Refs do
   def refs(path, opts \\ []),
     do:
       post_query("/refs?arg=" <> path, query: opts)
-      |> map_response_data()
+      |> handle_response_data()
       |> okify()
 end

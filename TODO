@@ -2,5 +2,4 @@ TODO
 ===
 
 QA commands against current API.
-
-Add lexer/parser to handle raw response data.
+okify functions properly

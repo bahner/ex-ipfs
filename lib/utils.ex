@@ -4,6 +4,9 @@ defmodule MyspaceIPFS.Utils do
   """
 
   @type fspath :: MyspaceIPFS.fspath()
+  @typep response :: Tesla.Env.t()
+  @typep okmapped :: MyspaceIPFS.okmapped()
+
   @doc """
   Filter out any empty values from a list.
   Removes nil, {}, [], and "".
@@ -22,11 +25,35 @@ defmodule MyspaceIPFS.Utils do
   data in a way that is easier to work with. IPFS only sends strings. This
   function will convert the string to a list of maps.
   """
-  @spec map_response_data(any) :: any
-  def map_response_data(response) do
+  @spec handle_response_data({:ok, response}) :: okmapped
+  def handle_response_data({:ok, response}) do
     with {_, tokens, _} <- :lexer.string(~c'#{response}') do
-      tokens
-      |> :parser.parse()
+      if tokens == [] do
+        {:ok, []}
+      else
+        tokens
+        |> :parser.parse()
+      end
+    end
+  end
+
+  # NB: There be dragons in here. This feels like a kludge.
+  # But this is a chokepoint for all the errors so it's probably fine
+  # and can be refactored later.
+  @spec handle_response_data({atom, binary}) :: any
+  def handle_response_data({error, response}) do
+    with {_, tokens, _} <- :lexer.string(~c'#{response}') do
+      if tokens == [] do
+        {:ok, []}
+      else
+        tokens
+        |> :parser.parse()
+        |> then(fn {_, data} -> {data} end)
+        |> Tuple.to_list()
+        |> List.first()
+        |> List.first()
+        |> then(fn data -> {error, data} end)
+      end
     end
   end
 

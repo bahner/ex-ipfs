@@ -29,16 +29,17 @@ values -> value comma values : ['$1'|'$3'].
 values -> value comma : ['$1'].
 values -> value : ['$1'].
 
-value -> string : extract_token('$1').
-value -> integer : extract_token('$1').
 value -> object : '$1'.
 value -> list : '$1'.
+value -> string : extract_token('$1').
+value -> integer : extract_token('$1').
 value -> boolean : extract_token('$1').
 % There are empty strings, empty maps, and empty lists
 value -> empty : extract_token('$1').
 value -> null : extract_token('$1').
 
 list -> lbracket values rbracket : '$2'.
+list -> lbracket rbracket : [].
 
 % the key is a string followed by a colon
 key -> string colon : extract_token('$1').

@@ -17,9 +17,12 @@ defmodule MyspaceIPFS do
 
   # Types
   @typedoc """
-  The name of the file or data to be sent to the node.
+  The name of the file or data to be sent to the node. Sometimes you cant't
+  use paths, but have to use a cid. This is because prefixes like /ipfs/ or
+  /ipns/ are not allowed.
+  FIXME: create a type for cid
   """
-  @type cid :: atom | binary
+  @type cid :: atom | String.t()
 
   @typedoc """
   The file system path to the file to be sent to the node.
@@ -140,8 +143,7 @@ defmodule MyspaceIPFS do
   def resolve(path, opts \\ []),
     do:
       post_query("/resolve?arg=" <> path, opts)
-      |> map_response_data()
-      |> okify()
+      |> handle_response_data()
 
   @doc """
   Add a file to IPFS.
@@ -153,8 +155,7 @@ defmodule MyspaceIPFS do
   def add(fspath, opts \\ []),
     do:
       post_file("/add", fspath, opts)
-      |> map_response_data()
-      |> okify()
+      |> handle_response_data()
 
   @doc """
   Get a file or directory from IPFS.
@@ -251,7 +252,7 @@ defmodule MyspaceIPFS do
   def id,
     do:
       post_query("/id")
-      |> map_response_data()
+      |> handle_response_data()
       |> okify()
 
   @doc """
@@ -270,7 +271,7 @@ defmodule MyspaceIPFS do
   def ping(peer, opts \\ []),
     do:
       post_query("/ping?arg=" <> peer, opts)
-      |> map_response_data()
+      |> handle_response_data()
       |> okify()
 
   if @experimental do
@@ -289,7 +290,8 @@ defmodule MyspaceIPFS do
     @spec mount(opts) :: okresult
     def mount(opts \\ []) do
       post_query("/mount", opts)
-      |> map_response_data()
+      |> handle_response_data()
+
       # |> okify()
     end
   end

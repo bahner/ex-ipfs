@@ -76,9 +76,10 @@ defmodule MyspaceIPFS.Api do
     #   - 403 - RPC call forbidden
     #   - 404 - RPC endpoint does not exist
     #   - 405 - RPC endpoint exists but method is not allowed
+    # FIXME: needs rework
     case response do
-      {:ok, %Tesla.Env{status: 200, body: body}} -> body
-      {:ok, %Tesla.Env{status: 500}} -> {:eserver, response}
+      {:ok, %Tesla.Env{status: 200, body: body}} -> {:ok, body}
+      {:ok, %Tesla.Env{status: 500, body: body}} -> {:eserver, body}
       {:ok, %Tesla.Env{status: 400}} -> {:eclient, response}
       {:ok, %Tesla.Env{status: 403}} -> {:eaccess, response}
       {:ok, %Tesla.Env{status: 404}} -> {:emissing, response}

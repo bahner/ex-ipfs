@@ -12,7 +12,7 @@ defmodule MyspaceIPFS.Stats do
   @spec dht() :: MyspaceIPFS.okmapped()
   def dht do
     post_query("/stats/dht")
-    |> map_response_data()
+    |> handle_response_data()
   end
 
   # FIXME: bw_peer is not implemented yet.
