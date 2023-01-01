@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS.Bitswap do
   @moduledoc """
-  MyspaceIPFS.Api.Bitswap is where the bootstrap commands of the IPFS API reside.
+  MyspaceIPFS.Bitswap is where the bitswap commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils

@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS.Files do
   @moduledoc """
-  MyspaceIPFS.Api is where the files commands of the IPFS API reside.
+  MyspaceIPFS.Files is where the files commands of the IPFS API reside.
   """
 
   import MyspaceIPFS.Api

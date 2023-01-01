@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS do
   @moduledoc """
-  MyspaceIPFS.Api is where the main commands of the IPFS API reside.
+  MyspaceIPFS is where the main commands of the IPFS API reside.
   Alias this library and you can run the commands via Api.<cmd_name>.
 
         ## Examples

@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS.PubSub do
   @moduledoc """
-  MyspaceIPFS.Api.PubSub is where the pubsub commands of the IPFS API reside.
+  MyspaceIPFS.PubSub is where the pubsub commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
 

@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS.Swarm do
   @moduledoc """
-  MyspaceIPFS.Api.Swarm is where the swarm commands of the IPFS API reside.
+  MyspaceIPFS.Swarm is where the swarm commands of the IPFS API reside.
   """
 
   import MyspaceIPFS.Api

@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS.Key do
   @moduledoc """
-  MyspaceIPFS.Api is where the key commands of the IPFS API reside.
+  MyspaceIPFS.Key is where the key commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils

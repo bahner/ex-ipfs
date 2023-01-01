@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS.Repo do
   @moduledoc """
-  MyspaceIPFS.Api.Repo is where the repo commands of the IPFS API reside.
+  MyspaceIPFS.Repo is where the repo commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
 

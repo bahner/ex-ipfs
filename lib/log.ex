@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS.Log do
   @moduledoc """
-  MyspaceIPFS.Api.Log is where the log commands of the IPFS API reside.
+  MyspaceIPFS.Log is where the log commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils

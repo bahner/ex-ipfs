@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS.Config do
   @moduledoc """
-  MyspaceIPFS.Api is where the main commands of the IPFS API reside.
+  MyspaceIPFS.Config is where the config commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils

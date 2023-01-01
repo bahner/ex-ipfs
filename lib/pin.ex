@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS.Pin do
   @moduledoc """
-  MyspaceIPFS.Api.Pin is where the pin commands of the IPFS API reside.
+  MyspaceIPFS.Pin is where the pin commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils

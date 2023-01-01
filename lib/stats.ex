@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS.Stats do
   @moduledoc """
-  MyspaceIPFS.Api.Stats is where the stats commands of the IPFS API reside.
+  MyspaceIPFS.Stats is where the stats commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
