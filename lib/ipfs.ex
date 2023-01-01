@@ -13,8 +13,6 @@ defmodule MyspaceIPFS do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @experimental Application.get_env(:myspace_ipfs, :experimental)
-
   # Types
   @typedoc """
   The name of the file or data to be sent to the node. Sometimes you cant't
@@ -238,8 +236,7 @@ defmodule MyspaceIPFS do
   def ls(path, opts \\ []),
     do:
       post_query("/ls?arg=" <> path, query: opts)
-      |> Jason.decode!()
-      |> okify()
+      |> handle_json_response()
 
   @doc """
   Show the id of the IPFS node.
@@ -258,7 +255,6 @@ defmodule MyspaceIPFS do
     do:
       post_query("/id")
       |> handle_plain_response()
-      |> okify()
 
   @doc """
   Ping a peer.
@@ -279,25 +275,21 @@ defmodule MyspaceIPFS do
       |> handle_plain_response()
       |> okify()
 
-  if @experimental do
-    @doc """
-    Mount an IPFS read-only mountpoint.
+  @doc """
+  Mount an IPFS read-only mountpoint.
 
-    ## Options
-    https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-mount
-    ```
-    [
-      ipfs-path: <string>, # default: /ipfs
-      ipns-path: <string>, # default: /ipns
-    ]
-    ```
-    """
-    @spec mount(opts) :: okresult
-    def mount(opts \\ []) do
-      post_query("/mount", query: opts)
-      |> handle_plain_response()
-
-      # |> okify()
-    end
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-mount
+  ```
+  [
+    ipfs-path: <string>, # default: /ipfs
+    ipns-path: <string>, # default: /ipns
+  ]
+  ```
+  """
+  @spec mount(opts) :: okresult
+  def mount(opts \\ []) do
+    post_query("/mount", query: opts)
+    |> handle_plain_response()
   end
 end
