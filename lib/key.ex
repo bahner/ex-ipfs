@@ -155,6 +155,6 @@ defmodule MyspaceIPFS.Key do
   @spec rotate(name, opts) :: okresult
   def rotate(oldkey, opts \\ []) do
     post_query("/key/rotate?arg=" <> oldkey, query: opts)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 end

@@ -23,7 +23,7 @@ defmodule MyspaceIPFS.Diag do
   @spec clear() :: okresult
   def clear do
     post_query("/diag/cmds/clear")
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """

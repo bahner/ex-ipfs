@@ -47,7 +47,7 @@ defmodule MyspaceIPFS.Pin do
   @spec ls(path) :: okmapped()
   def ls(path) do
     post_query("/pin/ls?arg=" <> path)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -66,7 +66,7 @@ defmodule MyspaceIPFS.Pin do
   @spec ls() :: okmapped
   def ls() do
     post_query("/pin/ls")
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -83,7 +83,7 @@ defmodule MyspaceIPFS.Pin do
   @spec rm(path) :: okmapped()
   def rm(path) do
     post_query("/pin/rm?arg=" <> path)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -104,7 +104,7 @@ defmodule MyspaceIPFS.Pin do
   @spec update(path, path, opts) :: okmapped
   def update(old, new, opts \\ []) do
     post_query("/pin/update?arg=" <> old <> "&arg=" <> new, query: opts)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -121,7 +121,7 @@ defmodule MyspaceIPFS.Pin do
   @spec verify(opts) :: okmapped
   def verify(opts \\ []) do
     post_query("/pin/verify", query: opts)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   ### Remote Pinning
@@ -145,7 +145,7 @@ defmodule MyspaceIPFS.Pin do
   @spec remote_add(path, opts) :: okmapped
   def remote_add(path, opts \\ []) do
     post_query("/pin/remote/add?arg=" <> path, query: opts)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -167,7 +167,7 @@ defmodule MyspaceIPFS.Pin do
   @spec remote_ls(opts) :: okmapped
   def remote_ls(opts \\ []) do
     post_query("/pin/remote/ls", query: opts)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -190,7 +190,7 @@ defmodule MyspaceIPFS.Pin do
   @spec remote_rm(opts) :: okmapped
   def remote_rm(opts \\ []) do
     post_query("/pin/remote/rm", query: opts)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   ### Remote Pinning Services
@@ -213,7 +213,7 @@ defmodule MyspaceIPFS.Pin do
   @spec remote_service_add(binary, url, binary) :: okmapped
   def remote_service_add(service, endpoint, key) do
     post_query("/pin/remote/service/add?arg=" <> service <> "&arg=" <> endpoint <> "&arg=" <> key)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -230,7 +230,7 @@ defmodule MyspaceIPFS.Pin do
   @spec remote_service_ls(opts) :: okmapped
   def remote_service_ls(opts \\ []) do
     post_query("/pin/remote/service/ls", query: opts)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -248,6 +248,6 @@ defmodule MyspaceIPFS.Pin do
   @spec remote_service_rm(name) :: okmapped
   def remote_service_rm(service) do
     post_query("/pin/remote/service/rm?arg=" <> service)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 end

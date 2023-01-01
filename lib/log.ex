@@ -37,6 +37,6 @@ defmodule MyspaceIPFS.Log do
   @spec tail() :: okresult
   def tail do
     post_query("/log/tail")
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 end

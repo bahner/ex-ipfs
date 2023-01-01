@@ -1,6 +1,6 @@
 defmodule MyspaceIPFS.Dht do
   @moduledoc """
-  MyspaceIPFS.Api.Dht is where the dht commands of the IPFS API reside.
+  MyspaceIPFS.Dht is where the dht commands of the IPFS API reside.
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
@@ -25,6 +25,6 @@ defmodule MyspaceIPFS.Dht do
   @spec query(peer_id) :: okresult
   def query(peer_id) do
     post_query("/dht/query?arg=" <> peer_id)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 end

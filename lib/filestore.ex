@@ -13,8 +13,8 @@ defmodule MyspaceIPFS.Filestore do
   """
   @spec dups() :: okresult
   def dups do
-     post_query("/filestore/dups")
-     |> handle_json_response()
+    post_query("/filestore/dups")
+    |> handle_json_response()
   end
 
   @doc """
@@ -31,11 +31,11 @@ defmodule MyspaceIPFS.Filestore do
   """
   @spec ls(opts) :: okresult
   def ls(opts \\ []) do
-     post_query("/filestore/ls", query: opts)
-      |> handle_json_response()
+    post_query("/filestore/ls", query: opts)
+    |> handle_json_response()
   end
 
-   @doc """
+  @doc """
   Verify objects in the filestore.
 
   ## Options
@@ -49,7 +49,7 @@ defmodule MyspaceIPFS.Filestore do
   """
   @spec verify(opts) :: okresult
   def verify(opts \\ []) do
-     post_query("/filestore/verify", query: opts)
-     |> handle_json_response()
+    post_query("/filestore/verify", query: opts)
+    |> handle_json_response()
   end
 end

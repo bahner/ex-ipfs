@@ -20,7 +20,7 @@ defmodule MyspaceIPFS.Block do
   @spec get(cid) :: okmapped()
   def get(cid) do
     post_query("/block/get?arg=" <> cid)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -44,7 +44,7 @@ defmodule MyspaceIPFS.Block do
   @spec put(fspath, opts) :: okmapped
   def put(fspath, opts \\ []) do
     post_file("/block/put", fspath, query: opts)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -65,7 +65,7 @@ defmodule MyspaceIPFS.Block do
   @spec rm(cid) :: okmapped()
   def rm(cid) do
     post_query("/block/rm?arg=" <> cid)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -78,6 +78,6 @@ defmodule MyspaceIPFS.Block do
   @spec stat(cid) :: okmapped()
   def stat(cid) do
     post_query("/block/stat?arg=" <> cid)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 end

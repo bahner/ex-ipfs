@@ -13,7 +13,7 @@ defmodule MyspaceIPFS.Bootstrap do
   @spec bootstrap() :: okmapped()
   def bootstrap do
     post_query("/bootstrap")
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -27,7 +27,7 @@ defmodule MyspaceIPFS.Bootstrap do
   @spec add(binary) :: okmapped()
   def add(peer) do
     post_query("/bootstrap/add?arg=" <> peer)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -39,7 +39,7 @@ defmodule MyspaceIPFS.Bootstrap do
   @spec add_default() :: okmapped()
   def add_default do
     post_query("/bootstrap/add/default")
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -51,7 +51,7 @@ defmodule MyspaceIPFS.Bootstrap do
   @spec list() :: okmapped()
   def list do
     post_query("/bootstrap/list")
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -66,7 +66,7 @@ defmodule MyspaceIPFS.Bootstrap do
   @spec rm(binary) :: okmapped()
   def rm(peer) do
     post_query("/bootstrap/rm?arg=" <> peer)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 
   @doc """
@@ -78,6 +78,6 @@ defmodule MyspaceIPFS.Bootstrap do
   @spec rm_all() :: okmapped()
   def rm_all do
     post_query("/bootstrap/rm/all")
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 end

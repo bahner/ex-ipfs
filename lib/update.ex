@@ -16,6 +16,6 @@ defmodule MyspaceIPFS.Update do
   @spec update(binary) :: result
   def update(args) do
     post_query("/update?arg=" <> args)
-    |> handle_data_response()
+    |> handle_plain_response()
   end
 end

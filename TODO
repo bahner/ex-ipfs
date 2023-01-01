@@ -3,3 +3,4 @@ TODO
 
 QA commands against current API.
 okify functions properly
+Create echo chamber. A lobby is point one, so to actors can chat. Preferably over ipfs pubsub.

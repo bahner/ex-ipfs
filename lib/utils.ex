@@ -25,8 +25,8 @@ defmodule MyspaceIPFS.Utils do
   data in a way that is easier to work with. IPFS only sends strings. This
   function will convert the string to a list of maps.
   """
-  @spec handle_data_response({:ok, response}) :: okmapped
-  def handle_data_response({:ok, response}) do
+  @spec handle_plain_response({:ok, response}) :: okmapped
+  def handle_plain_response({:ok, response}) do
     with {_, tokens, _} <- :lexer.string(~c'#{response}') do
       if tokens == [] do
         {:ok, []}
@@ -45,8 +45,8 @@ defmodule MyspaceIPFS.Utils do
   # information. This function will extract that information and return
   # it as a tuple.
   @doc false
-  @spec handle_data_response({atom, binary}) :: any
-  def handle_data_response({:eserver, response}) do
+  @spec handle_plain_response({atom, binary}) :: any
+  def handle_plain_response({:eserver, response}) do
     with {_, tokens, _} <- :lexer.string(~c'#{response}') do
       if tokens == [] do
         {:ok, []}
@@ -62,8 +62,8 @@ defmodule MyspaceIPFS.Utils do
     end
   end
 
-  @spec handle_data_response(binary) :: any
-  def handle_data_response(response) do
+  @spec handle_plain_response(binary) :: any
+  def handle_plain_response(response) do
     {error, {:ok, tesla_response}} = response
     {error, tesla_response}
   end
@@ -79,7 +79,7 @@ defmodule MyspaceIPFS.Utils do
   @doc false
   @spec handle_json_response({atom, binary}) :: any
   def handle_json_response({error, response}) do
-    handle_data_response({error, response})
+    handle_plain_response({error, response})
   end
 
   @doc false
@@ -128,13 +128,13 @@ defmodule MyspaceIPFS.Utils do
   end
 
   @doc false
-  @spec write_tmpfile(binary, fspath) :: binary
-  def write_tmpfile(data, dir \\ "/tmp") do
+  @spec write_temp_file(binary, fspath) :: {:ok, fspath}
+  def write_temp_file(data, dir \\ "/tmp") do
     with dir <- mktempdir(dir),
          name <- Nanoid.generate(),
          file <- dir <> "/" <> name do
       File.write!(file, data)
-      file
+      {:ok, file}
     end
   end
 
@@ -146,5 +146,13 @@ defmodule MyspaceIPFS.Utils do
       File.mkdir_p(dir_path)
       dir_path
     end
+  end
+
+  @doc """
+  Removes a temporary file. To be used in a pipe, and hence returns the data sent to it.
+  """
+  def remove_temp_file(data, file) do
+    File.rm_rf!(file)
+    data
   end
 end
