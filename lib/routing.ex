@@ -11,7 +11,6 @@ defmodule MyspaceIPFS.Routing do
   @typep opts :: MyspaceIPFS.opts()
   @typep name :: MyspaceIPFS.name()
 
-
   @doc """
   Find the multiaddresses associated with a peer ID.
 
@@ -66,7 +65,7 @@ defmodule MyspaceIPFS.Routing do
   @spec put(name, opts) :: okresult
   def put(name, opts \\ []) do
     with {:ok, file} <- write_temp_file(name) do
-      post_file("/routing/put?arg=#{name}", file,  query: opts)
+      post_file("/routing/put?arg=#{name}", file, query: opts)
       |> handle_json_response()
     end
   end

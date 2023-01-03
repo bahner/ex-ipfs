@@ -8,7 +8,6 @@ defmodule MyspaceIPFS.Repo do
   @typep okresult :: MyspaceIPFS.okresult()
   @typep opts :: MyspaceIPFS.opts()
 
-
   @doc """
   Perform a garbage collection sweep on the repo.
 
@@ -45,6 +44,7 @@ defmodule MyspaceIPFS.Repo do
     post_query("/repo/migrate", query: opts)
     |> handle_plain_response()
   end
+
   @doc """
   Get stats for the currently used repo.
 
@@ -54,7 +54,7 @@ defmodule MyspaceIPFS.Repo do
     size-only - <bool>, # Only output the RepoSize.
   """
   @spec stat(opts) :: okresult
-    def stat(opts \\ []) do
+  def stat(opts \\ []) do
     post_query("/repo/stat", query: opts)
     |> handle_json_response()
   end
