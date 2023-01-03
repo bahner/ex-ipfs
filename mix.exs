@@ -12,7 +12,14 @@ defmodule MyspaceIPFS.Mixfile do
       package: package(),
       description: description(),
       name: "myspace_ipfs",
-      source_url: "https://github.com/bahner/myspace-ipfs.git"
+      source_url: "https://github.com/bahner/myspace-ipfs.git",
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -28,6 +35,7 @@ defmodule MyspaceIPFS.Mixfile do
       {:jason, "~> 1.4"},
       {:hackney, "~> 1.13"},
       {:nanoid, "~> 2.0"},
+      {:excoveralls, "~> 0.15", only: :test},
       {:ex_doc, "~> 0.29", only: :dev, runtime: false}
     ]
   end
