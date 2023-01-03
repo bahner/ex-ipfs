@@ -53,11 +53,11 @@ defmodule MyspaceIPFS.Utils do
       else
         tokens
         |> :parser.parse()
-        |> then(fn {_, data} -> {data} end)
+        |> (fn {_, data} -> {data} end).()
         |> Tuple.to_list()
         |> List.first()
         |> List.first()
-        |> then(fn data -> {:eserver, data} end)
+        |> (fn data -> {:eserver, data} end).()
       end
     end
   end
