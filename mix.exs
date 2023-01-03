@@ -33,12 +33,12 @@ defmodule MyspaceIPFS.Mixfile do
   end
 
   defp description() do
-    "An IPFS RPC API wrapper"
+    "A Kubo IPFS RPC API client for Elixir."
   end
 
   defp package do
     [
-      files: ["lib", "mix.exs", "README*", "LICENSE*", "AUTHORS*"],
+      files: ["lib", "mix.exs", "README*", "LICENSE*", "AUTHORS*", "src"],
       maintainers: ["Lars Bahner"],
       licenses: ["Apache-2.0"],
       links: %{"GitHub" => "https://github.com/bahner/myspace-ipfs"}

@@ -1,5 +1,15 @@
 #!/usr/bin/make -ef
 
+VERSION ?= $(shell cat mix.exs | grep version | sed -e 's/.*version: "\(.*\)",/\1/')
+
+
+tag:
+	git tag $(VERSION)
+
+release: tag
+	mix hex.publish
+	git push --tags
+
 default: compile docs
 
 compile: format parser
