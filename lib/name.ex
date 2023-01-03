@@ -51,6 +51,7 @@ defmodule MyspaceIPFS.Name do
     dht-timeout: <string>, # Maximum time to collect values during DHT resolution eg "30s".
     stream: <bool>, # Stream the output as a continuous series of JSON values.
   ]
+  ```
   """
   @spec resolve(path, opts) :: okresult
   def resolve(path, opts \\ []),
