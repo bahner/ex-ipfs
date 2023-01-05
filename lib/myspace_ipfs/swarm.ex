@@ -6,7 +6,6 @@ defmodule MyspaceIPFS.Swarm do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-
   @typep okresult :: MyspaceIPFS.okresult()
   @typep peer_id :: MyspaceIPFS.peer_id()
 
@@ -36,6 +35,7 @@ defmodule MyspaceIPFS.Swarm do
     post_query("/swarm/addrs/local")
     |> handle_json_response()
   end
+
   @spec addrs_local(peer_id) :: okresult
   def addrs_local(peer_id) do
     post_query("/swarm/addrs/local?id=#{peer_id}")
