@@ -8,16 +8,15 @@ defmodule MyspaceIPFS.ApiTest do
   NB! The tests are not mocked. They are designed to be run against a live IPFS node. This is
   """
   use ExUnit.Case, async: true
-  alias MyspaceIPFS.Api
+  alias MyspaceIPFS, as: Ipfs
 
   test "get should return a binary when passed a valid key" do
-    {:ok, bin} = Api.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
+    {:ok, bin} = Ipfs.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     assert is_binary(bin)
   end
 
-  test "get should return a servererror when passed nothing or invalid key" do
-    {:server_error, bin} = Api.get("test_case")
-    assert is_map(bin)
+  test "get should return a :server when passed nothing or invalid key" do
+    {:eserver, bin} = Ipfs.get("test_case")
     assert bin["Message"] === "invalid path \"test_case\": illegal base32 data at input byte 3"
     assert bin["Code"] === 0
   end

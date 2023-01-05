@@ -254,7 +254,7 @@ defmodule MyspaceIPFS do
   def id,
     do:
       post_query("/id")
-      |> handle_plain_response()
+      |> handle_json_response()
 
   @doc """
   Ping a peer.

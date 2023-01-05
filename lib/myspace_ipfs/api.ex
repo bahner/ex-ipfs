@@ -79,12 +79,20 @@ defmodule MyspaceIPFS.Api do
     # FIXME: needs rework
     case response do
       {:ok, %Tesla.Env{status: 200, body: body}} -> {:ok, body}
-      {:ok, %Tesla.Env{status: 500, body: body}} -> {:eserver, body}
+      {:ok, %Tesla.Env{status: 500, body: body}} -> {:eserver, handle_error_response_body(body)}
       {:ok, %Tesla.Env{status: 400}} -> {:eclient, response}
       {:ok, %Tesla.Env{status: 403}} -> {:eaccess, response}
       {:ok, %Tesla.Env{status: 404}} -> {:emissing, response}
       {:ok, %Tesla.Env{status: 405}} -> {:enoallow, response}
       {:error, _} -> {:error, response}
+    end
+  end
+
+  # This is very simple error handling. It tries to decode the body as JSON
+  defp handle_error_response_body(body) do
+    case Jason.decode(body) do
+      {:ok, data} -> data
+      {:error, _} -> body
     end
   end
 

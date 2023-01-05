@@ -12,8 +12,17 @@ defmodule MyspaceIPFS.Get do
   #       of the file(s). This should be fixed in the API.
   @spec get(path, opts) :: {:ok, fspath} | {:error, any}
   def get(path, opts \\ []) do
-    with {:ok, data} <- post_query("/get?arg=" <> path, query: opts),
-         name <- Path.basename(path),
+    case post_query("/get?arg=" <> path, query: opts) do
+      {:ok, data} ->
+        handle_get_response({:ok, path, data, opts})
+
+      {error, data} ->
+        {error, data}
+    end
+  end
+
+  defp handle_get_response({:ok, path, data, opts}) do
+    with name <- Path.basename(path),
          output <- Keyword.get(opts, :output, name),
          archive <- Keyword.get(opts, :archive, false),
          {:ok, tmp} <- write_temp_file(data) do
