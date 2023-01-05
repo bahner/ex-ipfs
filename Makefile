@@ -15,6 +15,10 @@ default: compile docs
 compile: format parser
 	mix compile
 
+docker:
+	mkdir -p .docker/ipfs_staging .docker_data/ipfs_data
+	docker-compose up -d
+
 format:
 	mix format
 
@@ -25,4 +29,4 @@ docs: compile
 parser:
 	make -C src
 
-.PHONY: compile docs
+.PHONY: compile docs docker

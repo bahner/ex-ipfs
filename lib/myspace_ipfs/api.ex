@@ -21,8 +21,8 @@ defmodule MyspaceIPFS.Api do
   alias Tesla.Multipart
 
   # Config
-  @baseurl Application.get_env(:myspace_ipfs, :baseurl)
-  @debug Application.get_env(:myspace_ipfs, :debug)
+  @baseurl Application.compile_env(:myspace_ipfs, :baseurl)
+  @debug Application.compile_env(:myspace_ipfs, :debug)
 
   # Types
   @typep path :: MyspaceIPFS.path()
