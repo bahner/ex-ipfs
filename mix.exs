@@ -4,7 +4,7 @@ defmodule MyspaceIPFS.Mixfile do
   def project do
     [
       app: :myspace_ipfs,
-      version: "0.1.0-alpha.2",
+      version: "0.1.0",
       elixir: "~> 1.11",
       name: "Myspace IPFS",
       start_permanent: Mix.env() == :prod,
@@ -41,7 +41,7 @@ defmodule MyspaceIPFS.Mixfile do
   end
 
   defp description() do
-    "A Kubo IPFS RPC API client for Elixir."
+    "A pretty good Kubo IPFS RPC API client for Elixir."
   end
 
   defp package do
