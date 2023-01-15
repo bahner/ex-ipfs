@@ -3,4 +3,7 @@ TODO
 
 QA commands against current API.
 okify functions properly
-Create echo chamber. A lobby is point one, so to actors can chat. Preferably over ipfs pubsub.
+Overhaul documentation and make it more uniform.
+write lots of tests
+add commands! with exclamation mark, maybe
+collapse post-commands to one internally

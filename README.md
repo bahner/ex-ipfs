@@ -6,7 +6,9 @@
 
 The reason for starting a new IPFS module is that none of the others seem to work at all.
 
-All commands added, but *not* verified. For your everyday IPFS oiperations the moduile should work by now. But no guarantees. :-) Please, please, please - file issues and feature requests.
+All commands added, but *not* verified. For your everyday IPFS operations the module should work by now. But no guarantees. :-) Please, please, please - file issues and feature requests.
+
+Version 0.1.0 is substantially better than version 0.0.1 and not compatible at all.
 
 ## Install
 
