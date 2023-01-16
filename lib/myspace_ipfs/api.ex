@@ -45,6 +45,11 @@ defmodule MyspaceIPFS.Api do
     handle_response(post(path, "", opts))
   end
 
+  @spec post_query(path, opts) :: result
+  def post_query_infinity(path) do
+    post(path, "", adapter: [recv_timeout: :inifinity])
+  end
+
   @doc """
   High level function allowing to send data to the node.
   A `path` has to be specified along with the `data` to be sent. Also, a list

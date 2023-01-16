@@ -4,6 +4,7 @@ defmodule MyspaceIPFS.PubSub do
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
+  alias MyspaceIPFS.Multibase
 
   @typep okresult :: MyspaceIPFS.okresult()
   @typep name :: MyspaceIPFS.name()
@@ -73,10 +74,34 @@ defmodule MyspaceIPFS.PubSub do
   https://docs.ipfs.io/reference/http/api/#api-v0-pubsub-sub
     `topic` - The topic to subscribe to.
   """
-  @spec sub(atom) :: okresult
+  @spec sub(binary) :: any
   def sub(topic) do
-    post_query("/pubsub/sub?arg=#{topic}")
-    |> handle_json_response()
+    with {:ok, base64topic} <- Multibase.encode(topic) do
+     post_query_infinity("/pubsub/sub?arg=#{base64topic}")
+    end
+  end
+
+  defp body(ref) do
+    parse_response(:hackney.stream_body(ref))
+    body(ref)
+  end
+
+  def hack(topic) do
+    with {:ok, base64topic} <- Multibase.encode(topic),
+    opts <- [recv_timeout: :infinity],
+    {:ok, _, _, ref} = :hackney.request("post", "http://localhost:5001/api/v0/pubsub/sub?arg=#{base64topic}", [], <<>>, opts)
+    do
+      body(ref)
+    end
+  end
+
+  defp parse_response(response) do
+    with {:ok, body} <- response,
+    {:ok, json} <- Jason.decode(body) do
+      value = json["data"]
+      text = Multibase.decode(value)
+      IO.inspect(text)
+    end
   end
 
   @doc """

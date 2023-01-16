@@ -29,7 +29,7 @@ Add something like the following to your config:
 ```
 config :myspace_ipfs,
   baseurl: "http://localhost:5001/api/v0",
-  debug: false
+  d:ebug: false
 ```
 
 ## Documentation
