@@ -23,6 +23,15 @@ end
 
 and run `$ mix deps.get` to install the dependency.
 
+## Configuration
+
+Add something like the following to your config:
+```
+config :myspace_ipfs,
+  baseurl: "http://localhost:5001/api/v0",
+  debug: false
+```
+
 ## Documentation
 The documentation is very unbalanced. I am feeling my way forward as to how much I should document here. Each command will receive a link to the official documentation at least.
 
