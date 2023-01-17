@@ -67,9 +67,15 @@ defmodule MyspaceIPFS.PubSub do
   def sub(topic) do
     # Topics must be base64 encoded.
     with {:ok, base64topic} <- Multibase.encode(topic),
-    opts <- [recv_timeout: :infinity],
-    {:ok, _, _, ref} = :hackney.request("post", "http://localhost:5001/api/v0/pubsub/sub?arg=#{base64topic}", [], <<>>, opts)
-    do
+         opts <- [recv_timeout: :infinity],
+         {:ok, _, _, ref} =
+           :hackney.request(
+             "post",
+             "http://localhost:5001/api/v0/pubsub/sub?arg=#{base64topic}",
+             [],
+             <<>>,
+             opts
+           ) do
       loop(ref)
     end
   end
@@ -98,7 +104,7 @@ defmodule MyspaceIPFS.PubSub do
   # Feature request if it is to you!
   defp parse_response(response) do
     with {:ok, body} <- response,
-    {:ok, json} <- Jason.decode(body) do
+         {:ok, json} <- Jason.decode(body) do
       value = json["data"]
       text = Multibase.decode(value)
       IO.inspect(text)
@@ -107,7 +113,7 @@ defmodule MyspaceIPFS.PubSub do
 
   defp decode_response(response) do
     with {:ok, response} <- response,
-    {:ok, list} <- Map.fetch(response, "Strings") do
+         {:ok, list} <- Map.fetch(response, "Strings") do
       list
       |> Enum.map(&decode_if_needed(&1))
       |> recreate_map()

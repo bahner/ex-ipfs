@@ -69,11 +69,11 @@ defmodule MyspaceIPFS.Name do
   @spec pubsub_cancel(binary) :: okresult
   def pubsub_cancel(topic) do
     # with {:ok, base64topic} <- Multibase.encode(topic) do
-      post_query("/name/pubsub/cancel?arg=#{topic}")
-      |> handle_json_response()
+    post_query("/name/pubsub/cancel?arg=#{topic}")
+    |> handle_json_response()
+
     # end
   end
-
 
   @doc """
   Show the current pubsub state.

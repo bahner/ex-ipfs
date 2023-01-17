@@ -21,7 +21,8 @@ defmodule MyspaceIPFS.Multibase do
     with {:ok, file} <- write_temp_file(binary) do
       remove_temp_file(
         post_file("/multibase/decode", file),
-        file)
+        file
+      )
     end
   end
 
@@ -39,7 +40,8 @@ defmodule MyspaceIPFS.Multibase do
     with {:ok, file} <- write_temp_file(binary) do
       remove_temp_file(
         post_file("/multibase/encode", file, query: opts),
-        file)
+        file
+      )
     end
   end
 
