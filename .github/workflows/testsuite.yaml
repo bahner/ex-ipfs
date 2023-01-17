@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   build24:
-    name: Build and test OTP 24
+    name: Build and test for OTP 24
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -58,7 +58,7 @@ jobs:
           mix coveralls
           # mix coveralls.github
   build25:
-    name: Build and test
+    name: Build and for test OTP 25
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
