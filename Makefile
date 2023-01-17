@@ -26,7 +26,7 @@ docs: compile
 	mix docs
 	xdg-open doc/index.html
 
-push: format commited compile
+push: format commited
 	git pull
 	git push
 
