@@ -4,7 +4,7 @@ defmodule MyspaceIPFS.PubSub do
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
-  alias MyspaceIPFS.Multibase
+  import MyspaceIPFS.Multibase
 
   @typep okresult :: MyspaceIPFS.okresult()
   @typep name :: MyspaceIPFS.name()
@@ -52,8 +52,10 @@ defmodule MyspaceIPFS.PubSub do
   """
   @spec pub(name, name) :: okresult
   def pub(topic, data) do
-    post_query("/pubsub/pub?arg=#{topic}&arg=#{data}")
-    |> handle_json_response()
+    with {:ok, base64topic} <- encode(topic) do
+      post_data("/pubsub/pub?arg=#{base64topic}", data)
+      |> handle_json_response()
+    end
   end
 
   @doc """
@@ -66,7 +68,7 @@ defmodule MyspaceIPFS.PubSub do
   @spec sub(binary) :: any
   def sub(topic) do
     # Topics must be base64 encoded.
-    with {:ok, base64topic} <- Multibase.encode(topic),
+    with {:ok, base64topic} <- encode(topic),
          opts <- [recv_timeout: :infinity],
          {:ok, _, _, ref} =
            :hackney.request(
@@ -92,7 +94,7 @@ defmodule MyspaceIPFS.PubSub do
   # Some, but not all responses are base64 encoded,
   # so we need to try to decode them.
   defp decode_if_needed(value) do
-    case Multibase.decode(value) do
+    case decode(value) do
       {:ok, decoded} -> decoded
       _ -> value
     end
@@ -106,7 +108,7 @@ defmodule MyspaceIPFS.PubSub do
     with {:ok, body} <- response,
          {:ok, json} <- Jason.decode(body) do
       value = json["data"]
-      text = Multibase.decode(value)
+      text = decode(value)
       IO.inspect(text)
     end
   end
