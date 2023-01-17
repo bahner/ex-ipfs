@@ -26,6 +26,10 @@ docs: compile
 	mix docs
 	xdg-open doc/index.html
 
+push: compile
+	git pull
+	git push
+
 parser:
 	make -C src
 
