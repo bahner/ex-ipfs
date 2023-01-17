@@ -10,25 +10,23 @@ defmodule MyspaceIPFS.PubSub do
   @typep name :: MyspaceIPFS.name()
 
   @doc """
-  Cancel a subscription to a topic.
-
-  ## Parameters
-  https://docs.ipfs.io/reference/http/api/#api-v0-pubsub-cancel
-    `topic` - The topic to cancel the subscription to.
-  """
-  @spec cancel(atom) :: okresult
-  def cancel(topic) do
-    post_query("/pubsub/cancel?arg=#{topic}")
-    |> handle_json_response()
-  end
-
-  @doc """
   List the topics you are currently subscribed to.
   """
   @spec ls :: okresult
   def ls do
     post_query("/pubsub/ls")
     |> handle_json_response()
+  end
+
+  @doc """
+  List the topics you are currently subscribed to
+  and decode the base64 encoded topic names, if needed.
+  """
+  @spec ls(:decode) :: okresult
+  def ls(:decode) do
+    post_query("/pubsub/ls")
+    |> handle_json_response()
+    |> decode_response()
   end
 
   @doc """
@@ -59,15 +57,6 @@ defmodule MyspaceIPFS.PubSub do
   end
 
   @doc """
-  Show the current pubsub state.
-  """
-  @spec state :: okresult
-  def state do
-    post_query("/pubsub/state")
-    |> handle_json_response()
-  end
-
-  @doc """
   Subscribe to messages on a topic and listen for them.
 
   ## Parameters
@@ -76,25 +65,37 @@ defmodule MyspaceIPFS.PubSub do
   """
   @spec sub(binary) :: any
   def sub(topic) do
-    with {:ok, base64topic} <- Multibase.encode(topic) do
-     post_query_infinity("/pubsub/sub?arg=#{base64topic}")
-    end
-  end
-
-  defp body(ref) do
-    parse_response(:hackney.stream_body(ref))
-    body(ref)
-  end
-
-  def hack(topic) do
+    # Topics must be base64 encoded.
     with {:ok, base64topic} <- Multibase.encode(topic),
     opts <- [recv_timeout: :infinity],
     {:ok, _, _, ref} = :hackney.request("post", "http://localhost:5001/api/v0/pubsub/sub?arg=#{base64topic}", [], <<>>, opts)
     do
-      body(ref)
+      loop(ref)
     end
   end
 
+  # This loop automagically understands newlines,
+  # so we don't need to worry about that.
+  # The upshot is that when we receive a line, we just
+  # wait for the next one.
+  defp loop(ref) do
+    parse_response(:hackney.stream_body(ref))
+    loop(ref)
+  end
+
+  # Some, but not all responses are base64 encoded,
+  # so we need to try to decode them.
+  defp decode_if_needed(value) do
+    case Multibase.decode(value) do
+      {:ok, decoded} -> decoded
+      _ -> value
+    end
+  end
+
+  # Each line is actually a JSON object, so we need to
+  # to extract the data from it. I donæt believe the rest
+  # of the data is useful to us.
+  # Feature request if it is to you!
   defp parse_response(response) do
     with {:ok, body} <- response,
     {:ok, json} <- Jason.decode(body) do
@@ -104,16 +105,19 @@ defmodule MyspaceIPFS.PubSub do
     end
   end
 
-  @doc """
-  List the subscriptions you have.
+  defp decode_response(response) do
+    with {:ok, response} <- response,
+    {:ok, list} <- Map.fetch(response, "Strings") do
+      list
+      |> Enum.map(&decode_if_needed(&1))
+      |> recreate_map()
+      |> okify()
+    end
+  end
 
-  ## Options
-  https://docs.ipfs.io/reference/http/api/#api-v0-pubsub-subs
-    `ipns-base` - Base used for keys.
-  """
-  @spec subs :: okresult
-  def subs do
-    post_query("/pubsub/subs")
-    |> handle_json_response()
+  defp recreate_map(map) do
+    %{
+      "Strings" => map
+    }
   end
 end

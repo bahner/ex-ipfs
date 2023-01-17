@@ -58,4 +58,38 @@ defmodule MyspaceIPFS.Name do
     do:
       post_query("/name/resolve?arg=" <> path, query: opts)
       |> handle_json_response()
+
+  @doc """
+  Cancel a subscription to a topic.
+
+  ## Parameters
+  https://docs.ipfs.io/reference/http/api/#api-v0-pubsub-cancel
+    `topic` - The topic to cancel the subscription to.
+  """
+  @spec pubsub_cancel(binary) :: okresult
+  def pubsub_cancel(topic) do
+    # with {:ok, base64topic} <- Multibase.encode(topic) do
+      post_query("/name/pubsub/cancel?arg=#{topic}")
+      |> handle_json_response()
+    # end
+  end
+
+
+  @doc """
+  Show the current pubsub state.
+  """
+  @spec pubsub_state :: okresult
+  def pubsub_state do
+    post_query("/name/pubsub/state")
+    |> handle_json_response()
+  end
+
+  @doc """
+  Show the current pubsub subscribers.
+  """
+  @spec pubsub_subs :: okresult
+  def pubsub_subs do
+    post_query("/name/pubsub/subs")
+    |> handle_json_response()
+  end
 end
