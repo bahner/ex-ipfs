@@ -42,7 +42,7 @@ defmodule MyspaceIPFS.Api do
   """
   @spec post_query(path, opts) :: result
   def post_query(path, opts \\ []) do
-    handle_response(post(path, "", opts))
+    handle_response(post(path, <<>>, opts))
   end
 
   @doc """

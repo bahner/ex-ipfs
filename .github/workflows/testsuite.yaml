@@ -20,8 +20,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        otp: ["24.3", "25.1"]
-        elixir: ["1.13.4", "1.14.1"]
+        otp: ["24.3", "25.2"]
+        elixir: ["1.11.4", "1.12.3", "1.13.4", "1.14.3"]
     services:
       ipfs:
         image: ipfs/kubo:latest
