@@ -19,10 +19,7 @@ defmodule MyspaceIPFS.Api do
   """
   use Tesla, docs: false
   alias Tesla.Multipart
-
-  # Config
-  @baseurl Application.compile_env(:myspace_ipfs, :baseurl)
-  @debug Application.compile_env(:myspace_ipfs, :debug)
+  alias MyspaceIPFS.Configuration
 
   # Types
   @typep path :: MyspaceIPFS.path()
@@ -30,8 +27,11 @@ defmodule MyspaceIPFS.Api do
   @typep opts :: MyspaceIPFS.opts()
   @typep result :: MyspaceIPFS.result()
 
+  @api_url Configuration.entry(:api_url)
+  @debug Configuration.entry(:debug)
+
   # Middleware
-  plug(Tesla.Middleware.BaseUrl, @baseurl)
+  plug(Tesla.Middleware.BaseUrl, @api_url)
   @debug && plug(Tesla.Middleware.Logger)
 
   @doc """

@@ -25,11 +25,12 @@ and run `$ mix deps.get` to install the dependency.
 
 ## Configuration
 
-Add something like the following to your config:
+The default should brobably be OK, but you may override the default with the environment variables.
+
+These are the defaults.
 ```
-config :myspace_ipfs,
-  baseurl: "http://localhost:5001/api/v0",
-  debug: false
+export MYSPACE_IPFS_API_URL="http://127.0.0.1:5001"
+export MYSPACE_IPFS_DEBUG="true"
 ```
 
 ## Documentation

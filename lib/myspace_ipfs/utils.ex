@@ -7,6 +7,13 @@ defmodule MyspaceIPFS.Utils do
   @typep response :: Tesla.Env.t()
   @typep okmapped :: MyspaceIPFS.okmapped()
 
+
+  @doc """
+  Converts a string to a boolean or integer or vise versa
+  """
+  def str2bool!("true"), do: true
+  def str2bool!("false"), do: false
+
   @doc """
   Filter out any empty values from a list.
   Removes nil, {}, [], and "".

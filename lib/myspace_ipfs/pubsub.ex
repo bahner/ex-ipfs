@@ -5,9 +5,12 @@ defmodule MyspaceIPFS.PubSub do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
   import MyspaceIPFS.Multibase
+  alias MyspaceIPFS.Configuration
 
   @typep okresult :: MyspaceIPFS.okresult()
   @typep name :: MyspaceIPFS.name()
+
+  @api_url Configuration.entry(:api_url)
 
   @doc """
   List the topics you are currently subscribed to.
@@ -73,7 +76,7 @@ defmodule MyspaceIPFS.PubSub do
          {:ok, _, _, ref} =
            :hackney.request(
              "post",
-             "http://localhost:5001/api/v0/pubsub/sub?arg=#{base64topic}",
+             "#{@api_url}/pubsub/sub?arg=#{base64topic}",
              [],
              <<>>,
              opts
