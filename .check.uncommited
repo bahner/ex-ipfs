@@ -1,0 +1,5 @@
+#!/bin/bash
+
+NUM_UNCOMMITED=$(git status --porcelain | grep -e "^ M" | wc -l)
+
+exit ${NUM_UNCOMMITED}

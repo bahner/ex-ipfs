@@ -19,9 +19,10 @@ defmodule MyspaceIPFS.Multibase do
   @spec decode(binary) :: okresult
   def decode(binary) do
     with {:ok, file} <- write_temp_file(binary) do
-      post_file("/multibase/decode", file)
-      |> handle_plain_response()
-      |> remove_temp_file(file)
+      remove_temp_file(
+        post_file("/multibase/decode", file),
+        file
+      )
     end
   end
 
@@ -37,9 +38,10 @@ defmodule MyspaceIPFS.Multibase do
   @spec encode(binary, opts) :: okresult
   def encode(binary, opts \\ []) do
     with {:ok, file} <- write_temp_file(binary) do
-      post_file("/multibase/encode", file, query: opts)
-      |> handle_plain_response()
-      |> remove_temp_file(file)
+      remove_temp_file(
+        post_file("/multibase/encode", file, query: opts),
+        file
+      )
     end
   end
 

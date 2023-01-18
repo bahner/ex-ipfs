@@ -26,6 +26,13 @@ docs: compile
 	mix docs
 	xdg-open doc/index.html
 
+push: format commited
+	git pull
+	git push
+
+commited:
+	./.check.uncommited
+
 parser:
 	make -C src
 
