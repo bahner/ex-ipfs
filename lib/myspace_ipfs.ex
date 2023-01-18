@@ -294,19 +294,17 @@ defmodule MyspaceIPFS do
   end
 end
 
-
 defmodule MyspaceIPFS.Configuration do
   @spec entry(atom) :: String.t() | boolean | {:error, String.t()}
   @doc """
   Returns some defined config values.
   """
-  def entry(:api_url) do
-    System.get_env("MYSPACE_IPFS_API_URL", "http://127.0.0.1:5001")
-  end
-  def entry(:debug) do
+  def entry(:api_url), do:
+    System.get_env("MYSPACE_IPFS_API_URL", "http://127.0.0.1:5001/api/v0")
+
+  def entry(:debug), do:
     System.get_env("MYSPACE_IPFS_DEBUG", "false")
-  end
-  def entry(_) do
+
+  def entry(_), do:
     {:error, "Config not found"}
-  end
 end
