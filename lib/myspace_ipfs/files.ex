@@ -60,12 +60,13 @@ defmodule MyspaceIPFS.Files do
   https://docs.ipfs.io/reference/http/api/#api-v0-files-flush
   `path` - The path to flush. If not specified, the entire repo will be flushed.
   """
-  @spec flush(path) :: okresult
+  @spec flush() :: okresult
   def flush() do
     post_query("/files/flush")
     |> handle_json_response()
   end
 
+  @spec flush(path) :: okresult
   def flush(path) do
     post_query("/files/flush?arg=" <> path)
     |> handle_json_response()
@@ -164,7 +165,7 @@ defmodule MyspaceIPFS.Files do
   ```
   """
   @spec rm(path, opts) :: okresult
-  def rm(path, opts = []) do
+  def rm(path, opts \\ []) do
     post_query("/files/rm?arg=" <> path, query: opts)
     |> handle_json_response()
   end

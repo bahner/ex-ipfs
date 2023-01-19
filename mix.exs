@@ -31,11 +31,12 @@ defmodule MyspaceIPFS.Mixfile do
 
   defp deps do
     [
-      {:tesla, "~> 1.4"},
-      {:jason, "~> 1.4"},
       {:hackney, "~> 1.13"},
+      {:jason, "~> 1.4"},
       {:nanoid, "~> 2.0"},
-      {:excoveralls, "~> 0.15", only: :test},
+      {:tesla, "~> 1.4"},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.15", only: :test, runtime: false},
       {:ex_doc, "~> 0.29", only: :dev, runtime: false}
     ]
   end

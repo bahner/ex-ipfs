@@ -19,7 +19,6 @@ defmodule MyspaceIPFS.Api do
   """
   use Tesla, docs: false
   alias Tesla.Multipart
-  alias MyspaceIPFS.Configuration
 
   # Types
   @typep path :: MyspaceIPFS.path()
@@ -27,8 +26,8 @@ defmodule MyspaceIPFS.Api do
   @typep opts :: MyspaceIPFS.opts()
   @typep result :: MyspaceIPFS.result()
 
-  @api_url Configuration.entry(:api_url)
-  @debug Configuration.entry(:debug)
+  @api_url "http://localhost:5001/api/v0"
+  @debug false
 
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @api_url)
@@ -117,17 +116,17 @@ defmodule MyspaceIPFS.Api do
   # file path. This is done so that the file path is relative to the base
   # directory. This is to avoid leaking irrelevant paths to the server.
   defp multipart_add_file(mp, fspath, basedir) do
-    with relative_filename = String.replace(fspath, basedir <> "/", "") do
-      Multipart.add_file(mp, fspath,
-        name: "file",
-        filename: "#{relative_filename}",
-        detect_content_type: true
-      )
-    end
+    relative_filename = String.replace(fspath, basedir <> "/", "")
+
+    Multipart.add_file(mp, fspath,
+      name: "file",
+      filename: relative_filename,
+      detect_content_type: true
+    )
   end
 
   defp multipart_add_files(multipart, fspath) do
-    with basedir = Path.dirname(fspath) do
+    with basedir <- Path.dirname(fspath) do
       ls_r(fspath)
       |> Enum.reduce(multipart, fn fspath, multipart ->
         multipart_add_file(multipart, fspath, basedir)

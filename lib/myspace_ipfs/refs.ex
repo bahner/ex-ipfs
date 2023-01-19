@@ -1,7 +1,7 @@
 defmodule MyspaceIPFS.Refs do
-  # @moduledoc """
-  # MyspaceIPFS.Refs is where the main commands of the IPFS API reside.
-  # """
+  @moduledoc """
+  MyspaceIPFS.Refs is where the main commands of the IPFS API reside.
+  """
 
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils

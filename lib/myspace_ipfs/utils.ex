@@ -7,7 +7,6 @@ defmodule MyspaceIPFS.Utils do
   @typep response :: Tesla.Env.t()
   @typep okmapped :: MyspaceIPFS.okmapped()
 
-
   @doc """
   Converts a string to a boolean or integer or vise versa
   """
@@ -21,10 +20,7 @@ defmodule MyspaceIPFS.Utils do
   @spec filter_empties(list) :: list
   def filter_empties(list) do
     list
-    |> Enum.filter(fn x -> x != nil end)
-    |> Enum.filter(fn x -> x != {} end)
-    |> Enum.filter(fn x -> x != [] end)
-    |> Enum.filter(fn x -> x != "" end)
+    |> Enum.filter(fn x -> not Enum.member?(x, ["", nil, [], {}]) end)
   end
 
   @doc """
