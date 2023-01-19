@@ -7,5 +7,6 @@ Overhaul documentation and make it more uniform.
 write lots of tests
 add commands! with exclamation mark, maybe
 collapse post-commands to one internally
+wrap pubsub sub in an EVent.handler
 
 add path to fetching DAGs for proper IPLD features.
