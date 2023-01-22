@@ -20,8 +20,10 @@ defmodule MyspaceIPFS.PubSub.Channel do
           base64url_topic: binary
         }
 
-  @api_url Application.get_env(:myspace_ipfs, :api_url)
-  @default_topic Application.get_env(:myspace_ipfs, :default_topic)
+  # @api_url Application.get_env(:myspace_ipfs, :api_url)
+  # @default_topic Application.get_env(:myspace_ipfs, :default_topic)
+  @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0")
+  @default_topic Application.compile_env(:myspace_ipfs, :default_topic, "ubXlzcGFjZQ")
 
   @spec start_link(pid, binary) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(pid, topic \\ @default_topic) do
