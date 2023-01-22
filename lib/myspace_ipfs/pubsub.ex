@@ -9,8 +9,6 @@ defmodule MyspaceIPFS.PubSub do
   @typep okresult :: MyspaceIPFS.okresult()
   @typep name :: MyspaceIPFS.name()
 
-  @api_url "http://127.0.0.1:5001/api/v0"
-
   @doc """
   List the topics you are currently subscribed to.
   """
@@ -28,7 +26,9 @@ defmodule MyspaceIPFS.PubSub do
   def ls(:decode) do
     post_query("/pubsub/ls")
     |> handle_json_response()
-    |> decode_response()
+
+    # FIXME: Next step is to fix the response handling
+    # |> decode_response()
   end
 
   @doc """
@@ -66,69 +66,10 @@ defmodule MyspaceIPFS.PubSub do
   ## Parameters
   https://docs.ipfs.io/reference/http/api/#api-v0-pubsub-sub
     `topic` - The topic to subscribe to.
+    `pid`   - The process to send the messages to.
   """
-  @spec sub(binary) :: any
-  def sub(topic) do
-    # Topics must be base64 encoded.
-    with {:ok, base64topic} <- encode(topic),
-         opts <- [recv_timeout: :infinity],
-         {:ok, _, _, ref} <-
-           :hackney.request(
-             "post",
-             "#{@api_url}/pubsub/sub?arg=#{base64topic}",
-             [],
-             <<>>,
-             opts
-           ) do
-      loop(ref)
-    end
-  end
-
-  # This loop automagically understands newlines,
-  # so we don't need to worry about that.
-  # The upshot is that when we receive a line, we just
-  # wait for the next one.
-  defp loop(ref) do
-    parse_response(:hackney.stream_body(ref))
-    loop(ref)
-  end
-
-  # Some, but not all responses are base64 encoded,
-  # so we need to try to decode them.
-  defp decode_if_needed(value) do
-    case decode(value) do
-      {:ok, decoded} -> decoded
-      _ -> value
-    end
-  end
-
-  # Each line is actually a JSON object, so we need to
-  # to extract the data from it. I donæt believe the rest
-  # of the data is useful to us.
-  # Feature request if it is to you!
-  defp parse_response(response) do
-    with {:ok, body} <- response,
-         {:ok, json} <- Jason.decode(body) do
-      value = json["data"]
-      text = decode(value)
-      # credo:disable-for-next-line
-      IO.inspect(text)
-    end
-  end
-
-  defp decode_response(response) do
-    with {:ok, response} <- response,
-         {:ok, list} <- Map.fetch(response, "Strings") do
-      list
-      |> Enum.map(&decode_if_needed(&1))
-      |> recreate_map()
-      |> okify()
-    end
-  end
-
-  defp recreate_map(map) do
-    %{
-      "Strings" => map
-    }
+  @spec sub(pid, binary) :: any
+  def sub(pid, topic) do
+    MyspaceIPFS.PubSub.Channel.start_link(pid, topic)
   end
 end

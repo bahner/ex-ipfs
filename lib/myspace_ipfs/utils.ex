@@ -141,21 +141,29 @@ defmodule MyspaceIPFS.Utils do
     end
   end
 
-  @doc false
-  @spec mktempdir(binary) :: binary
+  @doc """
+  Creates a unique directory in the given directory and returns the path.
+  The directory name will be prefixed with "myspace-". This way you can easily remove
+  all the temporary directories created by this function.
+  """
+  @spec mktempdir(fspath) :: binary
   def mktempdir(parent_dir) do
-    with dir <- Nanoid.generate(),
-         dir_path <- parent_dir <> "/myspace-" <> dir do
-      File.mkdir_p(dir_path)
-      dir_path
-    end
+    dir_path = "#{parent_dir}/myspace-#{Nanoid.generate()}"
+    File.mkdir_p(dir_path)
+    dir_path
   end
 
+  @spec remove_temp_file(any, fspath) :: any
   @doc """
   Removes a temporary file. To be used in a pipe, and hence returns the data sent to it.
   """
   def remove_temp_file(data, file) do
     File.rm_rf!(file)
+    data
+  end
+
+  @spec data_from_tuple({:ok, any}) :: any
+  def data_from_tuple({:ok, data}) do
     data
   end
 end

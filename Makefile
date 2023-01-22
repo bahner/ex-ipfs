@@ -2,6 +2,10 @@
 
 VERSION ?= $(shell cat mix.exs | grep version | sed -e 's/.*version: "\(.*\)",/\1/')
 
+all:
+	mix format
+	mix compile
+	iex -S mix
 
 tag:
 	git tag $(VERSION)
