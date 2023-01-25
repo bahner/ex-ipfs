@@ -21,5 +21,6 @@ defmodule MyspaceIPFS.ApiTest do
     assert bin["Code"] === 0
   end
 
+  doctest MyspaceIPFS.Api
   ## TODO: add Unit testing
 end

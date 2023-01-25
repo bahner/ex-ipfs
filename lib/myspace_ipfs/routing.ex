@@ -21,7 +21,8 @@ defmodule MyspaceIPFS.Routing do
   @spec findpeer(peer_id, opts) :: okresult
   def findpeer(peer_id, opts \\ []) do
     post_query("/routing/findpeer?arg=#{peer_id}", query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -35,7 +36,8 @@ defmodule MyspaceIPFS.Routing do
   @spec findprovs(peer_id, opts) :: okresult
   def findprovs(cid, opts \\ []) do
     post_query("/routing/findprovs?arg=#{cid}", query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -49,7 +51,8 @@ defmodule MyspaceIPFS.Routing do
   @spec provide(name, opts) :: okresult
   def provide(name, opts \\ []) do
     post_query("/routing/provide?arg=#{name}", query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -62,11 +65,11 @@ defmodule MyspaceIPFS.Routing do
   https://docs.ipfs.io/reference/http/api/#api-v0-routing-put
     verbose - <bool>, # Write extra information.
   """
-  @spec put(name, opts) :: okresult
-  def put(name, opts \\ []) do
-    with {:ok, file} <- write_temp_file(name) do
-      post_file("/routing/put?arg=#{name}", file, query: opts)
-      |> handle_json_response()
-    end
+  @spec put(name, binary, opts) :: okresult
+  def put(key, value, opts \\ []) do
+    multipart_content(value)
+    |> post_multipart("/routing/put?arg=" <> key, query: opts)
+    |> handle_api_response()
+    |> okify()
   end
 end

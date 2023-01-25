@@ -48,6 +48,10 @@ MyspaceIPFS.Refs.refs("/ipns/myspace.bahner.com")
 
 alias MyspaceIPFS.Refs
 Refs.local()
+
+# Subscribe to a PubSub Channel and send the message to my inbox
+MyspaceIPFS.PubSub.Channel.start_link(self(), "mychannel")
+flush
 ```
 
 The basic commands are in the MyspaceIPFS module. The grouped ipfs commands each have their separate module, eg. MyspaceIPFS.Refs, MyspaceIPFS.Blocks etc.

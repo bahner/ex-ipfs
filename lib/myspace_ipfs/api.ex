@@ -18,20 +18,23 @@ defmodule MyspaceIPFS.Api do
   Based on https://github.com/tableturn/ipfs/blob/master/lib/ipfs.ex
   """
   use Tesla, docs: false
-  alias Tesla.Multipart
+  import MyspaceIPFS.Utils
+  require Logger
 
   # Types
   @typep path :: MyspaceIPFS.path()
-  @typep fspath :: MyspaceIPFS.fspath()
   @typep opts :: MyspaceIPFS.opts()
   @typep result :: MyspaceIPFS.result()
+  @typep okresult :: MyspaceIPFS.okresult()
+  @typep multipart :: Tesla.Multipart.t()
+  @typep response :: Tesla.Env.t()
 
-  @api_url "http://localhost:5001/api/v0"
-  @debug false
+  @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0/")
 
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @api_url)
-  @debug && plug(Tesla.Middleware.Logger)
+  plug(Tesla.Middleware.JSON)
+  plug(Tesla.Middleware.Logger)
 
   @doc """
   High level function allowing to perform POST requests to the node.
@@ -39,29 +42,23 @@ defmodule MyspaceIPFS.Api do
   dependent on the endpoint that will get hit.
   NB! This is not a GET request, but a POST request. IPFS uses POST requests.
   """
-  @spec post_query(path, opts) :: result
+  @spec post_query(path, opts) :: okresult
   def post_query(path, opts \\ []) do
-    handle_response(post(path, <<>>, opts))
+    post(path, <<>>, opts)
+    |> handle_response()
   end
 
   @doc """
   High level function allowing to send data to the node.
   A `path` has to be specified along with the `data` to be sent. Also, a list
   of `opts` can be optionally sent.
-  """
-  @spec post_data(path, any, opts) :: result
-  def post_data(path, data, opts \\ []) do
-    handle_response(post(path, data, opts))
-  end
 
-  @doc """
-  High level function allowing to send file contents to the node.
-  A `path` has to be specified along with the `fspath` to be sent. Also, a list
-  of `opts` can be optionally sent.
+  Data is sent first, so that it can easily be part of a pipe.
   """
-  @spec post_file(path, fspath, opts) :: result
-  def post_file(path, fspath, opts \\ []) do
-    handle_response(post(path, multipart(fspath), opts))
+  @spec post_multipart(multipart, path, opts) :: result
+  def post_multipart(mp, path, opts \\ []) do
+    post(path, mp, opts)
+    |> handle_response()
   end
 
   defp handle_response(response) do
@@ -75,67 +72,38 @@ defmodule MyspaceIPFS.Api do
     #   - 403 - RPC call forbidden
     #   - 404 - RPC endpoint does not exist
     #   - 405 - RPC endpoint exists but method is not allowed
-    # FIXME: needs rework
+    # Removing categorised status codes from the case statement.
+    # This is of no use to the user, and not for the code either, as far as I can think of.
+    # It just gives us more to match against, which is needlessly complex.
     case response do
-      {:ok, %Tesla.Env{status: 200, body: body}} -> {:ok, body}
-      {:ok, %Tesla.Env{status: 500, body: body}} -> {:eserver, handle_error_response_body(body)}
-      {:ok, %Tesla.Env{status: 400}} -> {:eclient, response}
-      {:ok, %Tesla.Env{status: 403}} -> {:eaccess, response}
-      {:ok, %Tesla.Env{status: 404}} -> {:emissing, response}
-      {:ok, %Tesla.Env{status: 405}} -> {:enoallow, response}
+      {:ok, %Tesla.Env{status: 200}} -> response
       {:error, _} -> {:error, response}
     end
   end
 
-  # This is very simple error handling. It tries to decode the body as JSON
-  defp handle_error_response_body(body) do
-    case Jason.decode(body) do
-      {:ok, data} -> data
-      {:error, _} -> body
+  @spec handle_api_response({:ok, response}) :: any
+  def handle_api_response({:ok, response}) do
+    Logger.debug("Headers: #{inspect(response.headers)}")
+    Logger.debug("Content type: #{get_header_value(response.headers, "content-type")}")
+
+    # At the moment this is a NOOP, but I want this choke point to be here.
+    case get_header_value(response.headers, "content-type") do
+      "application/json" -> response.body
+      "plain/text" -> response.body
+      _ -> response.body
     end
   end
 
-  # Thanks to some forum :-)
-  defp ls_r(path) do
-    cond do
-      File.regular?(path) ->
-        [path]
+  def handle_api_response({:error, response}) do
+    {:error, response} = response
 
-      File.dir?(path) ->
-        File.ls!(path)
-        |> Enum.map(&Path.join(path, &1))
-        |> Enum.map(&ls_r/1)
-        |> Enum.concat()
-
-      true ->
-        []
+    case response do
+      # create_list_from_lines_of_json/1 is a helper function that takes a
+      # string of JSON objects separated by newlines and returns a list of
+      # JSON objects.
+      # If it fails it'll just return the original data.
+      {Tesla.Middleware.JSON, :decode, json_error} ->
+        extract_data_from_json_error(json_error.data)
     end
-  end
-
-  # This function is written explicitly to remove the base directory from the
-  # file path. This is done so that the file path is relative to the base
-  # directory. This is to avoid leaking irrelevant paths to the server.
-  defp multipart_add_file(mp, fspath, basedir) do
-    relative_filename = String.replace(fspath, basedir <> "/", "")
-
-    Multipart.add_file(mp, fspath,
-      name: "file",
-      filename: relative_filename,
-      detect_content_type: true
-    )
-  end
-
-  defp multipart_add_files(multipart, fspath) do
-    with basedir <- Path.dirname(fspath) do
-      ls_r(fspath)
-      |> Enum.reduce(multipart, fn fspath, multipart ->
-        multipart_add_file(multipart, fspath, basedir)
-      end)
-    end
-  end
-
-  defp multipart(fspath) do
-    Multipart.new()
-    |> multipart_add_files(fspath)
   end
 end

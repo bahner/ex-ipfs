@@ -18,7 +18,8 @@ defmodule MyspaceIPFS.Commands do
   @spec commands(opts) :: okmapped()
   def commands(opts \\ []) do
     post_query("/commands", query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -35,6 +36,7 @@ defmodule MyspaceIPFS.Commands do
   @spec completion(binary) :: okmapped()
   def completion(shell) do
     post_query("/commands/completion/" <> shell)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 end

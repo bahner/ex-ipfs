@@ -49,29 +49,23 @@ defmodule MyspaceIPFS do
   @typedoc """
   The structure of a normal error response from the node.
   """
-  @type error ::
-          {:error, Tesla.Env.t()}
-          | {:eserver, Tesla.Env.t()}
-          | {:eclient, Tesla.Env.t()}
-          | {:eaccess, Tesla.Env.t()}
-          | {:emissing, Tesla.Env.t()}
-          | {:enoallow, Tesla.Env.t()}
+  @type tesla_error :: {:error, Tesla.Env.t()}
   @typedoc """
   The structure of a normal response from the node.
   """
-  @type okmapped :: {:ok, list} | {:error, Tesla.Env.t()}
+  @type okmapped :: {:ok, list} | tesla_error
   @typedoc """
   The structure of a JSON response from the node with :ok or :error.
   """
-  @type okresult :: {:ok, any} | {:error, Tesla.Env.t()}
+  @type okresult :: {:ok, any} | tesla_error
   @typedoc """
   The structure of a JSON response from the node.
   """
-  @type result :: any | {:error, Tesla.Env.t()}
+  @type result :: any | tesla_error
   @typedoc """
   A simple :ok or :error response from the node.
   """
-  @type ok :: {:ok} | {:error, Tesla.Env.t()}
+  @type ok :: {:ok} | tesla_error
 
   @doc """
   Start the IPFS daemon.
@@ -146,19 +140,27 @@ defmodule MyspaceIPFS do
   def resolve(path, opts \\ []),
     do:
       post_query("/resolve?arg=" <> path, query: opts)
-      |> handle_plain_response()
+      |> handle_api_response()
+      |> okify()
 
   @doc """
   Add a file to IPFS.
 
+  ## Parameters
+  * `fspath` - The file system path to the file or directory to be sent to the node.
+
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
+
+
   """
   @spec add(fspath, opts) :: result
   def add(fspath, opts \\ []),
     do:
-      post_file("/add", fspath, query: opts)
-      |> handle_plain_response()
+      multipart(fspath)
+      |> post_multipart("/add", query: opts)
+      |> handle_api_response()
+      |> okify()
 
   @doc """
   Get a file or directory from IPFS.
@@ -171,9 +173,13 @@ defmodule MyspaceIPFS do
   [
     output: <string>, # Output to file or directory name. Optional, default: <cid-ipfs-or-ipns-path>
     archive: <bool>, # Output as a tarball. Optional, default: false
+    timeout: <int64>, # Timeout in seconds. Optional, default: 100
   ]
   ```
   Compression is not implemented.
+
+  If you feel that you need more timeouts, you can use the `:timeout` option in the `opts` list.
+  But the default should be enough for most cases. More likely your content isn't available....
   """
   @spec get(path, opts) :: okresult
   defdelegate get(path, opts \\ []), to: MyspaceIPFS.Get
@@ -194,7 +200,9 @@ defmodule MyspaceIPFS do
   """
   @spec cat(path, opts) :: result
   def cat(path, opts \\ []),
-    do: post_query("/cat?arg=" <> path, query: opts)
+    do:
+      post_query("/cat?arg=" <> path, query: opts)
+      |> handle_api_response()
 
   @doc """
   List the files in an IPFS object.
@@ -236,7 +244,8 @@ defmodule MyspaceIPFS do
   def ls(path, opts \\ []),
     do:
       post_query("/ls?arg=" <> path, query: opts)
-      |> handle_json_response()
+      |> handle_api_response()
+      |> okify()
 
   @doc """
   Show the id of the IPFS node.
@@ -254,7 +263,8 @@ defmodule MyspaceIPFS do
   def id,
     do:
       post_query("/id")
-      |> handle_json_response()
+      |> handle_api_response()
+      |> okify()
 
   @doc """
   Ping a peer.
@@ -265,15 +275,17 @@ defmodule MyspaceIPFS do
   ```
   [
     n|count: <int>,
+    timeout: <int>,
   ]
   ```
   """
-  @spec ping(cid, opts) :: okresult
-  def ping(peer, opts \\ []),
-    do:
-      post_query("/ping?arg=" <> peer, query: opts)
-      |> handle_plain_response()
-      |> okify()
+  # FIXME: pass the query opts to query. Shouldn't be too difficult.
+  # But needs doing.
+  @spec ping(pid, cid, atom | integer, opts) :: :ok
+  def ping(pid, peer, timeout, opts \\ []),
+    do: MyspaceIPFS.Ping.start_link(pid, peer, timeout, opts)
+
+  :ok
 
   @doc """
   Mount an IPFS read-only mountpoint.
@@ -288,8 +300,9 @@ defmodule MyspaceIPFS do
   ```
   """
   @spec mount(opts) :: okresult
-  def mount(opts \\ []) do
-    post_query("/mount", query: opts)
-    |> handle_plain_response()
-  end
+  def mount(opts \\ []),
+    do:
+      post_query("/mount", query: opts)
+      |> handle_api_response()
+      |> okify()
 end

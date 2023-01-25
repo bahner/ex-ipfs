@@ -4,40 +4,82 @@ defmodule MyspaceIPFS.PubSub.Channel do
   forwards messages to a target process.
 
   The topic *must* be a base64 encoded string, but we will encode it for you.
+
+  ## Options
+    raw: true | false
+      If true, the message will be sent to the target process as a
+      MyspaceIPFS.PubSub.ChannelMessage struct containing the message data and the topic.
+      If false, only the message
+      data will be sent to the target process.
+
+  ## Example
+      iex> {:ok, pid} = MyspaceIPFS.PubSub.Channel.start_link(self(), "mytopic")
+      iex> MyspaceIPFS.PubSub.pub("mytopic", "Hello, world!")
+      iex> flush()
+      "Hello, world!"
+      :ok
   """
   use GenServer
+
   require Logger
-  alias MyspaceIPFS.Multibase
+
   import MyspaceIPFS.Utils
 
+  alias MyspaceIPFS.Multibase
+  alias MyspaceIPFS.PubSub.ChannelMessage
+
   @enforce_keys [:topic, :target]
-  defstruct topic: nil, target: nil, client: nil, base64url_topic: nil
+  defstruct topic: nil, target: nil, base64url_topic: nil, client: nil, raw: false
 
   @type t :: %__MODULE__{
           topic: binary,
           target: pid,
+          base64url_topic: binary,
           client: any,
-          base64url_topic: binary
+          raw: boolean
         }
 
   # @api_url Application.get_env(:myspace_ipfs, :api_url)
   # @default_topic Application.get_env(:myspace_ipfs, :default_topic)
   @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0")
-  @default_topic Application.compile_env(:myspace_ipfs, :default_topic, "ubXlzcGFjZQ")
 
   @spec start_link(pid, binary) :: :ignore | {:error, any} | {:ok, pid}
-  def start_link(pid, topic \\ @default_topic) do
+  def start_link(pid, topic) do
     GenServer.start_link(
       __MODULE__,
-      %MyspaceIPFS.PubSub.Channel{topic: topic, target: pid}
+      create_channel(topic, pid)
+    )
+  end
+
+  @spec start_link(pid, binary, list) :: :ignore | {:error, any} | {:ok, pid}
+  def start_link(pid, topic, options) do
+    GenServer.start_link(
+      __MODULE__,
+      create_channel(topic, pid, options)
+    )
+  end
+
+  defp create_channel(topic, target, options \\ []) do
+    # Takes options and merges them with the required struct and
+    # makes sure there is a base64url_topic, that is properly encoded
+    Enum.into(
+      options,
+      %MyspaceIPFS.PubSub.Channel{
+        topic: topic,
+        target: target,
+        base64url_topic: unokify(Multibase.encode(topic))
+      }
     )
   end
 
   @spec init(t) :: {:ok, t}
   def init(channel) do
-    {:ok, base64url_topic} = Multibase.encode(channel.topic)
-    {:ok, ref} = spawn_client(self(), base64url_topic)
-    {:ok, %{channel | client: ref, base64url_topic: base64url_topic}}
+    Logger.debug("Initializing channel #{inspect(channel)}")
+    url = "#{@api_url}/pubsub/sub?arg=#{channel.base64url_topic}"
+    Logger.debug("Subscribing to #{url}")
+    {:ok, ref} = spawn_client(self(), url, :infinity, channel.options)
+    Logger.debug("Subscribed to #{url} with #{inspect(ref)}")
+    {:ok, %{channel | client: ref}}
   end
 
   def handle_info({:hackney_response, _ref, data}, state) do
@@ -74,17 +116,33 @@ defmodule MyspaceIPFS.PubSub.Channel do
 
   # This is probably where we want to decrypt the message
   defp parse_pubsub_message(data) do
-    Jason.decode(data)
-    |> data_from_tuple()
-    |> (fn data -> Multibase.decode(data["data"]) end).()
-    |> data_from_tuple()
-    |> (fn data -> {:pubsub_sub, data} end).()
+    message = struct(ChannelMessage, unokify(Jason.decode(data, keys: :atoms)))
+    {:ipfs_pubsub_channel, Multibase.decode(message.data)}
   end
+end
 
-  @spec spawn_client(pid, binary) :: any
-  defp spawn_client(pid, topic) do
-    options = [stream_to: pid, async: true, recv_timeout: :infinity]
-    Logger.info("Subscribing to topic: #{topic} at #{@api_url}/pubsub/sub?arg=#{topic}")
-    :hackney.request(:post, "#{@api_url}/pubsub/sub?arg=#{topic}", [], <<>>, options)
-  end
+defmodule MyspaceIPFS.PubSub.ChannelMessage do
+  @moduledoc """
+  MyspaceIPFS.PubSub.ChannelMessage is a struct that represents a message as it
+  is received from the IPFS pubsub API.
+  """
+  @enforce_keys [:from, :data, :seqno, :topic_ids]
+  defstruct from: nil, data: nil, seqno: nil, topic_ids: nil
+
+  @type t :: %__MODULE__{
+          from: binary,
+          data: binary,
+          seqno: binary,
+          topic_ids: list
+        }
+
+  # def gen_channel_message(opts) do
+  #   # All keys are required.
+  #   %MyspaceIPFS.PubSub.ChannelMessage{
+  #     from: opts.from,
+  #     data: opts.data,
+  #     seqno: opts.seqno,
+  #     topic_ids: opts.topic_ids
+  #   }
+  # end
 end

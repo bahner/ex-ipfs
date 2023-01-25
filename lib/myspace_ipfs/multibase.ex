@@ -5,6 +5,8 @@ defmodule MyspaceIPFS.Multibase do
 
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
+  alias Tesla.Multipart
+  alias MyspaceIPFS.Multibase.Codec
 
   @typep okresult :: MyspaceIPFS.okresult()
   @typep opts :: MyspaceIPFS.opts()
@@ -17,13 +19,11 @@ defmodule MyspaceIPFS.Multibase do
     `data` - File to decode.
   """
   @spec decode(binary) :: okresult
-  def decode(binary) do
-    with {:ok, file} <- write_temp_file(binary) do
-      remove_temp_file(
-        post_file("/multibase/decode", file),
-        file
-      )
-    end
+  def decode(data) do
+    multipart_content(data)
+    |> post_multipart("/multibase/decode")
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -36,13 +36,12 @@ defmodule MyspaceIPFS.Multibase do
     `b` - Multibase encoding to use.
   """
   @spec encode(binary, opts) :: okresult
-  def encode(binary, opts \\ []) do
-    with {:ok, file} <- write_temp_file(binary) do
-      remove_temp_file(
-        post_file("/multibase/encode", file, query: opts),
-        file
-      )
-    end
+  def encode(data, opts \\ []) do
+    Multipart.new()
+    |> Multipart.add_file_content(data, "file")
+    |> post_multipart("/multibase/encode", query: opts)
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -55,7 +54,11 @@ defmodule MyspaceIPFS.Multibase do
   @spec list(opts) :: okresult
   def list(opts \\ []) do
     post_query("/multibase/list", query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> filter_empties()
+    |> snake_atomize()
+    |> Enum.map(fn x -> Codec.gen_multibase_codec(x) end)
+    |> okify()
   end
 
   @doc """
@@ -68,11 +71,10 @@ defmodule MyspaceIPFS.Multibase do
     `b` - Multibase encoding to use
   """
   @spec transcode(binary, opts) :: okresult
-  def transcode(binary, opts \\ []) do
-    with {:ok, file} <- write_temp_file(binary) do
-      post_file("/multibase/transcode", file, query: opts)
-      |> handle_plain_response()
-      |> remove_temp_file(file)
-    end
+  def transcode(data, opts \\ []) do
+    multipart_content(data)
+    |> post_multipart("/multibase/transcode", query: opts)
+    |> handle_api_response()
+    |> okify()
   end
 end

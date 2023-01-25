@@ -33,7 +33,8 @@ defmodule MyspaceIPFS.Name do
   def publish(path, opts \\ []),
     do:
       post_query("/name/publish?arg=" <> path, query: opts)
-      |> handle_json_response()
+      |> handle_api_response()
+      |> okify()
 
   @doc """
   Resolve IPNS names.
@@ -57,7 +58,8 @@ defmodule MyspaceIPFS.Name do
   def resolve(path, opts \\ []),
     do:
       post_query("/name/resolve?arg=" <> path, query: opts)
-      |> handle_json_response()
+      |> handle_api_response()
+      |> okify()
 
   @doc """
   Cancel a subscription to a topic.
@@ -70,9 +72,8 @@ defmodule MyspaceIPFS.Name do
   def pubsub_cancel(topic) do
     # with {:ok, base64topic} <- Multibase.encode(topic) do
     post_query("/name/pubsub/cancel?arg=#{topic}")
-    |> handle_json_response()
-
-    # end
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -81,7 +82,8 @@ defmodule MyspaceIPFS.Name do
   @spec pubsub_state :: okresult
   def pubsub_state do
     post_query("/name/pubsub/state")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -90,6 +92,7 @@ defmodule MyspaceIPFS.Name do
   @spec pubsub_subs :: okresult
   def pubsub_subs do
     post_query("/name/pubsub/subs")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 end

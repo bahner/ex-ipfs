@@ -15,7 +15,8 @@ defmodule MyspaceIPFS.Swarm do
   @spec addrs :: okresult
   def addrs do
     post_query("/swarm/addrs")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -24,7 +25,8 @@ defmodule MyspaceIPFS.Swarm do
   @spec addrs_listen :: okresult
   def addrs_listen do
     post_query("/swarm/addrs/listen")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -33,13 +35,15 @@ defmodule MyspaceIPFS.Swarm do
   @spec addrs_local :: okresult
   def addrs_local do
     post_query("/swarm/addrs/local")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @spec addrs_local(peer_id) :: okresult
   def addrs_local(peer_id) do
     post_query("/swarm/addrs/local?id=#{peer_id}")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -52,7 +56,8 @@ defmodule MyspaceIPFS.Swarm do
   @spec connect(peer_id) :: okresult
   def connect(peer_id) do
     post_query("/swarm/connect?arg=#{peer_id}")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -65,7 +70,8 @@ defmodule MyspaceIPFS.Swarm do
   @spec disconnect(peer_id) :: okresult
   def disconnect(peer_id) do
     post_query("/swarm/disconnect?arg=#{peer_id}")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -74,7 +80,8 @@ defmodule MyspaceIPFS.Swarm do
   @spec filters :: okresult
   def filters() do
     post_query("/swarm/filters")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -87,7 +94,8 @@ defmodule MyspaceIPFS.Swarm do
   @spec filters_add(peer_id) :: okresult
   def filters_add(peer_id) do
     post_query("/swarm/filters/add?arg=#{peer_id}")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -100,7 +108,8 @@ defmodule MyspaceIPFS.Swarm do
   @spec filters_rm(peer_id) :: okresult
   def filters_rm(peer_id) do
     post_query("/swarm/filters/rm?arg=#{peer_id}")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -113,7 +122,8 @@ defmodule MyspaceIPFS.Swarm do
   @spec peering_add(peer_id) :: okresult
   def peering_add(peer_id) do
     post_query("/swarm/peering/add?arg=#{peer_id}")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -122,7 +132,8 @@ defmodule MyspaceIPFS.Swarm do
   @spec peering_ls :: okresult
   def peering_ls do
     post_query("/swarm/peering/ls")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -134,7 +145,8 @@ defmodule MyspaceIPFS.Swarm do
   """
   def peering_rm(peer_id) do
     post_query("/swarm/peering/rm?arg=#{peer_id}")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -150,6 +162,7 @@ defmodule MyspaceIPFS.Swarm do
   @spec peers :: okresult
   def peers do
     post_query("/swarm/peers")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 end

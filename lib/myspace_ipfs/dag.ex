@@ -8,7 +8,6 @@ defmodule MyspaceIPFS.Dag do
   @typep cid :: MyspaceIPFS.cid()
   @typep okresult :: MyspaceIPFS.okresult()
   @typep opts :: MyspaceIPFS.opts()
-  @typep fspath :: MyspaceIPFS.fspath()
 
   @doc """
   Streams the selected DAG as a .car stream on stdout.
@@ -21,6 +20,7 @@ defmodule MyspaceIPFS.Dag do
   @spec export(cid) :: okresult
   def export(cid) do
     post_query("/dag/export?arg=" <> cid)
+    |> handle_api_response()
   end
 
   @doc """
@@ -32,7 +32,7 @@ defmodule MyspaceIPFS.Dag do
   @spec get(cid, opts) :: okresult
   def get(cid, opts \\ []) do
     post_query("/dag/get?arg=" <> cid, query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
   end
 
   @doc """
@@ -44,10 +44,11 @@ defmodule MyspaceIPFS.Dag do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-dag-import
   """
-  @spec import(fspath, opts) :: okresult
-  def import(filename, opts \\ []) do
-    post_file("/dag/import", filename, query: opts)
-    |> handle_json_response()
+  @spec import(binary, opts) :: okresult
+  def import(data, opts \\ []) do
+    multipart_content(data)
+    |> post_multipart("/dag/import", query: opts)
+    |> handle_api_response()
   end
 
   @doc """
@@ -66,9 +67,10 @@ defmodule MyspaceIPFS.Dag do
   ]
   ```
   """
-  @spec put(fspath, opts) :: okresult
-  def put(fspath, opts \\ []) do
-    post_file("/dag/put", fspath, query: opts)
-    |> handle_json_response()
+  @spec put(binary, opts) :: okresult
+  def put(data, opts \\ []) do
+    multipart_content(data)
+    |> post_multipart("/dag/put", query: opts)
+    |> handle_api_response()
   end
 end

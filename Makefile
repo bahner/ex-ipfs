@@ -3,8 +3,10 @@
 VERSION ?= $(shell cat mix.exs | grep version | sed -e 's/.*version: "\(.*\)",/\1/')
 
 all:
+	mix deps.get
 	mix format
 	mix compile
+mix: all
 	iex -S mix
 
 tag:
@@ -39,5 +41,8 @@ commited:
 
 parser:
 	make -C src
+
+clean:
+	rm -rf _build deps mix.lock
 
 .PHONY: compile docs docker

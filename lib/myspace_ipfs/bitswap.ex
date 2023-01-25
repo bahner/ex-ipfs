@@ -5,22 +5,45 @@ defmodule MyspaceIPFS.Bitswap do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep okmapped :: MySpaceIPFS.okmapped()
-  @typep opts :: MySpaceIPFS.opts()
-  @typep peer_id :: MySpaceIPFS.peer_id()
+  @typep okresult :: MySpaceIPFS.okresult()
+  @typep peer_id :: MyspaceIPFS.peer_id()
+  @type wantlist :: MyspaceIPFS.BitswapWantList.t()
+  @type stat :: MyspaceIPFS.BitswapStat.t()
+  @type ledger() :: MyspaceIPFS.BitswapLedger.t()
+  @typep opts :: MyspaceIPFS.opts()
 
   @doc """
-  Get the current bitswap ledger for a given peer.
+  Reprovide blocks to the network.
+  """
+  @spec reprovide() :: okresult()
+  def reprovide do
+    post_query("/bitswap/reprovide")
+  end
+
+  @doc """
+  Get the current bitswap wantlist.
 
   ## Parameters
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-ledger
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-wantlist
 
-  `peer` - The peer ID to get the ledger for.
+  `peer` - The peer ID to get the wantlist for. Optional.
   """
-  @spec ledger(peer_id) :: okmapped()
-  def ledger(peer) do
-    post_query("/bitswap/ledger?arg=" <> peer)
-    |> handle_plain_response()
+  @spec wantlist() :: okresult()
+  def wantlist() do
+    post_query("/bitswap/wantlist")
+    |> handle_api_response()
+    |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
+    |> gen_wantlist()
+    |> okify()
+  end
+
+  @spec wantlist(peer_id) :: {:ok, wantlist} | {:error, String.t()}
+  def wantlist(peer) do
+    post_query("/bitswap/wantlist?peer=" <> peer)
+    |> handle_api_response()
+    |> snake_atomize()
+    |> gen_wantlist()
+    |> okify()
   end
 
   @doc """
@@ -35,38 +58,42 @@ defmodule MyspaceIPFS.Bitswap do
   ]
   ```
   """
-  @spec stat(opts) :: okmapped()
+  @spec stat(opts) :: {:ok, [stat]} | {:error, any()}
   def stat(opts \\ []) do
     post_query("/bitswap/stat", query: opts)
-    |> handle_plain_response()
+    |> handle_api_response()
+    |> snake_atomize()
+    |> gen_stat()
   end
 
   @doc """
-  Reprovide blocks to the network.
-  """
-  @spec reprovide() :: okmapped()
-  def reprovide do
-    post_query("/bitswap/reprovide")
-    |> handle_plain_response()
-  end
-
-  @doc """
-  Get the current bitswap wantlist.
+  Get the current bitswap ledger for a given peer.
 
   ## Parameters
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-wantlist
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-ledger
 
-  `peer` - The peer ID to get the wantlist for. Optional.
+  `peer` - The peer ID to get the ledger for.
   """
-  @spec wantlist() :: okmapped()
-  def wantlist() do
-    post_query("/bitswap/wantlist")
-    |> handle_plain_response()
+  @spec ledger(peer_id) :: {:ok, [ledger]} | {:error, any()}
+  def ledger(peer) do
+    post_query("/bitswap/ledger?arg=" <> peer)
+    |> handle_api_response()
+    |> snake_atomize()
+    |> gen_ledger()
   end
 
-  @spec wantlist(peer_id) :: okmapped()
-  def wantlist(peer) do
-    post_query("/bitswap/wantlist?peer=" <> peer)
-    |> handle_plain_response()
+  defp gen_ledger(opts) do
+    %MyspaceIPFS.BitswapLedger{}
+    |> struct(opts)
+  end
+
+  defp gen_wantlist(opts) do
+    %MyspaceIPFS.BitswapWantList{}
+    |> struct(opts)
+  end
+
+  defp gen_stat(opts) do
+    %MyspaceIPFS.BitswapStat{}
+    |> struct(opts)
   end
 end

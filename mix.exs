@@ -34,6 +34,7 @@ defmodule MyspaceIPFS.Mixfile do
       {:hackney, "~> 1.13"},
       {:jason, "~> 1.4"},
       {:nanoid, "~> 2.0"},
+      {:recase, "~> 0.7.0"},
       {:tesla, "~> 1.4"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.15", only: :test, runtime: false},

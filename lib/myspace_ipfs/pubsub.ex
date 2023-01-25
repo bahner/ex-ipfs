@@ -4,7 +4,8 @@ defmodule MyspaceIPFS.PubSub do
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
-  import MyspaceIPFS.Multibase
+  alias MyspaceIPFS.Multibase
+  alias Tesla.Multipart
 
   @typep okresult :: MyspaceIPFS.okresult()
   @typep name :: MyspaceIPFS.name()
@@ -15,7 +16,8 @@ defmodule MyspaceIPFS.PubSub do
   @spec ls :: okresult
   def ls do
     post_query("/pubsub/ls")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -25,7 +27,8 @@ defmodule MyspaceIPFS.PubSub do
   @spec ls(:decode) :: okresult
   def ls(:decode) do
     post_query("/pubsub/ls")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
 
     # FIXME: Next step is to fix the response handling
     # |> decode_response()
@@ -38,10 +41,13 @@ defmodule MyspaceIPFS.PubSub do
   https://docs.ipfs.io/reference/http/api/#api-v0-pubsub-peers
     `topic` - The topic to list peers for.
   """
-  @spec peers(atom) :: okresult
+  @spec peers(binary) :: okresult
   def peers(topic) do
-    post_query("/pubsub/pub/arg?#{topic}")
-    |> handle_json_response()
+    base64topic = Multibase.encode(topic)
+
+    post_query("/pubsub/pub/arg?#{base64topic}")
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -49,15 +55,24 @@ defmodule MyspaceIPFS.PubSub do
 
   ## Parameters
   https://docs.ipfs.io/reference/http/api/#api-v0-pubsub-pub
+  ```
     `topic` - The topic to publish to.
     `data` - The data to publish.
+  ```
+
+  ## Usage
+  ```
+  MyspaceIPFS.PubSub.sub("mymessage", "mytopic")
+  ```
+
   """
-  @spec pub(name, name) :: okresult
-  def pub(topic, data) do
-    with {:ok, base64topic} <- encode(topic) do
-      post_data("/pubsub/pub?arg=#{base64topic}", data)
-      |> handle_json_response()
-    end
+  @spec pub(binary, name) :: okresult
+  def pub(data, topic) do
+    {:ok, base64topic} = Multibase.encode(topic)
+
+    Multipart.new()
+    |> Multipart.add_field("data", data)
+    |> post_multipart("/pubsub/pub?arg=#{base64topic}")
   end
 
   @doc """

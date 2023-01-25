@@ -3,9 +3,10 @@ defmodule MyspaceIPFS.Utils do
   Some common functions that are used throughout the library.
   """
 
+  require Logger
+  alias Tesla.Multipart
+
   @type fspath :: MyspaceIPFS.fspath()
-  @typep response :: Tesla.Env.t()
-  @typep okmapped :: MyspaceIPFS.okmapped()
 
   @doc """
   Converts a string to a boolean or integer or vise versa
@@ -20,77 +21,28 @@ defmodule MyspaceIPFS.Utils do
   @spec filter_empties(list) :: list
   def filter_empties(list) do
     list
-    |> Enum.filter(fn x -> not Enum.member?(x, ["", nil, [], {}]) end)
+    |> Enum.reject(fn x -> Enum.member?(["", nil, [], {}], x) end)
   end
 
   @doc """
-  Extracts the data from a response. Given a response, it will structure the
-  data in a way that is easier to work with. IPFS only sends strings. This
-  function will convert the string to a list of maps.
+  IPFS api sometimes return invalid json. Instead of one json object, it returns
+  multiple json objects separated by newlines. This function will convert the
+  string to a list of maps.
+
+  If it fails, it'll just return the original string.
   """
-  @spec handle_plain_response({:ok, response}) :: okmapped
-  def handle_plain_response({:ok, response}) do
-    with {_, tokens, _} <- :lexer.string(~c'#{response}') do
-      if tokens == [] do
-        {:ok, []}
-      else
-        tokens
-        # The parser returns a tuple, which means okify() is not needed.
-        |> :parser.parse()
-      end
+  @spec extract_data_from_json_error(any) :: list | binary
+  def extract_data_from_json_error(error) do
+    try do
+      error.data
+      |> String.split("\n")
+      |> filter_empties()
+      # Please note that Jason.decode *must* have input as a string.
+      # Hence the interpolation.
+      |> Enum.map(fn line -> Jason.decode!("#{line}") end)
+    rescue
+      _ -> error
     end
-  end
-
-  # NB: There be dragons in here. This feels like a kludge.
-  # But this is a chokepoint for all the errors so it's probably fine
-  # and can be refactored later.
-  # The error response when status code is 500 can contain important
-  # information. This function will extract that information and return
-  # it as a tuple.
-  @doc false
-  @spec handle_plain_response({atom, binary}) :: any
-  def handle_plain_response({:eserver, response}) do
-    with {_, tokens, _} <- :lexer.string(~c'#{response}') do
-      if tokens == [] do
-        {:ok, []}
-      else
-        tokens
-        |> :parser.parse()
-        |> (fn {_, data} -> {data} end).()
-        |> Tuple.to_list()
-        |> List.first()
-        |> List.first()
-        |> (fn data -> {:eserver, data} end).()
-      end
-    end
-  end
-
-  @spec handle_plain_response(binary) :: any
-  def handle_plain_response(response) do
-    {error, {:ok, tesla_response}} = response
-    {error, tesla_response}
-  end
-
-  @doc false
-  @spec handle_json_response({:ok, response}) :: okmapped
-  def handle_json_response({:ok, response}) do
-    response
-    |> Jason.decode!()
-    |> okify()
-  end
-
-  @doc false
-  @spec handle_json_response({atom, binary}) :: any
-  def handle_json_response({error, response}) do
-    handle_plain_response({error, response})
-  end
-
-  @doc false
-  # This function could be overloaded to extract data from response.
-  @spec handle_file_response({:ok, binary}, fspath) :: okmapped
-  def handle_file_response({:ok, response}, output) do
-    File.write!(output, response)
-    {:ok, output}
   end
 
   @spec timestamp :: integer
@@ -153,17 +105,168 @@ defmodule MyspaceIPFS.Utils do
     dir_path
   end
 
-  @spec remove_temp_file(any, fspath) :: any
+  @spec unokify({:ok, any}) :: any
   @doc """
-  Removes a temporary file. To be used in a pipe, and hence returns the data sent to it.
+  A simple function to extract the data from a tuple.
+
+  ## Examples
+
+      iex> Myspace.Utils.unokify({:ok, "data"})
+      "data"
   """
-  def remove_temp_file(data, file) do
-    File.rm_rf!(file)
+  def unokify({:ok, data}) do
     data
   end
 
-  @spec data_from_tuple({:ok, any}) :: any
-  def data_from_tuple({:ok, data}) do
-    data
+  @spec recase_headers(list, :kebab | :snake) :: list
+  @doc """
+  Recase the headers to snake or kebab case. The headers from tesla is a list of tuples.
+  So some sugar to make it easier to work with.
+  The default is snake case.
+
+  The use for this is to make it easier to pattern match on headers.
+
+  ## Parameters
+
+    - headers: A list of tuples. The first element is the header name, the second is the value.
+    - format: The format to convert the headers to. Either :snake or :kebab.
+
+  ## Examples
+
+      iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
+      iex> Myspace.Utils.recase_headers(headers, :kebab)
+      [{"content-type", "application/json"}, {"x-my-header", "value"}]
+
+      iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
+      iex> Myspace.Utils.recase_headers(headers, :snake)
+      [{"content_type", "application/json"}, {"x_my_header", "value"}]
+
+  """
+  def recase_headers(headers, format \\ :snake) when is_list(headers) do
+    case format do
+      :snake -> Enum.map(headers, fn {k, v} -> {Recase.to_snake(k), v} end)
+      :kebab -> Enum.map(headers, fn {k, v} -> {Recase.to_kebab(k), v} end)
+    end
+  end
+
+  @spec get_header_value(list, binary) :: binary
+  @doc """
+  Get a response header from a list of headers.
+  Tesla sends the headers as a list of tuples. This function makes it easier to get a header.
+
+  To do this recases the headers to snake case and then converts the list to a map.
+  This way you don't need to be concerned about the casing of the header name.
+
+  ## Parameters
+
+    - headers: A list of tuples. The first element is the header name, the second is the value.
+    - key: The name of the header to get the value for.
+  """
+  def get_header_value(headers, key) do
+    # Here it's important to recase the key to snake case both for the key and the headers.
+    key = Recase.to_snake(key)
+
+    headers
+    |> Enum.into(%{})
+    |> Recase.Enumerable.convert_keys(&Recase.to_snake/1)
+    |> Map.get(key)
+  end
+
+  # This function is written explicitly to remove the base directory from the
+  # file path. This is done so that the file path is relative to the base
+  # directory. This is to avoid leaking irrelevant paths to the server.
+  def multipart_add_file(mp, fspath, basedir) do
+    relative_filename = String.replace(fspath, basedir <> "/", "")
+
+    Multipart.add_file(mp, fspath,
+      name: "file",
+      filename: relative_filename,
+      detect_content_type: true
+    )
+  end
+
+  @doc """
+  Creates a multipart request from a file path. This takes care of adding all the files
+  in the directory recursively.
+  """
+  @spec multipart(fspath) :: Multipart.t()
+  def multipart(fspath) do
+    Multipart.new()
+    |> multipart_add_files(fspath)
+  end
+
+  @doc """
+  Creates a multipart request from a binary. The filename should always be "file". Because
+  the IPFS API expects this.
+  """
+  @spec multipart_content(binary) :: Multipart.t()
+  def multipart_content(data) do
+    Multipart.new()
+    |> Multipart.add_file_content(data, "file")
+  end
+
+  @doc """
+  Adds a directory to a multipart request. This takes care of adding all the files
+  in the directory recursively.
+
+  The underlying add function clears away the parent directory from the file path.
+  This way your don't reveal the full path to the server, just the last leg of the path.
+  Eg. myspace from /var/tmp/myspace.
+
+  ## Parameters
+
+    - multipart: The multipart request to add the files to.
+    - fspath: The path to the directory to add to the multipart request.
+  """
+  def multipart_add_files(multipart, fspath) do
+    with basedir <- Path.dirname(fspath) do
+      ls_r(fspath)
+      |> Enum.reduce(multipart, fn fspath, multipart ->
+        multipart_add_file(multipart, fspath, basedir)
+      end)
+    end
+  end
+
+  # Thanks to some forum :-)
+  defp ls_r(path) do
+    cond do
+      File.regular?(path) ->
+        [path]
+
+      File.dir?(path) ->
+        File.ls!(path)
+        |> Enum.map(&Path.join(path, &1))
+        |> Enum.map(&ls_r/1)
+        |> Enum.concat()
+
+      true ->
+        []
+    end
+  end
+
+  @doc """
+  Converts JSON key strings to snake cased atoms.
+  """
+  @spec snake_atomize(map) :: map
+  def snake_atomize(map) do
+    map
+    |> Recase.Enumerable.convert_keys(&Recase.to_snake/1)
+    |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
+  end
+
+  @doc """
+  Starts a stream client and returns a reference to the client.
+
+  ## Parameters
+
+    - pid: The pid to stream the data to.
+    - url: The url to stream the data from.
+    - timeout: The timeout for the stream. Defaults to infinity.
+  """
+  @spec spawn_client(pid, binary, :atom | integer, list) :: any
+  def spawn_client(pid, url, timeout, query_options \\ []) do
+    Logger.debug("Starting stream client for #{url} with query options #{inspect(query_options)}")
+    options = [stream_to: pid, async: true, recv_timeout: timeout, query: query_options]
+    :hackney.request(:post, url, [], <<>>, options)
   end
 end

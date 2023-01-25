@@ -2,6 +2,7 @@ defmodule MyspaceIPFS.Files do
   @moduledoc """
   MyspaceIPFS.Files is where the files commands of the IPFS API reside.
   """
+  alias Tesla.Multipart
 
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
@@ -29,7 +30,8 @@ defmodule MyspaceIPFS.Files do
   @spec cp(fspath, fspath, opts) :: okresult
   def cp(source, dest, opts \\ []) do
     post_query("/files/cp?arg=" <> source <> "&arg=" <> dest, query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -50,7 +52,8 @@ defmodule MyspaceIPFS.Files do
   @spec chcid(path, opts) :: okresult
   def chcid(path \\ '/', opts \\ []) do
     post_query("/files/chcid?arg=" <> path, query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -63,13 +66,15 @@ defmodule MyspaceIPFS.Files do
   @spec flush() :: okresult
   def flush() do
     post_query("/files/flush")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @spec flush(path) :: okresult
   def flush(path) do
     post_query("/files/flush?arg=" <> path)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -90,7 +95,8 @@ defmodule MyspaceIPFS.Files do
   @spec ls(path, opts) :: okresult
   def ls(path \\ '/', opts \\ []) do
     post_query("/files/ls?arg=" <> path, query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -112,7 +118,8 @@ defmodule MyspaceIPFS.Files do
   @spec mkdir(path, opts) :: okresult
   def mkdir(path, opts \\ []) do
     post_query("/files/mkdir?arg=" <> path, query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -125,7 +132,8 @@ defmodule MyspaceIPFS.Files do
   @spec mv(path, path) :: okresult
   def mv(source, dest) do
     post_query("/files/mv?arg=" <> source <> "&arg=" <> dest)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -146,7 +154,8 @@ defmodule MyspaceIPFS.Files do
   @spec read(path, opts) :: okresult
   def read(path, opts \\ []) do
     post_query("/files/read?arg=" <> path, query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -167,7 +176,8 @@ defmodule MyspaceIPFS.Files do
   @spec rm(path, opts) :: okresult
   def rm(path, opts \\ []) do
     post_query("/files/rm?arg=" <> path, query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -192,7 +202,8 @@ defmodule MyspaceIPFS.Files do
   @spec stat(path, opts) :: okresult
   def stat(path, opts \\ []) do
     post_query("/files/stat?arg=" <> path, query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -219,7 +230,11 @@ defmodule MyspaceIPFS.Files do
   """
   @spec write(fspath, path, opts) :: okresult
   def write(data, path, opts \\ []) do
-    post_file("/files/write?arg=" <> path, data, query: opts)
-    |> handle_json_response()
+    Multipart.new()
+    |> Multipart.add_file_content(data, "file")
+
+    post_multipart("/files/write?arg=" <> path, query: opts)
+    |> handle_api_response()
+    |> okify()
   end
 end

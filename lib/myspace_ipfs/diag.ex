@@ -6,7 +6,6 @@ defmodule MyspaceIPFS.Diag do
   import MyspaceIPFS.Utils
 
   @typep okresult :: MyspaceIPFS.okresult()
-  @typep opts :: MyspaceIPFS.opts()
 
   @doc """
   List commands run by the daemon.
@@ -14,7 +13,8 @@ defmodule MyspaceIPFS.Diag do
   @spec cmds() :: okresult
   def cmds() do
     post_query("/diag/cmds")
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -23,7 +23,8 @@ defmodule MyspaceIPFS.Diag do
   @spec clear() :: okresult
   def clear do
     post_query("/diag/cmds/clear")
-    |> handle_plain_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -35,7 +36,18 @@ defmodule MyspaceIPFS.Diag do
   @spec set_time(String.t()) :: okresult
   def set_time(time) do
     post_query("/diag/cmds/set-time?arg=" <> time)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
+  end
+
+  @doc """
+  Print system diagnostic information.
+  """
+  @spec sys() :: okresult
+  def sys do
+    post_query("/diag/sys")
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -48,11 +60,12 @@ defmodule MyspaceIPFS.Diag do
   ## Parameters
   timeout: The timeout for the request. Default is 35_000 milliseonds.
            This should be set to the profile-time + 5_000 milliseconds.
+  output: The output file for the profile. Default is "ipfs-profile-#{timestamp()}.zip".
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-diag-profile
   ```
   [
-    "output": <string>, # Output file for the profile.
+    "output": <string>, # Output file for the profile. Default: "ipfs-profile-#{timestamp()}.zip".
     "collectors": <array>, # List of collectors to use.
     "profile-time": <string>, # Time to run the profiler for.
     "mutex-profile-fraction": <number>, # Fraction of mutex contention events to profile.
@@ -60,23 +73,9 @@ defmodule MyspaceIPFS.Diag do
   ]
   ```
   """
-  @spec profile(integer, opts) :: any
-  def profile(timeout \\ 35_000, opts \\ []) do
-    with output <- Keyword.get(opts, :output, "ipfs-profile-#{timestamp()}.zip") do
-      post_query("/diag/profile",
-        opts: [adapter: [recv_timeout: timeout]],
-        query: opts
-      )
-      |> handle_file_response(output)
-    end
-  end
-
-  @doc """
-  Print system diagnostic information.
-  """
-  @spec sys() :: okresult
-  def sys do
-    post_query("/diag/sys")
-    |> handle_json_response()
+  @spec profile(list) :: okresult
+  def profile(options \\ []) do
+    MyspaceIPFS.Diag.Profile.start_link(options)
+    |> okify()
   end
 end

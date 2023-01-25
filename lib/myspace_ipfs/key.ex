@@ -15,21 +15,27 @@ defmodule MyspaceIPFS.Key do
 
   ## Parameters
     `key` - Name of the key to export.
-    `output` - Output file path.
+    `output` - Output file path or :memory.
+              :memory just returns the key as a binary.
 
   ## Options
   https://docs.ipfs.io/reference/http/api/#api-v0-key-export
   ```
   [
-    output: <string>, # Output file path.
     format: <string>, # Key format.
   ]
   ```
   """
-  @spec export(name, fspath, opts) :: okresult
-  def export(key, output, opts \\ []) do
-    post_query("/key/export?arg=" <> key, query: opts)
-    |> handle_file_response(output)
+  @spec export(name, fspath | atom, opts) :: okresult
+  def export(key, output \\ :memory, opts \\ []) do
+    key =
+      post_query("/key/export?arg=" <> key, query: opts)
+      |> handle_api_response()
+
+    case output do
+      :memory -> okify(key)
+      _ -> File.write(output, key)
+    end
   end
 
   @doc """
@@ -51,7 +57,8 @@ defmodule MyspaceIPFS.Key do
   @spec gen(name, opts) :: okresult
   def gen(key, opts \\ []) do
     post_query("/key/gen?arg=" <> key, query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -70,10 +77,11 @@ defmodule MyspaceIPFS.Key do
   ]
   ```
   """
-  @spec import(name, fspath, opts) :: okresult
-  def import(key, file, opts \\ []) do
-    post_file("/key/import?arg=" <> key, file, query: opts)
-    |> handle_json_response()
+  @spec import(name, binary, opts) :: okresult
+  def import(name, key, opts \\ []) do
+    multipart_content(key)
+    |> post_multipart("/key/import?arg=" <> name, query: opts)
+    |> handle_api_response()
   end
 
   @doc """
@@ -91,7 +99,8 @@ defmodule MyspaceIPFS.Key do
   @spec list(opts) :: okresult
   def list(opts \\ []) do
     post_query("/key/list", query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -113,7 +122,8 @@ defmodule MyspaceIPFS.Key do
   @spec rename(name, name, opts) :: okresult
   def rename(old, new, opts \\ []) do
     post_query("/key/rename?arg=" <> old <> "&arg=" <> new, query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -134,7 +144,8 @@ defmodule MyspaceIPFS.Key do
   @spec rm(name, opts) :: okresult
   def rm(key, opts \\ []) do
     post_query("/key/rm?arg=" <> key, query: opts)
-    |> handle_json_response()
+    |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -155,6 +166,7 @@ defmodule MyspaceIPFS.Key do
   @spec rotate(name, opts) :: okresult
   def rotate(oldkey, opts \\ []) do
     post_query("/key/rotate?arg=" <> oldkey, query: opts)
-    |> handle_plain_response()
+    |> handle_api_response()
+    |> okify()
   end
 end
