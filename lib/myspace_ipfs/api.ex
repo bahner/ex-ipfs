@@ -19,6 +19,7 @@ defmodule MyspaceIpfs.Api do
   """
   use Tesla, docs: false
   import MyspaceIpfs.Utils
+  alias MyspaceIpfs.ApiError
   require Logger
 
   # Types
@@ -77,6 +78,11 @@ defmodule MyspaceIpfs.Api do
     # It just gives us more to match against, which is needlessly complex.
     case response do
       {:ok, %Tesla.Env{status: 200}} -> response
+      {:ok, %Tesla.Env{status: 500}} -> {:error, unokify(response)}
+      {:ok, %Tesla.Env{status: 400}} -> {:error, unokify(response)}
+      {:ok, %Tesla.Env{status: 403}} -> {:error, unokify(response)}
+      {:ok, %Tesla.Env{status: 404}} -> {:error, unokify(response)}
+      {:ok, %Tesla.Env{status: 405}} -> {:error, unokify(response)}
       {:error, _} -> {:error, response}
     end
   end
@@ -86,24 +92,26 @@ defmodule MyspaceIpfs.Api do
     Logger.debug("Headers: #{inspect(response.headers)}")
     Logger.debug("Content type: #{get_header_value(response.headers, "content-type")}")
 
-    # At the moment this is a NOOP, but I want this choke point to be here.
-    case get_header_value(response.headers, "content-type") do
-      "application/json" -> response.body
-      "plain/text" -> response.body
-      _ -> response.body
-    end
+    response.body
+    # # At the moment this is a NOOP, but I want this choke point to be here.
+    # case get_header_value(response.headers, "content-type") do
+    #   "application/json" -> response.body
+    #   "plain/text" -> response.body
+    #   _ -> "response.body"
+    # end
   end
 
   def handle_api_response({:error, response}) do
-    {:error, response} = response
-
     case response do
       # create_list_from_lines_of_json/1 is a helper function that takes a
       # string of JSON objects separated by newlines and returns a list of
       # JSON objects.
       # If it fails it'll just return the original data.
-      {Tesla.Middleware.JSON, :decode, json_error} ->
+      {:error, {Tesla.Middleware.JSON, :decode, json_error}} ->
         extract_data_from_json_error(json_error.data)
+
+      %Tesla.Env{status: 500} ->
+        ApiError.handle_api_error(response)
     end
   end
 end

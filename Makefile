@@ -3,7 +3,6 @@
 VERSION ?= $(shell cat mix.exs | grep version | sed -e 's/.*version: "\(.*\)",/\1/')
 
 all: deps format compile
-	mix deps.get
 	mix format
 	mix compile
 

@@ -16,8 +16,9 @@ defmodule MyspaceIpfs.Bitswap do
   Reprovide blocks to the network.
   """
   @spec reprovide() :: okresult()
-  def reprovide do
+  def reprovide() do
     post_query("/bitswap/reprovide")
+    |> handle_api_response()
   end
 
   @doc """
