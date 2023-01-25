@@ -82,7 +82,11 @@ defmodule MyspaceIPFS.Utils do
     end
   end
 
-  @doc false
+  @doc """
+  Creates a unique file in the given directory and returns the path.
+
+  Path defaults to "/tmp" if not given.
+  """
   @spec write_temp_file(binary, fspath) :: {:ok, fspath}
   def write_temp_file(data, dir \\ "/tmp") do
     with dir <- mktempdir(dir),
@@ -105,20 +109,19 @@ defmodule MyspaceIPFS.Utils do
     dir_path
   end
 
-  @spec unokify({:ok, any}) :: any
   @doc """
   A simple function to extract the data from a tuple.
 
   ## Examples
 
-      iex> Myspace.Utils.unokify({:ok, "data"})
-      "data"
+  iex> Myspace.Utils.unokify({:ok, "data"})
+  "data"
   """
+  @spec unokify({:ok, any}) :: any
   def unokify({:ok, data}) do
     data
   end
 
-  @spec recase_headers(list, :kebab | :snake) :: list
   @doc """
   Recase the headers to snake or kebab case. The headers from tesla is a list of tuples.
   So some sugar to make it easier to work with.
@@ -128,20 +131,21 @@ defmodule MyspaceIPFS.Utils do
 
   ## Parameters
 
-    - headers: A list of tuples. The first element is the header name, the second is the value.
-    - format: The format to convert the headers to. Either :snake or :kebab.
+  - headers: A list of tuples. The first element is the header name, the second is the value.
+  - format: The format to convert the headers to. Either :snake or :kebab.
 
   ## Examples
 
-      iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
-      iex> Myspace.Utils.recase_headers(headers, :kebab)
-      [{"content-type", "application/json"}, {"x-my-header", "value"}]
+  iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
+  iex> Myspace.Utils.recase_headers(headers, :kebab)
+  [{"content-type", "application/json"}, {"x-my-header", "value"}]
 
-      iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
-      iex> Myspace.Utils.recase_headers(headers, :snake)
-      [{"content_type", "application/json"}, {"x_my_header", "value"}]
+  iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
+  iex> Myspace.Utils.recase_headers(headers, :snake)
+  [{"content_type", "application/json"}, {"x_my_header", "value"}]
 
   """
+  @spec recase_headers(list, :kebab | :snake) :: list
   def recase_headers(headers, format \\ :snake) when is_list(headers) do
     case format do
       :snake -> Enum.map(headers, fn {k, v} -> {Recase.to_snake(k), v} end)
@@ -149,7 +153,6 @@ defmodule MyspaceIPFS.Utils do
     end
   end
 
-  @spec get_header_value(list, binary) :: binary
   @doc """
   Get a response header from a list of headers.
   Tesla sends the headers as a list of tuples. This function makes it easier to get a header.
@@ -159,9 +162,10 @@ defmodule MyspaceIPFS.Utils do
 
   ## Parameters
 
-    - headers: A list of tuples. The first element is the header name, the second is the value.
-    - key: The name of the header to get the value for.
+  - headers: A list of tuples. The first element is the header name, the second is the value.
+  - key: The name of the header to get the value for.
   """
+  @spec get_header_value(list, binary) :: binary
   def get_header_value(headers, key) do
     # Here it's important to recase the key to snake case both for the key and the headers.
     key = Recase.to_snake(key)
@@ -172,9 +176,15 @@ defmodule MyspaceIPFS.Utils do
     |> Map.get(key)
   end
 
-  # This function is written explicitly to remove the base directory from the
-  # file path. This is done so that the file path is relative to the base
-  # directory. This is to avoid leaking irrelevant paths to the server.
+  @doc """
+  Adds a file to the multipart request.
+  This function is written explicitly to remove the base directory from the
+  file path.
+
+  This pattern is used in the IPFS API. The file path is relative to the
+  base directory. This is to avoid leaking irrelevant paths to the server.
+  """
+  @spec multipart_add_file(Multipart.t(), fspath, fspath) :: Multipart.t()
   def multipart_add_file(mp, fspath, basedir) do
     relative_filename = String.replace(fspath, basedir <> "/", "")
 
@@ -262,9 +272,10 @@ defmodule MyspaceIPFS.Utils do
     - pid: The pid to stream the data to.
     - url: The url to stream the data from.
     - timeout: The timeout for the stream. Defaults to infinity.
+    - query_options: A list of query options to add to the url.
   """
-  @spec spawn_client(pid, binary, :atom | integer, list) :: any
-  def spawn_client(pid, url, timeout, query_options \\ []) do
+  @spec spawn_client(pid, binary, :atom | integer, list) :: reference
+  def spawn_client(pid, url, timeout \\ :infinity, query_options \\ []) do
     Logger.debug("Starting stream client for #{url} with query options #{inspect(query_options)}")
     options = [stream_to: pid, async: true, recv_timeout: timeout, query: query_options]
     :hackney.request(:post, url, [], <<>>, options)
