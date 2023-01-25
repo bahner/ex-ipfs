@@ -1,10 +1,10 @@
-defmodule MyspaceIPFS.Cid do
+defmodule MyspaceIpfs.Cid do
   @moduledoc """
-  MyspaceIPFS.Cid is where the cid commands of the IPFS API reside.
+  MyspaceIpfs.Cid is where the cid commands of the IPFS API reside.
   """
 
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
   @typep okmapped :: MySpaceIPFS.okmapped()
   @typep opts :: MySpaceIPFS.opts()

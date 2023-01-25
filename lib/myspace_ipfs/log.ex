@@ -1,12 +1,12 @@
-defmodule MyspaceIPFS.Log do
+defmodule MyspaceIpfs.Log do
   @moduledoc """
-  MyspaceIPFS.Log is where the log commands of the IPFS API reside.
+  MyspaceIpfs.Log is where the log commands of the IPFS API reside.
   """
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
-  @typep okresult :: MyspaceIPFS.okresult()
-  @typep name :: MyspaceIPFS.name()
+  @typep okresult :: MyspaceIpfs.okresult()
+  @typep name :: MyspaceIpfs.name()
 
   @doc """
   Change the logging level.

@@ -1,13 +1,13 @@
-defmodule MyspaceIPFS.Dag do
+defmodule MyspaceIpfs.Dag do
   @moduledoc """
-  MyspaceIPFS.Dag is where the cid commands of the IPFS API reside.
+  MyspaceIpfs.Dag is where the cid commands of the IPFS API reside.
   """
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
-  @typep cid :: MyspaceIPFS.cid()
-  @typep okresult :: MyspaceIPFS.okresult()
-  @typep opts :: MyspaceIPFS.opts()
+  @typep cid :: MyspaceIpfs.cid()
+  @typep okresult :: MyspaceIpfs.okresult()
+  @typep opts :: MyspaceIpfs.opts()
 
   @doc """
   Streams the selected DAG as a .car stream on stdout.

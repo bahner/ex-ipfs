@@ -1,15 +1,15 @@
-defmodule MyspaceIPFS.Routing do
+defmodule MyspaceIpfs.Routing do
   @moduledoc """
-  MyspaceIPFS.Routing is where the routing commands of the IPFS API reside.
+  MyspaceIpfs.Routing is where the routing commands of the IPFS API reside.
   """
 
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
-  @typep okresult :: MyspaceIPFS.okresult()
-  @typep peer_id :: MyspaceIPFS.peer_id()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep name :: MyspaceIPFS.name()
+  @typep okresult :: MyspaceIpfs.okresult()
+  @typep peer_id :: MyspaceIpfs.peer_id()
+  @typep opts :: MyspaceIpfs.opts()
+  @typep name :: MyspaceIpfs.name()
 
   @doc """
   Find the multiaddresses associated with a peer ID.

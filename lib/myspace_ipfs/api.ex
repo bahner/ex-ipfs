@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Api do
+defmodule MyspaceIpfs.Api do
   @moduledoc """
   IPFS (the InterPlanetary File Syste
   new hypermedia distribution protocol, addressed by
@@ -18,14 +18,14 @@ defmodule MyspaceIPFS.Api do
   Based on https://github.com/tableturn/ipfs/blob/master/lib/ipfs.ex
   """
   use Tesla, docs: false
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Utils
   require Logger
 
   # Types
-  @typep path :: MyspaceIPFS.path()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep result :: MyspaceIPFS.result()
-  @typep okresult :: MyspaceIPFS.okresult()
+  @typep path :: MyspaceIpfs.path()
+  @typep opts :: MyspaceIpfs.opts()
+  @typep result :: MyspaceIpfs.result()
+  @typep okresult :: MyspaceIpfs.okresult()
   @typep multipart :: Tesla.Multipart.t()
   @typep response :: Tesla.Env.t()
 

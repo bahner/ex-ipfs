@@ -1,14 +1,14 @@
-defmodule MyspaceIPFS.PubSub do
+defmodule MyspaceIpfs.PubSub do
   @moduledoc """
-  MyspaceIPFS.PubSub is where the pubsub commands of the IPFS API reside.
+  MyspaceIpfs.PubSub is where the pubsub commands of the IPFS API reside.
   """
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
-  alias MyspaceIPFS.Multibase
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
+  alias MyspaceIpfs.Multibase
   alias Tesla.Multipart
 
-  @typep okresult :: MyspaceIPFS.okresult()
-  @typep name :: MyspaceIPFS.name()
+  @typep okresult :: MyspaceIpfs.okresult()
+  @typep name :: MyspaceIpfs.name()
 
   @doc """
   List the topics you are currently subscribed to.
@@ -62,7 +62,7 @@ defmodule MyspaceIPFS.PubSub do
 
   ## Usage
   ```
-  MyspaceIPFS.PubSub.sub("mymessage", "mytopic")
+  MyspaceIpfs.PubSub.sub("mymessage", "mytopic")
   ```
 
   """
@@ -85,6 +85,6 @@ defmodule MyspaceIPFS.PubSub do
   """
   @spec sub(pid, binary) :: any
   def sub(pid, topic) do
-    MyspaceIPFS.PubSub.Channel.start_link(pid, topic)
+    MyspaceIpfs.PubSub.Channel.start_link(pid, topic)
   end
 end

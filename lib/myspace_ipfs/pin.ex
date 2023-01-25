@@ -1,9 +1,9 @@
-defmodule MyspaceIPFS.Pin do
+defmodule MyspaceIpfs.Pin do
   @moduledoc """
-  MyspaceIPFS.Pin is where the pin commands of the IPFS API reside.
+  MyspaceIpfs.Pin is where the pin commands of the IPFS API reside.
   """
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
   @type okmapped :: MySpaceIPFS.okmapped()
   @type name :: MySpaceIPFS.name()

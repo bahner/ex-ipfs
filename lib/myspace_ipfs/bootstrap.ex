@@ -1,11 +1,11 @@
-defmodule MyspaceIPFS.Bootstrap do
+defmodule MyspaceIpfs.Bootstrap do
   @moduledoc """
-  MyspaceIPFS.Bootstrap is where the bootstrap commands of the IPFS API reside.
+  MyspaceIpfs.Bootstrap is where the bootstrap commands of the IPFS API reside.
   """
 
   defstruct Peers: []
 
-  import MyspaceIPFS.Api
+  import MyspaceIpfs.Api
 
   @type t :: %__MODULE__{
           Peers: List.t()

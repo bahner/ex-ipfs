@@ -1,12 +1,12 @@
-defmodule MyspaceIPFS.Dht do
+defmodule MyspaceIpfs.Dht do
   @moduledoc """
-  MyspaceIPFS.Dht is where the dht commands of the IPFS API reside.
+  MyspaceIpfs.Dht is where the dht commands of the IPFS API reside.
   """
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
-  @typep peer_id :: MyspaceIPFS.peer_id()
-  @typep okresult :: MyspaceIPFS.okresult()
+  @typep peer_id :: MyspaceIpfs.peer_id()
+  @typep okresult :: MyspaceIpfs.okresult()
 
   @doc """
   Find the closest peers to a given key.

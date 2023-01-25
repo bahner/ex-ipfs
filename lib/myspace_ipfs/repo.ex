@@ -1,12 +1,12 @@
-defmodule MyspaceIPFS.Repo do
+defmodule MyspaceIpfs.Repo do
   @moduledoc """
-  MyspaceIPFS.Repo is where the repo commands of the IPFS API reside.
+  MyspaceIpfs.Repo is where the repo commands of the IPFS API reside.
   """
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
-  @typep okresult :: MyspaceIPFS.okresult()
-  @typep opts :: MyspaceIPFS.opts()
+  @typep okresult :: MyspaceIpfs.okresult()
+  @typep opts :: MyspaceIpfs.opts()
 
   @doc """
   Perform a garbage collection sweep on the repo.

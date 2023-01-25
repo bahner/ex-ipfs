@@ -1,9 +1,9 @@
-defmodule MyspaceIPFS.Block do
+defmodule MyspaceIpfs.Block do
   @moduledoc """
-  MyspaceIPFS.Block is where the block commands of the IPFS API reside.
+  MyspaceIpfs.Block is where the block commands of the IPFS API reside.
   """
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
   @typep okmapped :: MySpaceIPFS.okmapped()
   @typep opts :: MySpaceIPFS.opts()

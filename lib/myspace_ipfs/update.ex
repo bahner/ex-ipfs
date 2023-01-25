@@ -1,10 +1,10 @@
-defmodule MyspaceIPFS.Update do
+defmodule MyspaceIpfs.Update do
   # FIXME: This is a stub.  It needs to be implemented.
   @moduledoc false
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
-  @typep result :: MyspaceIPFS.result()
+  @typep result :: MyspaceIpfs.result()
 
   @doc """
   Update IPFS via IPFS.

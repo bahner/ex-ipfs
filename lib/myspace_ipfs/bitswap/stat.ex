@@ -1,5 +1,7 @@
-defmodule MyspaceIPFS.BitswapStat do
-  @moduledoc false
+defmodule MyspaceIpfs.BitswapStat do
+  @moduledoc """
+  A struct that represents the bitswap network statistics.
+  """
 
   defstruct blocks_received: nil,
             blocks_sent: nil,
@@ -12,16 +14,19 @@ defmodule MyspaceIPFS.BitswapStat do
             provide_buf_len: nil,
             wantlist: []
 
+  @typep rootcid :: MyspaceIpfs.RootCid.t()
+  @typep peer_id :: MyspaceIpfs.peer_id()
+
   @type t :: %__MODULE__{
-          blocks_received: non_neg_integer(),
-          blocks_sent: non_neg_integer(),
-          data_received: non_neg_integer(),
-          data_sent: non_neg_integer(),
-          dup_blks_received: non_neg_integer(),
-          dup_data_received: non_neg_integer(),
-          messages_received: non_neg_integer(),
-          peers: List.t(),
-          provide_buf_len: integer(),
-          wantlist: List.t()
+          blocks_received: non_neg_integer,
+          blocks_sent: non_neg_integer,
+          data_received: non_neg_integer,
+          data_sent: non_neg_integer,
+          dup_blks_received: non_neg_integer,
+          dup_data_received: non_neg_integer,
+          messages_received: list,
+          peers: list(peer_id),
+          provide_buf_len: integer,
+          wantlist: list(rootcid)
         }
 end

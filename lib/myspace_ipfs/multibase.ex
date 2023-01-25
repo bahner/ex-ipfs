@@ -1,15 +1,15 @@
-defmodule MyspaceIPFS.Multibase do
+defmodule MyspaceIpfs.Multibase do
   @moduledoc """
-  MyspaceIPFS.Multibase is where the multibase commands of the IPFS API reside.
+  MyspaceIpfs.Multibase is where the multibase commands of the IPFS API reside.
   """
 
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
   alias Tesla.Multipart
-  alias MyspaceIPFS.Multibase.Codec
+  alias MyspaceIpfs.Multibase.Codec
 
-  @typep okresult :: MyspaceIPFS.okresult()
-  @typep opts :: MyspaceIPFS.opts()
+  @typep okresult :: MyspaceIpfs.okresult()
+  @typep opts :: MyspaceIpfs.opts()
 
   # Fixme add _file variants.
   @doc """

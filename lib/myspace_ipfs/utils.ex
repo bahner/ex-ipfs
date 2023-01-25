@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Utils do
+defmodule MyspaceIpfs.Utils do
   @moduledoc """
   Some common functions that are used throughout the library.
   """
@@ -6,7 +6,7 @@ defmodule MyspaceIPFS.Utils do
   require Logger
   alias Tesla.Multipart
 
-  @type fspath :: MyspaceIPFS.fspath()
+  @type fspath :: MyspaceIpfs.fspath()
 
   @doc """
   Converts a string to a boolean or integer or vise versa

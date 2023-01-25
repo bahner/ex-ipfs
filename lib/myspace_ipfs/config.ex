@@ -1,14 +1,14 @@
-defmodule MyspaceIPFS.Config do
+defmodule MyspaceIpfs.Config do
   @moduledoc """
-  MyspaceIPFS.Config is where the config commands of the IPFS API reside.
+  MyspaceIpfs.Config is where the config commands of the IPFS API reside.
   """
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
-  @typep name :: MyspaceIPFS.name()
-  @typep result :: MyspaceIPFS.result()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep fspath :: MyspaceIPFS.fspath()
+  @typep name :: MyspaceIpfs.name()
+  @typep result :: MyspaceIpfs.result()
+  @typep opts :: MyspaceIpfs.opts()
+  @typep fspath :: MyspaceIpfs.fspath()
 
   @doc """
   Get the value of a config key.

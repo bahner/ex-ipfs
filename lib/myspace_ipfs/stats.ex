@@ -1,13 +1,13 @@
-defmodule MyspaceIPFS.Stats do
+defmodule MyspaceIpfs.Stats do
   @moduledoc """
-  MyspaceIPFS.Stats is where the stats commands of the IPFS API reside.
+  MyspaceIpfs.Stats is where the stats commands of the IPFS API reside.
   """
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
-  @typep okresult :: MyspaceIPFS.okresult()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep name :: MyspaceIPFS.name()
+  @typep okresult :: MyspaceIpfs.okresult()
+  @typep opts :: MyspaceIpfs.opts()
+  @typep name :: MyspaceIpfs.name()
 
   @doc """
   Show some diagnostic information on the bitswap agent.
@@ -44,7 +44,7 @@ defmodule MyspaceIPFS.Stats do
     dht - <string>, # The name of the DHT to query.
                     # "wanserver", "lanserver", "lan" or "wan".
   """
-  @spec dht(name) :: MyspaceIPFS.okmapped()
+  @spec dht(name) :: MyspaceIpfs.okmapped()
   def dht(name) do
     post_query("/stats/dht?arg=#{name}")
     |> handle_api_response()

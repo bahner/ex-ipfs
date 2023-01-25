@@ -1,16 +1,16 @@
-defmodule MyspaceIPFS.Bitswap do
+defmodule MyspaceIpfs.Bitswap do
   @moduledoc """
-  MyspaceIPFS.Bitswap is where the bitswap commands of the IPFS API reside.
+  MyspaceIpfs.Bitswap is where the bitswap commands of the IPFS API reside.
   """
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
   @typep okresult :: MySpaceIPFS.okresult()
-  @typep peer_id :: MyspaceIPFS.peer_id()
-  @type wantlist :: MyspaceIPFS.BitswapWantList.t()
-  @type stat :: MyspaceIPFS.BitswapStat.t()
-  @type ledger() :: MyspaceIPFS.BitswapLedger.t()
-  @typep opts :: MyspaceIPFS.opts()
+  @typep peer_id :: MyspaceIpfs.peer_id()
+  @type wantlist :: MyspaceIpfs.BitswapWantList.t()
+  @type stat :: MyspaceIpfs.BitswapStat.t()
+  @type ledger() :: MyspaceIpfs.BitswapLedger.t()
+  @typep opts :: MyspaceIpfs.opts()
 
   @doc """
   Reprovide blocks to the network.
@@ -83,17 +83,17 @@ defmodule MyspaceIPFS.Bitswap do
   end
 
   defp gen_ledger(opts) do
-    %MyspaceIPFS.BitswapLedger{}
+    %MyspaceIpfs.BitswapLedger{}
     |> struct(opts)
   end
 
   defp gen_wantlist(opts) do
-    %MyspaceIPFS.BitswapWantList{}
+    %MyspaceIpfs.BitswapWantList{}
     |> struct(opts)
   end
 
   defp gen_stat(opts) do
-    %MyspaceIPFS.BitswapStat{}
+    %MyspaceIpfs.BitswapStat{}
     |> struct(opts)
   end
 end

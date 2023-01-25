@@ -1,12 +1,12 @@
-defmodule MyspaceIPFS.Filestore do
+defmodule MyspaceIpfs.Filestore do
   @moduledoc """
-  MyspaceIPFS.Filestore is where the filestore commands of the IPFS API reside.
+  MyspaceIpfs.Filestore is where the filestore commands of the IPFS API reside.
   """
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
-  @typep okresult :: MyspaceIPFS.okresult()
-  @typep opts :: MyspaceIPFS.opts()
+  @typep okresult :: MyspaceIpfs.okresult()
+  @typep opts :: MyspaceIpfs.opts()
 
   @doc """
   List blocks that are both in the filestore and standard block storage.

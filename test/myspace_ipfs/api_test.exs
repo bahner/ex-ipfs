@@ -1,14 +1,14 @@
-defmodule MyspaceIPFS.ApiTest do
+defmodule MyspaceIpfs.ApiTest do
   @moduledoc """
-  Test the MyspaceIPFS API
+  Test the MyspaceIpfs API
 
-  This test suite is designed to test the MyspaceIPFS API. It is not designed to test the IPFS API
-  itself. It is designed to test the MyspaceIPFS API wrapper. This test suite is designed to be run
+  This test suite is designed to test the MyspaceIpfs API. It is not designed to test the IPFS API
+  itself. It is designed to test the MyspaceIpfs API wrapper. This test suite is designed to be run
 
   NB! The tests are not mocked. They are designed to be run against a live IPFS node. This is
   """
   use ExUnit.Case, async: true
-  alias MyspaceIPFS, as: Ipfs
+  alias MyspaceIpfs, as: Ipfs
 
   test "get should return a binary when passed a valid key" do
     {:ok, bin} = Ipfs.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
@@ -21,6 +21,6 @@ defmodule MyspaceIPFS.ApiTest do
     assert bin["Code"] === 0
   end
 
-  doctest MyspaceIPFS.Api
+  doctest MyspaceIpfs.Api
   ## TODO: add Unit testing
 end

@@ -1,11 +1,11 @@
-defmodule MyspaceIPFS.Version do
+defmodule MyspaceIpfs.Version do
   @moduledoc """
-  MyspaceIPFS.Version is a collection of functions for the MyspaceIPFS library.
+  MyspaceIpfs.Version is a collection of functions for the MyspaceIpfs library.
   """
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
-  @typep result :: MyspaceIPFS.result()
+  @typep result :: MyspaceIpfs.result()
 
   @doc """
   Get the version of the IPFS daemon.

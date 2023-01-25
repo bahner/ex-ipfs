@@ -1,16 +1,16 @@
-defmodule MyspaceIPFS.Files do
+defmodule MyspaceIpfs.Files do
   @moduledoc """
-  MyspaceIPFS.Files is where the files commands of the IPFS API reside.
+  MyspaceIpfs.Files is where the files commands of the IPFS API reside.
   """
   alias Tesla.Multipart
 
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
-  @typep okresult :: MyspaceIPFS.okresult()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep path :: MyspaceIPFS.path()
-  @typep fspath :: MyspaceIPFS.fspath()
+  @typep okresult :: MyspaceIpfs.okresult()
+  @typep opts :: MyspaceIpfs.opts()
+  @typep path :: MyspaceIpfs.path()
+  @typep fspath :: MyspaceIpfs.fspath()
 
   @doc """
   Copy files into mfs.

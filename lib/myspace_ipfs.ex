@@ -1,17 +1,17 @@
-defmodule MyspaceIPFS do
+defmodule MyspaceIpfs do
   @moduledoc """
-  MyspaceIPFS is where the main commands of the IPFS API reside.
+  MyspaceIpfs is where the main commands of the IPFS API reside.
   Alias this library and you can run the commands via Api.<cmd_name>.
 
         ## Examples
 
-        iex> alias MyspaceIPFS, as: Ipfs
+        iex> alias MyspaceIpfs, as: Ipfs
         iex> Ipfs.cat(QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
         <<0, 19, 148, 0, ... >>
   """
 
-  import MyspaceIPFS.Api
-  import MyspaceIPFS.Utils
+  import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
   # Types
   @typedoc """
@@ -182,7 +182,7 @@ defmodule MyspaceIPFS do
   But the default should be enough for most cases. More likely your content isn't available....
   """
   @spec get(path, opts) :: okresult
-  defdelegate get(path, opts \\ []), to: MyspaceIPFS.Get
+  defdelegate get(path, opts \\ []), to: MyspaceIpfs.Get
 
   @doc """
   Get the contents of a file from ipfs.
@@ -283,7 +283,7 @@ defmodule MyspaceIPFS do
   # But needs doing.
   @spec ping(pid, cid, atom | integer, opts) :: :ok
   def ping(pid, peer, timeout, opts \\ []),
-    do: MyspaceIPFS.Ping.start_link(pid, peer, timeout, opts)
+    do: MyspaceIpfs.Ping.start_link(pid, peer, timeout, opts)
 
   :ok
 
@@ -305,4 +305,58 @@ defmodule MyspaceIPFS do
       post_query("/mount", query: opts)
       |> handle_api_response()
       |> okify()
+end
+
+defmodule MyspaceIpfs.RootCid do
+  @moduledoc """
+  This struct is very simple. Some results are listed as `%{"/": cid}`. This is a
+  convenience struct to make it easier match on the result.
+
+  The name is odd, but it signifies that it is a CID of in the API notation, with the
+  leading slash.
+  """
+
+  @typep cid :: MyspaceIpfs.cid()
+  # The CID of the root object.
+  defstruct /: nil
+
+  @type t :: %__MODULE__{/: cid}
+end
+
+defmodule MyspaceIpfs.KeySize do
+  @moduledoc """
+  This struct is very simple. Some results are listed as "Size": size. This is a
+  convenience struct to make it easier match on the result.
+  """
+
+  defstruct key: nil, size: nil
+
+  @type t :: %__MODULE__{key: binary, size: non_neg_integer}
+end
+
+defmodule MyspaceIpfs.ErrorHash do
+  @moduledoc """
+  This struct is very simple. Some results are listed as "Error": error, "Hash": hash. This is a
+  """
+
+  defstruct error: nil, hash: nil
+
+  @type t :: %__MODULE__{error: binary, hash: binary}
+end
+
+defmodule MyspaceIpfs.Add do
+  @moduledoc """
+  This struct is very simple. Some results are listed as "Bytes": bytes, "Hash": hash, "Size": size, "Type": type. This is a
+  convenience struct to make it easier match on the result.
+
+  This is returned when you add a file or directory to IPFS.
+  """
+  defstruct bytes: nil, hash: nil, size: nil, type: nil
+
+  @type t :: %__MODULE__{
+          bytes: non_neg_integer,
+          hash: binary,
+          size: non_neg_integer,
+          type: binary
+        }
 end
