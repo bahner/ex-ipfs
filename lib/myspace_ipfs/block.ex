@@ -21,6 +21,7 @@ defmodule MyspaceIpfs.Block do
   def get(cid) do
     post_query("/block/get?arg=" <> cid)
     |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -46,6 +47,8 @@ defmodule MyspaceIpfs.Block do
     multipart(fspath)
     |> post_multipart("/block/put", query: opts)
     |> handle_api_response()
+    |> snake_atomize()
+    |> gen_key_size()
     |> okify()
   end
 
@@ -68,6 +71,8 @@ defmodule MyspaceIpfs.Block do
   def rm(cid) do
     post_query("/block/rm?arg=" <> cid)
     |> handle_api_response()
+    |> snake_atomize()
+    |> gen_hash()
     |> okify()
   end
 

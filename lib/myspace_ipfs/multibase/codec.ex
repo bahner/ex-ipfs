@@ -1,6 +1,6 @@
-defmodule MyspaceIpfs.Multibase.Codec do
+defmodule MyspaceIpfs.MultibaseCodec do
   @moduledoc """
-  MyspaceIpfs.Multibase.Codec is a struct representing a multibase codec.
+  MyspaceIpfs.MultibaseCodec is a struct representing a multibase codec.
   """
   @enforce_keys [:name, :code]
   defstruct [:name, :code, prefix: nil, description: nil]
@@ -14,7 +14,7 @@ defmodule MyspaceIpfs.Multibase.Codec do
 
   def gen_multibase_codec(opts) do
     # code and name are required and must be present.
-    %MyspaceIpfs.Multibase.Codec{
+    %MyspaceIpfs.MultibaseCodec{
       name: opts.name,
       code: opts.code,
       prefix: Map.get(opts, :prefix, nil),

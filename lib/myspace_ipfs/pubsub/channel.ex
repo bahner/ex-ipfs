@@ -1,6 +1,6 @@
-defmodule MyspaceIpfs.PubSub.Channel do
+defmodule MyspaceIpfs.PubSubChannel do
   @moduledoc """
-  MyspaceIpfs.PubSub.Channel is a GenServer that subscribes to a topic and
+  MyspaceIpfs.PubSubChannel is a GenServer that subscribes to a topic and
   forwards messages to a target process.
 
   The topic *must* be a base64 encoded string, but we will encode it for you.
@@ -8,12 +8,12 @@ defmodule MyspaceIpfs.PubSub.Channel do
   ## Options
     raw: true | false
       If true, the message will be sent to the target process as a
-      MyspaceIpfs.PubSub.ChannelMessage struct containing the message data and the topic.
+      MyspaceIpfs.PubSubChannelMessage struct containing the message data and the topic.
       If false, only the message
       data will be sent to the target process.
 
   ## Example
-      iex> {:ok, pid} = MyspaceIpfs.PubSub.Channel.start_link(self(), "mytopic")
+      iex> {:ok, pid} = MyspaceIpfs.PubSubChannel.start_link(self(), "mytopic")
       iex> MyspaceIpfs.PubSub.pub("mytopic", "Hello, world!")
       iex> flush()
       "Hello, world!"
@@ -26,7 +26,6 @@ defmodule MyspaceIpfs.PubSub.Channel do
   import MyspaceIpfs.Utils
 
   alias MyspaceIpfs.Multibase
-  alias MyspaceIpfs.PubSub.ChannelMessage
 
   @enforce_keys [:topic, :target]
   defstruct topic: nil, target: nil, base64url_topic: nil, client: nil, raw: false
@@ -64,7 +63,7 @@ defmodule MyspaceIpfs.PubSub.Channel do
     # makes sure there is a base64url_topic, that is properly encoded
     Enum.into(
       options,
-      %MyspaceIpfs.PubSub.Channel{
+      %MyspaceIpfs.PubSubChannel{
         topic: topic,
         target: target,
         base64url_topic: unokify(Multibase.encode(topic))
@@ -121,9 +120,9 @@ defmodule MyspaceIpfs.PubSub.Channel do
   end
 end
 
-defmodule MyspaceIpfs.PubSub.ChannelMessage do
+defmodule MyspaceIpfs.PubSubChannelMessage do
   @moduledoc """
-  MyspaceIpfs.PubSub.ChannelMessage is a struct that represents a message as it
+  MyspaceIpfs.PubSubChannelMessage is a struct that represents a message as it
   is received from the IPFS pubsub API.
   """
   @enforce_keys [:from, :data, :seqno, :topic_ids]
@@ -135,14 +134,4 @@ defmodule MyspaceIpfs.PubSub.ChannelMessage do
           seqno: binary,
           topic_ids: list
         }
-
-  # def gen_channel_message(opts) do
-  #   # All keys are required.
-  #   %MyspaceIpfs.PubSub.ChannelMessage{
-  #     from: opts.from,
-  #     data: opts.data,
-  #     seqno: opts.seqno,
-  #     topic_ids: opts.topic_ids
-  #   }
-  # end
 end

@@ -68,7 +68,7 @@ defmodule MyspaceIpfs.Utils do
   {:ok, data} or {:error, data}
   """
   @spec okify(any) :: {:ok, any} | {:error, any}
-  def okify({:error, _} = err), do: err
+  def okify({:error, data}), do: {:error, data}
   def okify(res), do: {:ok, res}
 
   @doc """
@@ -114,7 +114,7 @@ defmodule MyspaceIpfs.Utils do
 
   ## Examples
 
-  iex> Myspace.Utils.unokify({:ok, "data"})
+  iex> MyspaceIpfs.Utils.unokify({:ok, "data"})
   "data"
   """
   @spec unokify({:ok, any}) :: any
@@ -137,11 +137,11 @@ defmodule MyspaceIpfs.Utils do
   ## Examples
 
   iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
-  iex> Myspace.Utils.recase_headers(headers, :kebab)
+  iex> MyspaceIpfs.Utils.recase_headers(headers, :kebab)
   [{"content-type", "application/json"}, {"x-my-header", "value"}]
 
   iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
-  iex> Myspace.Utils.recase_headers(headers, :snake)
+  iex> MyspaceIpfs.Utils.recase_headers(headers, :snake)
   [{"content_type", "application/json"}, {"x_my_header", "value"}]
 
   """
@@ -255,20 +255,50 @@ defmodule MyspaceIpfs.Utils do
   end
 
   @doc """
-  Converts JSON key strings to snake cased atoms.
+  Converts JSON key strings to snake cased atoms. If action fails, it just passes on the data.
   """
-  @spec snake_atomize(map) :: map
-  def snake_atomize(map) do
-    map
-    |> Recase.Enumerable.convert_keys(&Recase.to_snake/1)
-    |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
+  @spec snake_atomize({:error, any} | map) :: map | {:error, any}
+
+  @spec snake_atomize({:error, any}) :: {:error, any}
+  def snake_atomize({:error, data}) do
+    {:error, data}
   end
+
+  def snake_atomize(map) do
+    try do
+      map
+      |> Recase.Enumerable.convert_keys(&Recase.to_snake/1)
+      |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
+    catch
+      _ -> map
+    end
+  end
+
+  # This causes deadlocks.
+  # @doc """
+  # Easily generate some common structs. Opts are received first, so this should be pipeable.
+  # Opts are a map of keys and values. It should probably be snake_atomized first.
+
+  # If it fails, it just passes on the data.
+  # """
+  # @spec gen_common_struct(map, atom) :: struct
+  # def gen_common_struct(opts, name) do
+  #   try do
+  #     case name do
+  #       :key_size -> %MyspaceIpfs.KeySize{} |> struct!(opts)
+  #       :add -> %MyspaceIpfs.Add{} |> struct!(opts)
+  #       :root_cid -> %MyspaceIpfs.RootCid{} |> struct!(opts)
+  #       :error_hash -> %MyspaceIpfs.ErrorHash{} |> struct!(opts)
+  #       :api_error -> %MyspaceIpfs.ApiError{} |> struct!(opts)
+  #     end
+  #   rescue
+  #     _ -> opts
+  #   end
+  # end
 
   @doc """
   Starts a stream client and returns a reference to the client.
-
   ## Parameters
-
     - pid: The pid to stream the data to.
     - url: The url to stream the data from.
     - timeout: The timeout for the stream. Defaults to infinity.
@@ -279,5 +309,49 @@ defmodule MyspaceIpfs.Utils do
     Logger.debug("Starting stream client for #{url} with query options #{inspect(query_options)}")
     options = [stream_to: pid, async: true, recv_timeout: timeout, query: query_options]
     :hackney.request(:post, url, [], <<>>, options)
+  end
+
+  @doc """
+  Generates a key size struct from a map.
+  """
+  @spec gen_key_size({:error, any} | map) :: struct | {:error, any}
+  def gen_key_size({:error, data}) do
+    {:error, data}
+  end
+
+  def gen_key_size(opts) when is_map(opts) do
+    %MyspaceIpfs.KeySize{} |> struct!(opts)
+  end
+
+  @doc """
+  Generates a key value struct from a map.
+  """
+  @spec gen_key_value({:error, any} | map) :: struct | {:error, any}
+  def gen_key_value({:error, data}) do
+    {:error, data}
+  end
+
+  def gen_key_value(opts) when is_map(opts) do
+    %MyspaceIpfs.KeyValue{} |> struct!(opts)
+  end
+
+  @doc """
+  Generates an IPFS API Hash struct from a map.
+  """
+  @spec gen_hash({:error, any} | map) :: struct | {:error, any}
+  def gen_hash({:error, data}) do
+    {:error, data}
+  end
+
+  def gen_hash(opts) when is_map(opts) do
+    %MyspaceIpfs.Hash{} |> struct!(opts)
+  end
+
+  @doc """
+  Returns the data in an {:error, tuple}
+  """
+  @spec errify(any) :: {:error, any}
+  def errify(data) do
+    {:error, data}
   end
 end

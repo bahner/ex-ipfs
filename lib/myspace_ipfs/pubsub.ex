@@ -85,6 +85,6 @@ defmodule MyspaceIpfs.PubSub do
   """
   @spec sub(pid, binary) :: any
   def sub(pid, topic) do
-    MyspaceIpfs.PubSub.Channel.start_link(pid, topic)
+    MyspaceIpfs.PubSubChannel.start_link(pid, topic)
   end
 end

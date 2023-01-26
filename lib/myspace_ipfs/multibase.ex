@@ -5,8 +5,7 @@ defmodule MyspaceIpfs.Multibase do
 
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
-  alias Tesla.Multipart
-  alias MyspaceIpfs.Multibase.Codec
+  alias MyspaceIpfs.MultibaseCodec
 
   @typep okresult :: MyspaceIpfs.okresult()
   @typep opts :: MyspaceIpfs.opts()
@@ -37,8 +36,7 @@ defmodule MyspaceIpfs.Multibase do
   """
   @spec encode(binary, opts) :: okresult
   def encode(data, opts \\ []) do
-    Multipart.new()
-    |> Multipart.add_file_content(data, "file")
+    multipart_content(data)
     |> post_multipart("/multibase/encode", query: opts)
     |> handle_api_response()
     |> okify()
@@ -57,7 +55,7 @@ defmodule MyspaceIpfs.Multibase do
     |> handle_api_response()
     |> filter_empties()
     |> snake_atomize()
-    |> Enum.map(fn x -> Codec.gen_multibase_codec(x) end)
+    |> Enum.map(fn x -> MultibaseCodec.gen_multibase_codec(x) end)
     |> okify()
   end
 

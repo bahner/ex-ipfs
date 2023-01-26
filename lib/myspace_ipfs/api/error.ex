@@ -25,6 +25,9 @@ defmodule MyspaceIpfs.ApiError do
   def handle_api_error(response) do
     Logger.debug("IPFS error: #{inspect(response)}")
 
-    gen_api_error(snake_atomize(response.body))
+    response.body
+    |> snake_atomize()
+    |> gen_api_error()
+    |> errify()
   end
 end
