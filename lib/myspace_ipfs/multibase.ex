@@ -55,7 +55,7 @@ defmodule MyspaceIpfs.Multibase do
     |> handle_api_response()
     |> filter_empties()
     |> snake_atomize()
-    |> Enum.map(fn x -> MultibaseCodec.gen_multibase_codec(x) end)
+    |> Enum.map(&MultibaseCodec.gen_multibase_codec/1)
     |> okify()
   end
 
