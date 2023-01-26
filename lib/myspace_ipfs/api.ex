@@ -103,6 +103,7 @@ defmodule MyspaceIpfs.Api do
 
   def handle_api_response({:error, response}) do
     Logger.debug("Headers: #{inspect(response)}")
+
     case response do
       # create_list_from_lines_of_json/1 is a helper function that takes a
       # string of JSON objects separated by newlines and returns a list of

@@ -34,6 +34,7 @@ defmodule MyspaceIpfs.Utils do
   @spec extract_data_from_json_error(any) :: list | binary
   def extract_data_from_json_error(error) do
     Logger.debug("Extract DATA from JSON Error: #{inspect(error)}")
+
     try do
       error
       |> String.split("\n")
