@@ -102,15 +102,18 @@ defmodule MyspaceIpfs.Api do
   end
 
   def handle_api_response({:error, response}) do
+    Logger.debug("Headers: #{inspect(response)}")
     case response do
       # create_list_from_lines_of_json/1 is a helper function that takes a
       # string of JSON objects separated by newlines and returns a list of
       # JSON objects.
       # If it fails it'll just return the original data.
       {:error, {Tesla.Middleware.JSON, :decode, json_error}} ->
+        Logger.debug("JSON error: #{inspect(json_error)}")
         extract_data_from_json_error(json_error.data)
 
       %Tesla.Env{status: 500} ->
+        Logger.debug("500 error: #{inspect(response.body)}")
         ApiError.handle_api_error(response)
     end
   end
