@@ -12,7 +12,7 @@ defmodule MyspaceIpfs.Bootstrap do
           Peers: List.t()
         }
   @typep reply :: {:ok, [t()]} | {:error, any()}
-  @typep path :: MyspaceIpfs.path
+  @typep path :: MyspaceIpfs.path()
 
   @doc """
   List peers in bootstrap list.
