@@ -314,6 +314,18 @@ defmodule MyspaceIpfs.Utils do
   end
 
   @doc """
+  Generates a peers struct from a map.
+  """
+  @spec gen_peers({:error, any} | map) :: struct | {:error, any}
+  def gen_peers({:error, data}) do
+    {:error, data}
+  end
+
+  def gen_peers(opts) when is_map(opts) do
+    %MyspaceIpfs.Peers{} |> struct!(opts)
+  end
+
+  @doc """
   Generates an IPFS API Hash struct from a map.
   """
   @spec gen_hash({:error, any} | map) :: struct | {:error, any}

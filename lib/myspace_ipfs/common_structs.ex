@@ -73,3 +73,16 @@ defmodule MyspaceIpfs.Add do
           type: binary
         }
 end
+
+defmodule MyspaceIpfs.Peers do
+  @moduledoc """
+  A struct that represents the wantlist for a peer in the bitswap network.
+  """
+  defstruct peers: []
+
+  @typep path :: MyspaceIpfs.path()
+
+  @type t :: %__MODULE__{
+          peers: list[path] | nil
+        }
+end

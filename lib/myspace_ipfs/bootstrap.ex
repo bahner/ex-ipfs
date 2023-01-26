@@ -6,11 +6,13 @@ defmodule MyspaceIpfs.Bootstrap do
   defstruct Peers: []
 
   import MyspaceIpfs.Api
+  import MyspaceIpfs.Utils
 
   @type t :: %__MODULE__{
           Peers: List.t()
         }
   @typep reply :: {:ok, [t()]} | {:error, any()}
+  @typep path :: MyspaceIpfs.path
 
   @doc """
   List peers in bootstrap list.
@@ -19,6 +21,8 @@ defmodule MyspaceIpfs.Bootstrap do
   def bootstrap do
     post_query("/bootstrap")
     |> handle_api_response()
+    |> snake_atomize()
+    |> gen_peers()
   end
 
   @doc """
@@ -29,10 +33,12 @@ defmodule MyspaceIpfs.Bootstrap do
   `peer` - The peer ID to add to the bootstrap list. The format is a multiaddr
   in the form of `<multiaddr>/<peerID>`
   """
-  @spec add(binary) :: reply
+  @spec add(path) :: reply
   def add(peer) do
     post_query("/bootstrap/add?arg=" <> peer)
     |> handle_api_response()
+    |> snake_atomize()
+    |> gen_peers()
   end
 
   @doc """
@@ -45,6 +51,8 @@ defmodule MyspaceIpfs.Bootstrap do
   def add_default do
     post_query("/bootstrap/add/default")
     |> handle_api_response()
+    |> snake_atomize()
+    |> gen_peers()
   end
 
   @doc """
@@ -57,6 +65,8 @@ defmodule MyspaceIpfs.Bootstrap do
   def list do
     post_query("/bootstrap/list")
     |> handle_api_response()
+    |> snake_atomize()
+    |> gen_peers()
   end
 
   @doc """
@@ -68,10 +78,12 @@ defmodule MyspaceIpfs.Bootstrap do
   in the form of `<multiaddr>/<peerID>`
 
   """
-  @spec rm(binary) :: reply
+  @spec rm(path) :: reply
   def rm(peer) do
     post_query("/bootstrap/rm?arg=" <> peer)
     |> handle_api_response()
+    |> snake_atomize()
+    |> gen_peers()
   end
 
   @doc """
