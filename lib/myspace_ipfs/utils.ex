@@ -266,7 +266,7 @@ defmodule MyspaceIpfs.Utils do
     {:error, data}
   end
 
-  def snake_atomize(map) do
+  def snake_atomize(map) when is_map(map) do
     try do
       map
       |> Recase.Enumerable.convert_keys(&Recase.to_snake/1)

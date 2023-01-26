@@ -14,7 +14,7 @@ defmodule MyspaceIpfs.MultibaseCodec do
 
   def gen_multibase_codec(opts) do
     # code and name are required and must be present.
-    %MyspaceIpfs.MultibaseCodec{
+    %__MODULE__{
       name: opts.name,
       code: opts.code,
       prefix: Map.get(opts, :prefix, nil),
