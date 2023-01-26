@@ -1,6 +1,6 @@
 defmodule MyspaceIpfs.Get do
   @moduledoc false
-  alias MyspaceIpfs.Api
+  import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
   require Logger
 
@@ -10,6 +10,8 @@ defmodule MyspaceIpfs.Get do
   @typep path :: MyspaceIpfs.path()
   @typep fspath :: MyspaceIpfs.fspath()
   @typep opts :: MyspaceIpfs.opts()
+  @typep tesla_error :: MyspaceIpfs.tesla_error()
+
   @typep t :: %__MODULE__{
            path: path,
            fspath: fspath,
@@ -21,18 +23,35 @@ defmodule MyspaceIpfs.Get do
   # FIXME: This is a hack to get around the fact that the IPFS API returns a tarball
   #       of the file(s). This should be fixed in the API.
   # TODO: QA this module, because it's a bit of a mess at this point. But better than it was.
-  @spec get(path, opts) :: {:ok, fspath} | {:error, any}
+  @spec get(path, opts) :: {:ok, fspath} | tesla_error
   def get(path, opts \\ []) do
     content = get_get_data(path, opts)
 
-    create_output_struct(path, content, opts)
-    |> handle_output()
+    case content do
+      {:error, reason} ->
+        {:error, reason}
+
+      _ ->
+        create_output_struct(path, content, opts)
+        |> handle_output()
+    end
   end
 
   defp get_get_data(path, opts) do
     options = create_query_opts(opts)
-    {:ok, response} = Api.post_query("/get?arg=" <> path, options)
-    response.body
+
+    reply =
+      post_query("/get?arg=" <> path, options)
+      |> handle_api_response()
+
+    case reply do
+      {:error, reason} ->
+        Logger.error("Error getting data: #{inspect(reason)}")
+        {:error, reason}
+
+      _ ->
+        reply
+    end
   end
 
   defp create_query_opts(opts) do
