@@ -9,7 +9,7 @@ all: deps format compile
 mix: all
 	iex -S mix
 
-push: all commited
+push: all commited test
 	git push
 
 tag:
@@ -40,6 +40,9 @@ push: format commited
 	git pull
 	git push
 
+test:
+	mix test
+
 commited:
 	./.check.uncommited
 
@@ -49,4 +52,4 @@ parser:
 clean:
 	rm -rf _build deps mix.lock
 
-.PHONY: compile docs docker
+.PHONY: compile docs docker test
