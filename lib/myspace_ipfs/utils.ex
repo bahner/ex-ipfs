@@ -274,28 +274,6 @@ defmodule MyspaceIpfs.Utils do
     end
   end
 
-  # This causes deadlocks.
-  # @doc """
-  # Easily generate some common structs. Opts are received first, so this should be pipeable.
-  # Opts are a map of keys and values. It should probably be snake_atomized first.
-
-  # If it fails, it just passes on the data.
-  # """
-  # @spec gen_common_struct(map, atom) :: struct
-  # def gen_common_struct(opts, name) do
-  #   try do
-  #     case name do
-  #       :key_size -> %MyspaceIpfs.KeySize{} |> struct!(opts)
-  #       :add -> %MyspaceIpfs.Add{} |> struct!(opts)
-  #       :root_cid -> %MyspaceIpfs.RootCid{} |> struct!(opts)
-  #       :error_hash -> %MyspaceIpfs.ErrorHash{} |> struct!(opts)
-  #       :api_error -> %MyspaceIpfs.ApiError{} |> struct!(opts)
-  #     end
-  #   rescue
-  #     _ -> opts
-  #   end
-  # end
-
   @doc """
   Starts a stream client and returns a reference to the client.
   ## Parameters
