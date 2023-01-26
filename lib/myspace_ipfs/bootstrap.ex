@@ -9,7 +9,7 @@ defmodule MyspaceIpfs.Bootstrap do
   import MyspaceIpfs.Utils
 
   @type t :: %__MODULE__{
-          Peers: List.t()
+          Peers: list
         }
   @typep reply :: {:ok, [t()]} | {:error, any()}
   @typep path :: MyspaceIpfs.path()
