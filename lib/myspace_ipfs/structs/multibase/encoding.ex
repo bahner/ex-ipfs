@@ -10,7 +10,16 @@ defmodule MyspaceIpfs.MultibaseEncoding do
           code: non_neg_integer()
         }
 
-  def gen_multibase_encoding(opts) do
+  @doc """
+  Generate a new MultibaseCodec struct or passthrough an error message
+  from the IPFS API
+  """
+  @spec new({:error, map}) :: {:error, map}
+  def new({:error, data}) do
+    {:error, data}
+  end
+
+  def new(opts) do
     # code and name are required and must be present.
     %MyspaceIpfs.MultibaseEncoding{
       name: opts.name,

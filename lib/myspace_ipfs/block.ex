@@ -4,6 +4,8 @@ defmodule MyspaceIpfs.Block do
   """
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
+  alias MyspaceIpfs.KeySize
+  alias MyspaceIpfs.Hash
 
   @typep okmapped :: MySpaceIPFS.okmapped()
   @typep opts :: MySpaceIPFS.opts()
@@ -48,7 +50,7 @@ defmodule MyspaceIpfs.Block do
     |> post_multipart("/block/put", query: opts)
     |> handle_api_response()
     |> snake_atomize()
-    |> gen_key_size()
+    |> KeySize.new()
     |> okify()
   end
 
@@ -72,7 +74,7 @@ defmodule MyspaceIpfs.Block do
     post_query("/block/rm?arg=" <> cid)
     |> handle_api_response()
     |> snake_atomize()
-    |> gen_hash()
+    |> Hash.new()
     |> okify()
   end
 

@@ -56,7 +56,7 @@ defmodule MyspaceIpfs.Ping do
           try do
             Jason.decode!("#{data}")
             |> snake_atomize()
-            |> gen_ping()
+            |> new()
           rescue
             _ -> data
           end
@@ -68,7 +68,7 @@ defmodule MyspaceIpfs.Ping do
     {:noreply, state}
   end
 
-  defp gen_ping(opts) do
+  defp new(opts) do
     %MyspaceIpfs.Ping{}
     |> struct(opts)
   end

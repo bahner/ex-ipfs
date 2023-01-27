@@ -38,6 +38,26 @@ defmodule MyspaceIpfs.PubSubChannel do
           raw: boolean
         }
 
+  @doc """
+  Generate a PubSubChannel struct from a map or passthrough an error message
+  from the IPFS API
+  """
+  @spec new({:error, map}) :: {:error, map}
+  def new({:error, data}) do
+    {:error, data}
+  end
+
+  @spec new(map) :: t()
+  def new(map) do
+    %__MODULE__{
+      topic: map.topic,
+      target: map.target,
+      base64url_topic: map.base64url_topic,
+      client: map.client,
+      raw: map.raw
+    }
+  end
+
   # @api_url Application.get_env(:myspace_ipfs, :api_url)
   # @default_topic Application.get_env(:myspace_ipfs, :default_topic)
   @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0")

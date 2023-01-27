@@ -12,4 +12,24 @@ defmodule MyspaceIpfs.BitswapLedger do
           sent: pos_integer(),
           value: float()
         }
+
+  @doc """
+  Generate a new BitswapLedger struct or passthrough an error message
+  from the IPFS API
+  """
+  @spec new({:error, map}) :: {:error, map}
+  def new({:error, data}) do
+    {:error, data}
+  end
+
+  @spec new(map) :: MyspaceIpfs.BitswapLedger.t()
+  def new(opts) do
+    %__MODULE__{
+      exchanged: opts.exchanged,
+      peer: opts.peer,
+      recv: opts.recv,
+      sent: opts.sent,
+      value: opts.value
+    }
+  end
 end

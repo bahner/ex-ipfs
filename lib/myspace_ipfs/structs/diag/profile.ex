@@ -20,6 +20,23 @@ defmodule MyspaceIpfs.Diag.Profile do
           ref: reference,
           query_options: list
         }
+  @doc """
+  Generate command struct for a command object
+  """
+  @spec new({:error, map}) :: {:error, map}
+  def new({:error, data}) do
+    {:error, data}
+  end
+
+  def new(opts) do
+    %__MODULE__{
+      output: opts.output,
+      timeout: opts.timeout,
+      writer: opts.writer,
+      ref: opts.ref,
+      query_options: opts.query_options
+    }
+  end
 
   @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0")
 

@@ -4,6 +4,9 @@ defmodule MyspaceIpfs.Bitswap do
   """
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
+  alias MyspaceIpfs.BitswapStat
+  alias MyspaceIpfs.BitswapWantList
+  alias MyspaceIpfs.BitswapLedger
 
   @typep okresult :: MySpaceIPFS.okresult()
   @typep peer_id :: MyspaceIpfs.peer_id()
@@ -34,7 +37,7 @@ defmodule MyspaceIpfs.Bitswap do
     post_query("/bitswap/wantlist")
     |> handle_api_response()
     |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
-    |> gen_wantlist()
+    |> BitswapWantList.new()
     |> okify()
   end
 
@@ -43,7 +46,7 @@ defmodule MyspaceIpfs.Bitswap do
     post_query("/bitswap/wantlist?peer=" <> peer)
     |> handle_api_response()
     |> snake_atomize()
-    |> gen_wantlist()
+    |> BitswapWantList.new()
     |> okify()
   end
 
@@ -64,7 +67,7 @@ defmodule MyspaceIpfs.Bitswap do
     post_query("/bitswap/stat", query: opts)
     |> handle_api_response()
     |> snake_atomize()
-    |> gen_stat()
+    |> BitswapStat.new()
   end
 
   @doc """
@@ -80,21 +83,21 @@ defmodule MyspaceIpfs.Bitswap do
     post_query("/bitswap/ledger?arg=" <> peer)
     |> handle_api_response()
     |> snake_atomize()
-    |> gen_ledger()
+    |> BitswapLedger.new()
   end
 
-  defp gen_ledger(opts) do
-    %MyspaceIpfs.BitswapLedger{}
-    |> struct(opts)
-  end
+  # defp new(opts) do
+  #   %MyspaceIpfs.BitswapLedger{}
+  #   |> struct(opts)
+  # end
 
-  defp gen_wantlist(opts) do
-    %MyspaceIpfs.BitswapWantList{}
-    |> struct(opts)
-  end
+  # defp new(opts) do
+  #   %MyspaceIpfs.BitswapWantList{}
+  #   |> struct(opts)
+  # end
 
-  defp gen_stat(opts) do
-    %MyspaceIpfs.BitswapStat{}
-    |> struct(opts)
-  end
+  # defp new(opts) do
+  #   %MyspaceIpfs.BitswapStat{}
+  #   |> struct(opts)
+  # end
 end

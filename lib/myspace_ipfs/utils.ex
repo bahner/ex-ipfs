@@ -292,54 +292,6 @@ defmodule MyspaceIpfs.Utils do
   end
 
   @doc """
-  Generates a key size struct from a map.
-  """
-  @spec gen_key_size({:error, any} | map) :: struct | {:error, any}
-  def gen_key_size({:error, data}) do
-    {:error, data}
-  end
-
-  def gen_key_size(opts) when is_map(opts) do
-    %MyspaceIpfs.KeySize{} |> struct!(opts)
-  end
-
-  @doc """
-  Generates a key value struct from a map.
-  """
-  @spec gen_key_value({:error, any} | map) :: struct | {:error, any}
-  def gen_key_value({:error, data}) do
-    {:error, data}
-  end
-
-  def gen_key_value(opts) when is_map(opts) do
-    %MyspaceIpfs.KeyValue{} |> struct!(opts)
-  end
-
-  @doc """
-  Generates a peers struct from a map.
-  """
-  @spec gen_peers({:error, any} | map) :: struct | {:error, any}
-  def gen_peers({:error, data}) do
-    {:error, data}
-  end
-
-  def gen_peers(opts) when is_map(opts) do
-    %MyspaceIpfs.Peers{} |> struct!(opts)
-  end
-
-  @doc """
-  Generates an IPFS API Hash struct from a map.
-  """
-  @spec gen_hash({:error, any} | map) :: struct | {:error, any}
-  def gen_hash({:error, data}) do
-    {:error, data}
-  end
-
-  def gen_hash(opts) when is_map(opts) do
-    %MyspaceIpfs.Hash{} |> struct!(opts)
-  end
-
-  @doc """
   Returns the data in an {:error, tuple}
   """
   @spec errify(any) :: {:error, any}

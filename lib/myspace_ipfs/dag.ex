@@ -53,7 +53,7 @@ defmodule MyspaceIpfs.Dag do
     |> post_multipart("/dag/import", query: opts)
     |> handle_api_response()
     |> snake_atomize()
-    |> MyspaceIpfs.DagImport.gen_dag_import()
+    |> MyspaceIpfs.DagImport.new()
     |> okify()
   end
 

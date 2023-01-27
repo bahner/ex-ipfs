@@ -13,7 +13,16 @@ defmodule MyspaceIpfs.ApiError do
           type: binary
         }
 
-  defp gen_api_error(map) do
+  @doc """
+  Generate an IPFS error struct from a map or passthrough an error message
+  """
+  @spec new({:error, map}) :: {:error, map}
+  def new({:error, data}) do
+    {:error, data}
+  end
+
+  @spec new(map) :: MyspaceIpfs.ApiError.t()
+  def new(map) do
     %MyspaceIpfs.ApiError{
       code: map.code,
       message: map.message,
@@ -21,13 +30,16 @@ defmodule MyspaceIpfs.ApiError do
     }
   end
 
-  @doc false
+  @doc """
+  Convert an IPFS error message into a tuple of {:error, struct}
+  """
+  @spec handle_api_error(map) :: {:error, MyspaceIpfs.ApiError.t()}
   def handle_api_error(response) do
     Logger.debug("IPFS error: #{inspect(response)}")
 
     response.body
     |> snake_atomize()
-    |> gen_api_error()
+    |> new()
     |> errify()
   end
 end
