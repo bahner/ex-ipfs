@@ -9,9 +9,6 @@ all: deps format compile
 mix: all
 	iex -S mix
 
-push: all commited test
-	git push
-
 tag:
 	git tag $(VERSION)
 
@@ -36,7 +33,7 @@ docs: compile
 	mix docs
 	xdg-open doc/index.html
 
-push: format commited
+push: all
 	git pull
 	git push
 
@@ -46,8 +43,10 @@ test:
 commited:
 	./.check.uncommited
 
-clean:
+distclean: clean
 	rm -rf _build deps mix.lock
+
+clean:
 	rm -f Qm*
 
 .PHONY: compile docs docker test
