@@ -7,6 +7,7 @@ defmodule MyspaceIpfs.Bootstrap do
 
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
+  alias MyspaceIpfs.Peers
 
   @type t :: %__MODULE__{
           Peers: list
@@ -22,7 +23,7 @@ defmodule MyspaceIpfs.Bootstrap do
     post_query("/bootstrap")
     |> handle_api_response()
     |> snake_atomize()
-    |> gen_peers()
+    |> Peers.new()
   end
 
   @doc """
@@ -38,7 +39,7 @@ defmodule MyspaceIpfs.Bootstrap do
     post_query("/bootstrap/add?arg=" <> peer)
     |> handle_api_response()
     |> snake_atomize()
-    |> gen_peers()
+    |> Peers.new()
   end
 
   @doc """
@@ -52,7 +53,7 @@ defmodule MyspaceIpfs.Bootstrap do
     post_query("/bootstrap/add/default")
     |> handle_api_response()
     |> snake_atomize()
-    |> gen_peers()
+    |> Peers.new()
   end
 
   @doc """
@@ -66,7 +67,7 @@ defmodule MyspaceIpfs.Bootstrap do
     post_query("/bootstrap/list")
     |> handle_api_response()
     |> snake_atomize()
-    |> gen_peers()
+    |> Peers.new()
   end
 
   @doc """
@@ -83,7 +84,7 @@ defmodule MyspaceIpfs.Bootstrap do
     post_query("/bootstrap/rm?arg=" <> peer)
     |> handle_api_response()
     |> snake_atomize()
-    |> gen_peers()
+    |> Peers.new()
   end
 
   @doc """

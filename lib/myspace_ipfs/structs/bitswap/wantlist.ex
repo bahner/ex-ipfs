@@ -9,4 +9,20 @@ defmodule MyspaceIpfs.BitswapWantList do
   @type t :: %__MODULE__{
           keys: list[rootcid] | nil
         }
+
+  @doc """
+  Generate a new BitswapWantList struct or passthrough an error message
+  from the IPFS API
+  """
+  @spec new({:error, map}) :: {:error, map}
+  def new({:error, data}) do
+    {:error, data}
+  end
+
+  @spec new(map) :: MyspaceIpfs.BitswapWantList.t()
+  def new(opts) do
+    %__MODULE__{
+      keys: opts.keys
+    }
+  end
 end

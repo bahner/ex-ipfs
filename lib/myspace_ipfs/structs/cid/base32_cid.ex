@@ -12,11 +12,21 @@ defmodule MyspaceIpfs.CidCid do
           error_msg: binary
         }
 
-  def gen_cid_cid({:error, data}) do
+  @doc """
+  Generate a new CidCid struct or passthrough an error message
+  from the IPFS API
+  """
+  @spec new({:error, map}) :: {:error, map}
+  def new({:error, data}) do
     {:error, data}
   end
 
-  def gen_cid_cid(opts) when is_map(opts) do
-    %MyspaceIpfs.CidCid{} |> struct!(opts)
+  @spec new(map) :: MyspaceIpfs.CidCid.t()
+  def new(opts) when is_map(opts) do
+    %__MODULE__{
+      cid_str: opts.cid_str,
+      formatted: opts.formatted,
+      error_msg: opts.error_msg
+    }
   end
 end

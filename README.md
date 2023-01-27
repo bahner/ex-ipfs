@@ -8,7 +8,7 @@ The reason for starting a new IPFS module is that none of the others seem to wor
 
 All commands added, but *not* verified. For your everyday IPFS operations the module should work by now. But no guarantees. :-) Please, please, please - file issues and feature requests.
 
-Version 0.1.0 is substantially better than version 0.0.1 and not compatible at all.
+Version 0.2.0 is substantially better than version 0.1.0. I consider it of beta-quality.
 
 ## Install
 
@@ -16,18 +16,17 @@ Add myspace_ipfs to your `mix.exs` dependencies:
 ```elixir
 def deps do
 [
-    {:myspace_ipfs, "~> 0.1.0"},
+    {:myspace_ipfs, "~> 0.2.0"},
 ]
 end
 ```
 
-and run `$ mix deps.get` to install the dependency.
+and run `make mix` to install the dependencies.
 
 ## Configuration
 
 The default should brobably be OK, but you may override the default with the environment variables.
 
-These are the defaults.
 ```
 export MYSPACE_IPFS_API_URL="http://127.0.0.1:5001"
 ```
@@ -52,5 +51,8 @@ Refs.local()
 MyspaceIpfs.PubSub.Channel.start_link(self(), "mychannel")
 flush
 ```
+Some commands, like channel and tail that streams data needs a pid to send messages to. 
 
 The basic commands are in the MyspaceIpfs module. The grouped ipfs commands each have their separate module, eg. MyspaceIpfs.Refs, MyspaceIpfs.Blocks etc.
+
+

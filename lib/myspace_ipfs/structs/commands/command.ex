@@ -16,9 +16,18 @@ defmodule MyspaceIpfs.CommandsCommand do
   @doc """
   Generate command struct for a command object
   """
-  @spec gen_command(map) :: t
-  def gen_command(opts) do
-    %__MODULE__{} |> struct(opts)
+  @spec new({:error, map}) :: {:error, map}
+  def new({:error, data}) do
+    {:error, data}
+  end
+
+  @spec new(map) :: t
+  def new(opts) do
+    %__MODULE__{
+      name: opts.name,
+      options: opts.options,
+      subcommands: Enum.map(opts.subcommands, &gen_commands/1)
+    }
   end
 
   @doc """
@@ -31,7 +40,7 @@ defmodule MyspaceIpfs.CommandsCommand do
       %{command | subcommands: Enum.map(command.subcommands, &gen_commands/1)}
     else
       Logger.debug("Generating command #{command.name}")
-      gen_command(command)
+      new(command)
     end
   end
 

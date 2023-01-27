@@ -28,7 +28,7 @@ defmodule MyspaceIpfs.Cid do
       post_query("/cid/base32?arg=" <> cid)
       |> handle_api_response()
       |> snake_atomize()
-      |> CidCid.gen_cid_cid()
+      |> CidCid.new()
       |> okify()
 
   @doc """
@@ -41,7 +41,7 @@ defmodule MyspaceIpfs.Cid do
       post_query("/cid/bases", query: opts)
       |> handle_api_response()
       |> snake_atomize()
-      |> Enum.map(&MultibaseEncoding.gen_multibase_encoding/1)
+      |> Enum.map(&MultibaseEncoding.new/1)
       |> okify()
 
   @doc """
@@ -59,7 +59,7 @@ defmodule MyspaceIpfs.Cid do
       post_query("/cid/codecs", query: opts)
       |> handle_api_response()
       |> snake_atomize()
-      |> Enum.map(&MultiCodec.gen_multicodec/1)
+      |> Enum.map(&MultiCodec.new/1)
       |> okify()
 
   @doc """
@@ -81,7 +81,7 @@ defmodule MyspaceIpfs.Cid do
       post_query("/cid/format?arg=" <> cid, query: opts)
       |> handle_api_response()
       |> snake_atomize()
-      |> CidCid.gen_cid_cid()
+      |> CidCid.new()
       |> okify()
 
   @doc """
@@ -98,6 +98,6 @@ defmodule MyspaceIpfs.Cid do
       post_query("/cid/hashes", query: opts)
       |> handle_api_response()
       |> snake_atomize()
-      |> Enum.map(&MultiHash.gen_multihash/1)
+      |> Enum.map(&MultiHash.new/1)
       |> okify()
 end

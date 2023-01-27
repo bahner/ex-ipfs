@@ -5,7 +5,7 @@ defmodule MyspaceIpfs.Multibase do
 
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
-  import MyspaceIpfs.MultibaseCodec
+  alias MyspaceIpfs.MultibaseCodec
 
   @typep okresult :: MyspaceIpfs.okresult()
   @typep opts :: MyspaceIpfs.opts()
@@ -55,7 +55,7 @@ defmodule MyspaceIpfs.Multibase do
     |> handle_api_response()
     |> filter_empties()
     |> snake_atomize()
-    |> Enum.map(&gen_multibase_codec/1)
+    |> Enum.map(&MultibaseCodec.new/1)
     |> okify()
   end
 

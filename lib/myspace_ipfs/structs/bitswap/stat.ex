@@ -29,4 +29,29 @@ defmodule MyspaceIpfs.BitswapStat do
           provide_buf_len: integer,
           wantlist: list(rootcid)
         }
+
+  @doc """
+  Generate a new BitswapStat struct or passthrough an error message
+  from the IPFS API
+  """
+  @spec new({:error, map}) :: {:error, map}
+  def new({:error, data}) do
+    {:error, data}
+  end
+
+  @spec new(map) :: MyspaceIpfs.BitswapStat.t()
+  def new(opts) do
+    %__MODULE__{
+      blocks_received: opts.blocks_received,
+      blocks_sent: opts.blocks_sent,
+      data_received: opts.data_received,
+      data_sent: opts.data_sent,
+      dup_blks_received: opts.dup_blks_received,
+      dup_data_received: opts.dup_data_received,
+      messages_received: opts.messages_received,
+      peers: opts.peers,
+      provide_buf_len: opts.provide_buf_len,
+      wantlist: opts.wantlist
+    }
+  end
 end

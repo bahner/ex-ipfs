@@ -11,6 +11,7 @@ defmodule MyspaceIpfs.Utils do
   @doc """
   Converts a string to a boolean or integer or vise versa
   """
+  @spec str2bool!(<<_::32, _::_*8>>) :: boolean
   def str2bool!("true"), do: true
   def str2bool!("false"), do: false
 
@@ -259,7 +260,12 @@ defmodule MyspaceIpfs.Utils do
   @doc """
   Converts JSON key strings to snake cased atoms. If action fails, it just passes on the data.
   """
-  @spec snake_atomize({:error, any} | map) :: map | {:error, any}
+
+  # @spec snake_atomize(list) :: list
+  # def snake_atomize(list) when is_list(list) do
+  #   list
+  #   |> Enum.map(&snake_atomize/1)
+  # end
 
   @spec snake_atomize({:error, any}) :: {:error, any}
   def snake_atomize({:error, data}) do
@@ -267,6 +273,8 @@ defmodule MyspaceIpfs.Utils do
   end
 
   def snake_atomize(map) when is_map(map) do
+    IO.inspect(map)
+
     try do
       map
       |> Recase.Enumerable.convert_keys(&Recase.to_snake/1)
@@ -276,6 +284,15 @@ defmodule MyspaceIpfs.Utils do
     end
   end
 
+  @spec spawn_client(
+          any,
+          binary
+          | [binary | maybe_improper_list(any, binary | []) | char]
+          | {:hackney_url, atom, atom, binary, :undefined | binary, nil | :undefined | binary,
+             binary, binary, charlist, :undefined | integer, binary, binary},
+          :infinity | integer,
+          any
+        ) :: {:error, any} | {:ok, any} | {:ok, integer, list} | {:ok, integer, list, any}
   @doc """
   Starts a stream client and returns a reference to the client.
   ## Parameters
@@ -284,59 +301,18 @@ defmodule MyspaceIpfs.Utils do
     - timeout: The timeout for the stream. Defaults to infinity.
     - query_options: A list of query options to add to the url.
   """
-  @spec spawn_client(pid, binary, :atom | integer, list) :: reference
-  def spawn_client(pid, url, timeout \\ :infinity, query_options \\ []) do
+  def spawn_client(pid, url, timeout \\ :infinity, query_options \\ [])
+
+  def spawn_client(pid, url, :infinity, query_options) do
     Logger.debug("Starting stream client for #{url} with query options #{inspect(query_options)}")
-    options = [stream_to: pid, async: true, recv_timeout: timeout, query: query_options]
+    options = [stream_to: pid, async: true, recv_timeout: :infinity, query: query_options]
     :hackney.request(:post, url, [], <<>>, options)
   end
 
-  @doc """
-  Generates a key size struct from a map.
-  """
-  @spec gen_key_size({:error, any} | map) :: struct | {:error, any}
-  def gen_key_size({:error, data}) do
-    {:error, data}
-  end
-
-  def gen_key_size(opts) when is_map(opts) do
-    %MyspaceIpfs.KeySize{} |> struct!(opts)
-  end
-
-  @doc """
-  Generates a key value struct from a map.
-  """
-  @spec gen_key_value({:error, any} | map) :: struct | {:error, any}
-  def gen_key_value({:error, data}) do
-    {:error, data}
-  end
-
-  def gen_key_value(opts) when is_map(opts) do
-    %MyspaceIpfs.KeyValue{} |> struct!(opts)
-  end
-
-  @doc """
-  Generates a peers struct from a map.
-  """
-  @spec gen_peers({:error, any} | map) :: struct | {:error, any}
-  def gen_peers({:error, data}) do
-    {:error, data}
-  end
-
-  def gen_peers(opts) when is_map(opts) do
-    %MyspaceIpfs.Peers{} |> struct!(opts)
-  end
-
-  @doc """
-  Generates an IPFS API Hash struct from a map.
-  """
-  @spec gen_hash({:error, any} | map) :: struct | {:error, any}
-  def gen_hash({:error, data}) do
-    {:error, data}
-  end
-
-  def gen_hash(opts) when is_map(opts) do
-    %MyspaceIpfs.Hash{} |> struct!(opts)
+  def spawn_client(pid, url, timeout, query_options) when is_integer(timeout) do
+    Logger.debug("Starting stream client for #{url} with query options #{inspect(query_options)}")
+    options = [stream_to: pid, async: true, recv_timeout: :infinity, query: query_options]
+    :hackney.request(:post, url, [], <<>>, options)
   end
 
   @doc """

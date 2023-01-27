@@ -18,9 +18,8 @@ defmodule MyspaceIpfs do
   The name of the file or data to be sent to the node. Sometimes you cant't
   use paths, but have to use a cid. This is because prefixes like /ipfs/ or
   /ipns/ are not allowed.
-  FIXME: create a type for cid
   """
-  @type cid :: atom | String.t()
+  @type cid :: binary
 
   @typedoc """
   B58 encoded peer ID.
@@ -281,11 +280,9 @@ defmodule MyspaceIpfs do
   """
   # FIXME: pass the query opts to query. Shouldn't be too difficult.
   # But needs doing.
-  @spec ping(pid, cid, atom | integer, opts) :: :ok
-  def ping(pid, peer, timeout, opts \\ []),
+  @spec(ping(pid, peer_id, atom | integer, opts) :: :ignore | {:ok, pid}, {:error, reason})
+  def ping(pid, peer, timeout \\ 10, opts \\ []),
     do: MyspaceIpfs.Ping.start_link(pid, peer, timeout, opts)
-
-  :ok
 
   @doc """
   Mount an IPFS read-only mountpoint.

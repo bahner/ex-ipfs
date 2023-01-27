@@ -4,10 +4,14 @@ defmodule MyspaceIpfs.Dag do
   """
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
+  alias MyspaceIpfs.DagImportRoot
+  alias MyspaceIpfs.DagImportStats
+  require Logger
 
   @typep cid :: MyspaceIpfs.cid()
   @typep okresult :: MyspaceIpfs.okresult()
   @typep opts :: MyspaceIpfs.opts()
+  @typep path :: MyspaceIpfs.path()
 
   @doc """
   Streams the selected DAG as a .car stream on stdout.
@@ -21,6 +25,7 @@ defmodule MyspaceIpfs.Dag do
   def export(cid) do
     post_query("/dag/export?arg=" <> cid)
     |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -29,10 +34,11 @@ defmodule MyspaceIpfs.Dag do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-dag-get
   """
-  @spec get(cid, opts) :: okresult
-  def get(cid, opts \\ []) do
-    post_query("/dag/get?arg=" <> cid, query: opts)
+  @spec get(path, opts) :: okresult
+  def get(path, opts \\ []) do
+    post_query("/dag/get?arg=" <> path, query: opts)
     |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -46,9 +52,32 @@ defmodule MyspaceIpfs.Dag do
   """
   @spec import(binary, opts) :: okresult
   def import(data, opts \\ []) do
+    # Always fetch stats. We can decided later if we want to return them.
+    opts = Keyword.put(opts, :stats, true)
+
     multipart_content(data)
     |> post_multipart("/dag/import", query: opts)
     |> handle_api_response()
+    |> Enum.map(&root_or_stats/1)
+    |> okify()
+  end
+
+  defp root_or_stats(element) do
+    with element <- snake_atomize(element) do
+      try do
+        case element do
+          %{root: root} ->
+            root
+            |> DagImportRoot.new()
+
+          %{stats: stats} ->
+            stats
+            |> DagImportStats.new()
+        end
+      rescue
+        _ -> element
+      end
+    end
   end
 
   @doc """
