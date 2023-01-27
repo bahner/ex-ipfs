@@ -8,6 +8,7 @@ defmodule MyspaceIpfs.Dag do
   @typep cid :: MyspaceIpfs.cid()
   @typep okresult :: MyspaceIpfs.okresult()
   @typep opts :: MyspaceIpfs.opts()
+  @typep path :: MyspaceIpfs.path()
 
   @doc """
   Streams the selected DAG as a .car stream on stdout.
@@ -21,6 +22,7 @@ defmodule MyspaceIpfs.Dag do
   def export(cid) do
     post_query("/dag/export?arg=" <> cid)
     |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -29,10 +31,11 @@ defmodule MyspaceIpfs.Dag do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-dag-get
   """
-  @spec get(cid, opts) :: okresult
-  def get(cid, opts \\ []) do
-    post_query("/dag/get?arg=" <> cid, query: opts)
+  @spec get(path, opts) :: okresult
+  def get(path, opts \\ []) do
+    post_query("/dag/get?arg=" <> path, query: opts)
     |> handle_api_response()
+    |> okify()
   end
 
   @doc """
@@ -49,6 +52,9 @@ defmodule MyspaceIpfs.Dag do
     multipart_content(data)
     |> post_multipart("/dag/import", query: opts)
     |> handle_api_response()
+    |> snake_atomize()
+    |> MyspaceIpfs.DagImport.gen_dag_import()
+    |> okify()
   end
 
   @doc """

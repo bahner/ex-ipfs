@@ -12,6 +12,11 @@ defmodule MyspaceIpfs.RootCid do
   defstruct /: nil
 
   @type t :: %__MODULE__{/: cid}
+
+  @spec new(any) :: MyspaceIpfs.RootCid.t()
+  def new(cid) do
+    %__MODULE__{/: cid}
+  end
 end
 
 defmodule MyspaceIpfs.KeySize do
@@ -23,6 +28,14 @@ defmodule MyspaceIpfs.KeySize do
   defstruct key: nil, size: nil
 
   @type t :: %__MODULE__{key: binary, size: non_neg_integer}
+
+  @spec new(map) :: MyspaceIpfs.KeySize.t()
+  def new(opts) do
+    %__MODULE__{
+      key: opts.key,
+      size: opts.size
+    }
+  end
 end
 
 defmodule MyspaceIpfs.KeyValue do
@@ -34,6 +47,14 @@ defmodule MyspaceIpfs.KeyValue do
   defstruct key: nil, value: nil
 
   @type t :: %__MODULE__{key: binary, value: binary}
+
+  @spec new(map) :: MyspaceIpfs.KeyValue.t()
+  def new(opts) do
+    %__MODULE__{
+      key: opts.key,
+      value: opts.value
+    }
+  end
 end
 
 defmodule MyspaceIpfs.Hash do
@@ -45,6 +66,13 @@ defmodule MyspaceIpfs.Hash do
   defstruct hash: nil
 
   @type t :: %__MODULE__{hash: MyspaceIpfs.cid()}
+
+  @spec new(map) :: MyspaceIpfs.Hash.t()
+  def new(opts) do
+    %__MODULE__{
+      hash: opts.hash
+    }
+  end
 end
 
 defmodule MyspaceIpfs.ErrorHash do
@@ -55,6 +83,14 @@ defmodule MyspaceIpfs.ErrorHash do
   defstruct error: nil, hash: nil
 
   @type t :: %__MODULE__{error: binary, hash: binary}
+
+  @spec new(map) :: MyspaceIpfs.ErrorHash.t()
+  def new(opts) do
+    %__MODULE__{
+      error: opts.error,
+      hash: opts.hash
+    }
+  end
 end
 
 defmodule MyspaceIpfs.Add do
@@ -72,6 +108,16 @@ defmodule MyspaceIpfs.Add do
           size: non_neg_integer,
           type: binary
         }
+
+  @spec new(map) :: MyspaceIpfs.Add.t()
+  def new(opts) do
+    %__MODULE__{
+      bytes: opts.bytes,
+      hash: opts.hash,
+      size: opts.size,
+      type: opts.type
+    }
+  end
 end
 
 defmodule MyspaceIpfs.Peers do
@@ -85,4 +131,10 @@ defmodule MyspaceIpfs.Peers do
   @type t :: %__MODULE__{
           peers: list[path] | nil
         }
+  @spec new(map) :: MyspaceIpfs.Peers.t()
+  def new(opts) do
+    %__MODULE__{
+      peers: opts.peers
+    }
+  end
 end
