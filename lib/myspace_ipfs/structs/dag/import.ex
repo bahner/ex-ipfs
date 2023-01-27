@@ -3,10 +3,11 @@ defmodule MyspaceIpfs.DagImport do
   Object returned from importing a dag into IPFS.
   """
 
-  defstruct root: nil, stats: nil
+  defstruct root: nil, stats: %{}
 
   @type t :: %__MODULE__{
-          root: MyspaceIpfs.Structs.DagImportRoot
+          root: MyspaceIpfs.Structs.DagImportRoot,
+          stats: MyspaceIpfs.Structs.DagImportStats
         }
 
   @doc """
@@ -21,12 +22,13 @@ defmodule MyspaceIpfs.DagImport do
   @spec new(map) :: t
   def new(opts) do
     %__MODULE__{
-      root: MyspaceIpfs.Structs.DagImportRoot.new(opts.root)
+      root: MyspaceIpfs.DagImportRoot.new(opts.root),
+      stats: MyspaceIpfs.DagImportStats.new(opts.stats)
     }
   end
 end
 
-defmodule MyspaceIpfs.Structs.DagImportRoot do
+defmodule MyspaceIpfs.DagImportRoot do
   @moduledoc false
   defstruct cid: nil, pin_error_msg: nil
 
@@ -44,6 +46,7 @@ defmodule MyspaceIpfs.Structs.DagImportRoot do
     {:error, data}
   end
 
+  @spec new(map) :: t
   def new(opts) do
     %__MODULE__{
       cid: MyspaceIpfs.RootCid.new(opts.cid),
@@ -52,24 +55,25 @@ defmodule MyspaceIpfs.Structs.DagImportRoot do
   end
 end
 
-defmodule MyspaceIpfs.Structs.DagImportStats do
+defmodule MyspaceIpfs.DagImportStats do
   @moduledoc false
 
-  defstruct block_bytes_count: nil, block_count: nil
+  defstruct block_bytes_count: 0, block_count: 0
 
   @type t :: %__MODULE__{
-          block_bytes_count: integer,
-          block_count: integer
+          block_bytes_count: integer | nil,
+          block_count: integer | nil
         }
+
   @doc """
   Generate a new DagImportStats struct or passthrough an error message
   from the IPFS API
   """
-  @spec new({:error, map}) :: {:error, map}
-  def new({:error, data}) do
-    {:error, data}
-  end
-
+  # @spec new({:error, map}) :: {:error, map}
+  # def new({:error, data}) do
+  #   {:error, data}
+  # end
+  @spec new(map) :: t
   def new(opts) do
     %__MODULE__{
       block_bytes_count: opts.block_bytes_count,
