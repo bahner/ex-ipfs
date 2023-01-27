@@ -19,7 +19,7 @@ release: tag
 	mix hex.publish
 	git push --tags
 
-compile: format parser
+compile: format
 	mix compile
 
 deps:
@@ -45,9 +45,6 @@ test:
 
 commited:
 	./.check.uncommited
-
-parser:
-	make -C src
 
 clean:
 	rm -rf _build deps mix.lock

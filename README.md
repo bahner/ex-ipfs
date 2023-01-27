@@ -30,7 +30,6 @@ The default should brobably be OK, but you may override the default with the env
 These are the defaults.
 ```
 export MYSPACE_IPFS_API_URL="http://127.0.0.1:5001"
-export MYSPACE_IPFS_DEBUG="true"
 ```
 
 ## Documentation
