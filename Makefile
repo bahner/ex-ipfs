@@ -48,5 +48,6 @@ commited:
 
 clean:
 	rm -rf _build deps mix.lock
+	rm -f Qm*
 
 .PHONY: compile docs docker test
