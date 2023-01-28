@@ -19,10 +19,14 @@ defmodule MyspaceIpfs.Utils do
   Filter out any empty values from a list.
   Removes nil, {}, [], and "".
   """
-  @spec filter_empties(list) :: list
-  def filter_empties(list) do
-    list
-    |> Enum.reject(fn x -> Enum.member?(["", nil, [], {}], x) end)
+  # @spec filter_empties(list | map | {:error, any}) :: list | map | {:error, any}
+  @spec filter_empties(any) :: any
+  def filter_empties(data) do
+    case data do
+      {:error, data} -> {:error, data}
+      [] -> []
+      _ -> Enum.reject(data, fn x -> Enum.member?(["", nil, [], {}], x) end)
+    end
   end
 
   @doc """

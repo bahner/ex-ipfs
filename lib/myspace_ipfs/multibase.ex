@@ -10,15 +10,28 @@ defmodule MyspaceIpfs.Multibase do
   @typep okresult :: MyspaceIpfs.okresult()
   @typep opts :: MyspaceIpfs.opts()
 
-  # Fixme add _file variants.
   @doc """
   Decode a multibase encoded string.
 
   ## Parameters
-    `data` - File to decode.
+    `data` - Data to decode.
   """
   @spec decode(binary) :: okresult
   def decode(data) do
+    multipart_content(data)
+    |> post_multipart("/multibase/decode")
+    |> handle_api_response()
+    |> okify()
+  end
+
+  @doc """
+  Decode a multibase encoded file.
+
+  ## Parameters
+    `data` - File to decode.
+  """
+  @spec decode_file(Path.t()) :: okresult
+  def decode_file(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
     |> handle_api_response()
@@ -53,8 +66,7 @@ defmodule MyspaceIpfs.Multibase do
   def list(opts \\ []) do
     post_query("/multibase/list", query: opts)
     |> handle_api_response()
-    # FIXME: This is fix to silence dialyzer. Fix typespecs for filter
-    # |> filter_empties()
+    |> filter_empties()
     |> snake_atomize()
     |> Enum.map(&MultibaseCodec.new/1)
     |> okify()

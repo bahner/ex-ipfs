@@ -28,10 +28,15 @@ defmodule MyspaceIpfs.PubSub do
   def ls(:decode) do
     post_query("/pubsub/ls")
     |> handle_api_response()
+    |> decode_topic()
     |> okify()
+  end
 
-    # FIXME: Next step is to fix the response handling
-    # |> decode_response()
+  defp decode_topic(topic) do
+    case Multibase.decode(topic) do
+      {:ok, decoded_topic} -> decoded_topic
+      _ -> topic
+    end
   end
 
   @doc """

@@ -20,9 +20,9 @@ defmodule MyspaceIpfs.Get do
            archive: boolean
          }
 
-  # FIXME: This is a hack to get around the fact that the IPFS API returns a tarball
-  #       of the file(s). This should be fixed in the API.
-  # TODO: QA this module, because it's a bit of a mess at this point. But better than it was.
+  @doc """
+  Get a file from IPFS and write it to a file or directory.
+  """
   @spec get(path, opts) :: {:ok, fspath} | tesla_error
   def get(path, opts \\ []) do
     content = get_get_data(path, opts)

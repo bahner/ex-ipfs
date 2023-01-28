@@ -278,8 +278,6 @@ defmodule MyspaceIpfs do
   ]
   ```
   """
-  # FIXME: pass the query opts to query. Shouldn't be too difficult.
-  # But needs doing.
   @spec(ping(pid, peer_id, atom | integer, opts) :: :ignore | {:ok, pid}, {:error, reason})
   def ping(pid, peer, timeout \\ 10, opts \\ []),
     do: MyspaceIpfs.Ping.start_link(pid, peer, timeout, opts)
