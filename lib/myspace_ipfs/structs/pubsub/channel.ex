@@ -80,7 +80,7 @@ defmodule MyspaceIpfs.PubSubChannel do
 
   @spec build_channel(pid, binary, list) :: t()
   defp build_channel(target, topic, options \\ []) do
-      new(target, topic, Keyword.get(options, :raw, false))
+    new(target, topic, Keyword.get(options, :raw, false))
   end
 
   @spec init(t()) :: {:ok, t()}
