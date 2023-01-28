@@ -25,10 +25,33 @@ defmodule MyspaceIpfs.Api do
   # Types
   @typep path :: MyspaceIpfs.path()
   @typep opts :: MyspaceIpfs.opts()
-  @typep result :: MyspaceIpfs.result()
-  @typep okresult :: MyspaceIpfs.okresult()
   @typep multipart :: Tesla.Multipart.t()
   @typep response :: Tesla.Env.t()
+
+  @typedoc """
+  The structure of a normal response from the node.
+  """
+  @type tesla_error :: {:error, Tesla.Env.t()}
+  @typedoc """
+  The structure of an error response from the node.
+  """
+  @type tesla_ok :: {:ok, Tesla.Env.t()}
+  @typedoc """
+  The structure of a normal response from the node.
+  """
+  @type tesla_response :: tesla_ok | tesla_error
+  @typedoc """
+  The structure of a normal response from the node.
+  """
+  @type okresult :: {:ok, any} | tesla_error
+  @typedoc """
+  The structure of a JSON response from the node.
+  """
+  @type result :: any | tesla_error
+  @typedoc """
+  A simple :ok or :error response from the node.
+  """
+  @type ok :: {:ok} | tesla_error
 
   @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0/")
 
@@ -56,13 +79,15 @@ defmodule MyspaceIpfs.Api do
 
   Data is sent first, so that it can easily be part of a pipe.
   """
-  @spec post_multipart(multipart, path, opts) :: result
+  @spec post_multipart(multipart, binary, list) ::
+          tesla_response
   def post_multipart(mp, path, opts \\ []) do
     post(path, mp, opts)
     |> handle_response()
   end
 
-  defp handle_response(response) do
+  @spec handle_response({:ok, Tesla.Env.t()}) :: tesla_response
+  def handle_response(response) do
     # Handles the response from the node. It returns the body of the response
     # if the status code is 200, otherwise it returns an error tuple.
     # ## Status codes that are handled
@@ -83,7 +108,6 @@ defmodule MyspaceIpfs.Api do
       {:ok, %Tesla.Env{status: 403}} -> {:error, unokify(response)}
       {:ok, %Tesla.Env{status: 404}} -> {:error, unokify(response)}
       {:ok, %Tesla.Env{status: 405}} -> {:error, unokify(response)}
-      {:error, _} -> {:error, response}
     end
   end
 

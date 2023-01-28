@@ -5,10 +5,8 @@ defmodule MyspaceIpfs.PubSub do
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
   alias MyspaceIpfs.Multibase
-  alias Tesla.Multipart
 
   @typep okresult :: MyspaceIpfs.okresult()
-  @typep name :: MyspaceIpfs.name()
 
   @doc """
   List the topics you are currently subscribed to.
@@ -71,13 +69,17 @@ defmodule MyspaceIpfs.PubSub do
   ```
 
   """
-  @spec pub(binary, name) :: okresult
-  def pub(data, topic) do
-    {:ok, base64topic} = Multibase.encode(topic)
 
-    Multipart.new()
-    |> Multipart.add_field("data", data)
-    |> post_multipart("/pubsub/pub?arg=#{base64topic}")
+  @spec pub(binary, binary) :: okresult
+  def pub(data, topic) do
+    with {:ok, base64topic} <- Multibase.encode(topic) do
+      multipart_content(data, "data")
+      |> post_multipart("/pubsub/pub?arg=" <> base64topic)
+      |> handle_api_response()
+      |> okify()
+    else
+      _ -> {:error, "Could not encode topic"}
+    end
   end
 
   @doc """

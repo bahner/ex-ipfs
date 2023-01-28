@@ -14,6 +14,10 @@ defmodule MyspaceIpfs do
   import MyspaceIpfs.Utils
 
   # Types
+
+  @typep okresult :: MyspaceIpfs.Api.okresult()
+  @typep result :: MyspaceIpfs.Api.result()
+
   @typedoc """
   The name of the file or data to be sent to the node. Sometimes you cant't
   use paths, but have to use a cid. This is because prefixes like /ipfs/ or
@@ -37,34 +41,12 @@ defmodule MyspaceIpfs do
   it's because prefixes like /ipfs/ or /ipns/ are not allowed.
   """
   @type opts :: list
-
   @typedoc """
   The path to the endpoint to be hit. For example, `/add` or `/cat`.
   It's called path because sometimes the MultiHash is not enough to
   identify the resource, and a path is needed, eg. /ipns/myspace.bahner.com
   """
   @type path :: Path.t()
-
-  @typedoc """
-  The structure of a normal error response from the node.
-  """
-  @type tesla_error :: {:error, Tesla.Env.t()}
-  @typedoc """
-  The structure of a normal response from the node.
-  """
-  @type okmapped :: {:ok, list} | tesla_error
-  @typedoc """
-  The structure of a JSON response from the node with :ok or :error.
-  """
-  @type okresult :: {:ok, any} | tesla_error
-  @typedoc """
-  The structure of a JSON response from the node.
-  """
-  @type result :: any | tesla_error
-  @typedoc """
-  A simple :ok or :error response from the node.
-  """
-  @type ok :: {:ok} | tesla_error
 
   @doc """
   Start the IPFS daemon.
@@ -115,10 +97,10 @@ defmodule MyspaceIpfs do
   @doc """
   Shutdown the IPFS daemon.
   """
-  @spec shutdown() :: ok
+  @spec shutdown() :: :ok
   def shutdown do
     post_query("/shutdown")
-    {:ok}
+    :ok
   end
 
   @doc """
@@ -153,7 +135,7 @@ defmodule MyspaceIpfs do
 
 
   """
-  @spec add(fspath, opts) :: result
+  @spec add(fspath, opts) :: okresult
   def add(fspath, opts \\ []),
     do:
       multipart(fspath)

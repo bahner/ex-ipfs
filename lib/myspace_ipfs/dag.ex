@@ -38,6 +38,7 @@ defmodule MyspaceIpfs.Dag do
   def get(path, opts \\ []) do
     post_query("/dag/get?arg=" <> path, query: opts)
     |> handle_api_response()
+    |> Jason.decode!()
     |> okify()
   end
 
@@ -61,6 +62,8 @@ defmodule MyspaceIpfs.Dag do
     |> Enum.map(&root_or_stats/1)
     |> okify()
   end
+
+  defp root_or_stats(%{error: error}), do: error
 
   defp root_or_stats(element) do
     with element <- snake_atomize(element) do
