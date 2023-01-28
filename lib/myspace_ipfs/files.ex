@@ -2,8 +2,6 @@ defmodule MyspaceIpfs.Files do
   @moduledoc """
   MyspaceIpfs.Files is where the files commands of the IPFS API reside.
   """
-  alias Tesla.Multipart
-
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
 
@@ -38,7 +36,7 @@ defmodule MyspaceIpfs.Files do
   Change the CID version or hash function of a path's root node.
 
   ## Parameters
-  path: The path to change the CID for.
+  path: The path to change the CID for, if doubt use "/"
 
   ## Options
   https://docs.ipfs.io/reference/http/api/#api-v0-files-chcid
@@ -49,8 +47,9 @@ defmodule MyspaceIpfs.Files do
   ]
   ```
   """
+  # @spec chcid(path, opts) :: okresult
   @spec chcid(path, opts) :: okresult
-  def chcid(path \\ '/', opts \\ []) do
+  def chcid(path, opts \\ []) do
     post_query("/files/chcid?arg=" <> path, query: opts)
     |> handle_api_response()
     |> okify()
@@ -81,7 +80,7 @@ defmodule MyspaceIpfs.Files do
   List directories in the local mutable namespace.
 
   ## Parameters
-  `path` - The path to list. Defaults to /.
+  `path` - The path to list. If in doubt, use "/".
 
   ## Options
   https://docs.ipfs.io/reference/http/api/#api-v0-files-ls
@@ -93,7 +92,7 @@ defmodule MyspaceIpfs.Files do
   ```
   """
   @spec ls(path, opts) :: okresult
-  def ls(path \\ '/', opts \\ []) do
+  def ls(path, opts \\ []) do
     post_query("/files/ls?arg=" <> path, query: opts)
     |> handle_api_response()
     |> okify()
@@ -230,10 +229,8 @@ defmodule MyspaceIpfs.Files do
   """
   @spec write(fspath, path, opts) :: okresult
   def write(data, path, opts \\ []) do
-    Multipart.new()
-    |> Multipart.add_file_content(data, "file")
-
-    post_multipart("/files/write?arg=" <> path, query: opts)
+    multipart_content(data)
+    |> post_multipart("/files/write?arg=" <> path, query: opts)
     |> handle_api_response()
     |> okify()
   end

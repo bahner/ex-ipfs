@@ -89,8 +89,7 @@ defmodule MyspaceIpfs.Api do
 
   @spec handle_api_response({:ok, response}) :: any
   def handle_api_response({:ok, response}) do
-    Logger.debug("Headers: #{inspect(response.headers)}")
-    Logger.debug("Content type: #{get_header_value(response.headers, "content-type")}")
+    Logger.debug("handle_api_response_ok: #{inspect(response.headers)}")
 
     response.body
     # # At the moment this is a NOOP, but I want this choke point to be here.
@@ -102,7 +101,7 @@ defmodule MyspaceIpfs.Api do
   end
 
   def handle_api_response({:error, response}) do
-    Logger.debug("Headers: #{inspect(response)}")
+    Logger.debug("handle_api_response_error: #{inspect(response)}")
 
     case response do
       # create_list_from_lines_of_json/1 is a helper function that takes a

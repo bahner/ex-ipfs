@@ -28,14 +28,14 @@ defmodule MyspaceIpfs.PubSubChannel do
   alias MyspaceIpfs.Multibase
 
   @enforce_keys [:topic, :target]
-  defstruct topic: nil, target: nil, base64url_topic: nil, client: nil, raw: false
+  defstruct base64url_topic: nil, client: nil, raw: false, target: nil, topic: nil
 
   @type t :: %__MODULE__{
-          topic: binary,
+          base64url_topic: binary | nil,
+          client: reference | nil,
+          raw: boolean | nil,
           target: pid,
-          base64url_topic: binary,
-          client: any,
-          raw: boolean
+          topic: binary
         }
 
   @doc """
@@ -47,14 +47,14 @@ defmodule MyspaceIpfs.PubSubChannel do
     {:error, data}
   end
 
-  @spec new(map) :: t()
-  def new(map) do
+  @spec new(pid, binary, boolean) :: t()
+  def new(target, topic, raw) do
     %__MODULE__{
-      topic: map.topic,
-      target: map.target,
-      base64url_topic: map.base64url_topic,
-      client: map.client,
-      raw: map.raw
+      base64url_topic: unokify(Multibase.encode(topic)),
+      client: nil,
+      raw: raw,
+      target: target,
+      topic: topic
     }
   end
 
@@ -66,37 +66,29 @@ defmodule MyspaceIpfs.PubSubChannel do
   def start_link(pid, topic) do
     GenServer.start_link(
       __MODULE__,
-      create_channel(topic, pid)
+      build_channel(pid, topic)
     )
   end
 
-  @spec start_link(pid, binary, list) :: :ignore | {:error, any} | {:ok, pid}
+  @spec start_link(pid, binary, keyword) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(pid, topic, options) do
     GenServer.start_link(
       __MODULE__,
-      create_channel(topic, pid, options)
+      build_channel(pid, topic, options)
     )
   end
 
-  defp create_channel(topic, target, options \\ []) do
-    # Takes options and merges them with the required struct and
-    # makes sure there is a base64url_topic, that is properly encoded
-    Enum.into(
-      options,
-      %MyspaceIpfs.PubSubChannel{
-        topic: topic,
-        target: target,
-        base64url_topic: unokify(Multibase.encode(topic))
-      }
-    )
+  @spec build_channel(pid, binary, list) :: t()
+  defp build_channel(target, topic, options \\ []) do
+      new(target, topic, Keyword.get(options, :raw, false))
   end
 
-  @spec init(t) :: {:ok, t}
+  @spec init(t()) :: {:ok, t()}
   def init(channel) do
     Logger.debug("Initializing channel #{inspect(channel)}")
     url = "#{@api_url}/pubsub/sub?arg=#{channel.base64url_topic}"
     Logger.debug("Subscribing to #{url}")
-    {:ok, ref} = spawn_client(self(), url, :infinity, channel.options)
+    {:ok, ref} = spawn_client(self(), url)
     Logger.debug("Subscribed to #{url} with #{inspect(ref)}")
     {:ok, %{channel | client: ref}}
   end

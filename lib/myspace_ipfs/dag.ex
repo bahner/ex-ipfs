@@ -96,10 +96,14 @@ defmodule MyspaceIpfs.Dag do
   ]
   ```
   """
-  @spec put(binary, opts) :: okresult
+  @spec put(binary, opts) :: {:ok, MyspaceIpfs.RootCid} | {:error, any}
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/dag/put", query: opts)
     |> handle_api_response()
+    |> snake_atomize()
+    |> Map.get(:cid, nil)
+    |> MyspaceIpfs.RootCid.new()
+    |> okify()
   end
 end

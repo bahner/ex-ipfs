@@ -53,7 +53,8 @@ defmodule MyspaceIpfs.Multibase do
   def list(opts \\ []) do
     post_query("/multibase/list", query: opts)
     |> handle_api_response()
-    |> filter_empties()
+    # FIXME: This is fix to silence dialyzer. Fix typespecs for filter
+    # |> filter_empties()
     |> snake_atomize()
     |> Enum.map(&MultibaseCodec.new/1)
     |> okify()

@@ -15,7 +15,13 @@ defmodule MyspaceIpfs.RootCid do
 
   @spec new(any) :: MyspaceIpfs.RootCid.t()
   def new(cid) do
-    %__MODULE__{/: cid./}
+    case cid do
+      %{/: something} ->
+        %__MODULE__{/: something}
+
+      _ ->
+        %__MODULE__{/: cid}
+    end
   end
 end
 

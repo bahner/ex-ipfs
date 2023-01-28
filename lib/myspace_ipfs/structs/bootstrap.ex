@@ -18,12 +18,13 @@ defmodule MyspaceIpfs.Bootstrap do
   @doc """
   List peers in bootstrap list.
   """
-  @spec bootstrap() :: reply
+  @spec bootstrap() :: {:ok, MyspaceIpfs.Peers.t()}
   def bootstrap do
     post_query("/bootstrap")
     |> handle_api_response()
     |> snake_atomize()
     |> Peers.new()
+    |> okify()
   end
 
   @doc """
@@ -34,12 +35,13 @@ defmodule MyspaceIpfs.Bootstrap do
   `peer` - The peer ID to add to the bootstrap list. The format is a multiaddr
   in the form of `<multiaddr>/<peerID>`
   """
-  @spec add(path) :: reply
+  @spec add(path) :: {:ok, MyspaceIpfs.Peers.t()}
   def add(peer) do
     post_query("/bootstrap/add?arg=" <> peer)
     |> handle_api_response()
     |> snake_atomize()
     |> Peers.new()
+    |> okify()
   end
 
   @doc """
@@ -48,12 +50,13 @@ defmodule MyspaceIpfs.Bootstrap do
   ## Parameters
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bootstrap-add-default
   """
-  @spec add_default() :: reply
+  @spec add_default() :: {:ok, MyspaceIpfs.Peers.t()}
   def add_default do
     post_query("/bootstrap/add/default")
     |> handle_api_response()
     |> snake_atomize()
     |> Peers.new()
+    |> okify()
   end
 
   @doc """
@@ -62,12 +65,13 @@ defmodule MyspaceIpfs.Bootstrap do
   ## Parameters
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bootstrap-list
   """
-  @spec list() :: reply
+  @spec list() :: {:ok, MyspaceIpfs.Peers.t()}
   def list do
     post_query("/bootstrap/list")
     |> handle_api_response()
     |> snake_atomize()
     |> Peers.new()
+    |> okify()
   end
 
   @doc """
@@ -79,12 +83,13 @@ defmodule MyspaceIpfs.Bootstrap do
   in the form of `<multiaddr>/<peerID>`
 
   """
-  @spec rm(path) :: reply
+  @spec rm(path) :: {:ok, MyspaceIpfs.Peers.t()}
   def rm(peer) do
     post_query("/bootstrap/rm?arg=" <> peer)
     |> handle_api_response()
     |> snake_atomize()
     |> Peers.new()
+    |> okify()
   end
 
   @doc """

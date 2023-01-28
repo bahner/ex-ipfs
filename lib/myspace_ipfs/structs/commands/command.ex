@@ -44,11 +44,11 @@ defmodule MyspaceIpfs.CommandsCommand do
     end
   end
 
+  # defp has_subcommands?(command) when is_list(command) do
+  #   command != []
+  # end
+
   defp has_subcommands?(command) when is_map(command) do
     Map.has_key?(command, :subcommands) && command.subcommands != []
-  end
-
-  defp has_subcommands?(command) when is_list(command) do
-    command != []
   end
 end
