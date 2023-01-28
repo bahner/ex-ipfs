@@ -33,7 +33,7 @@ docs: compile
 	mix docs
 	xdg-open doc/index.html
 
-push: all
+push: format commited all
 	git pull
 	git push
 
