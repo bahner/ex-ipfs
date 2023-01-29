@@ -129,9 +129,12 @@ defmodule MyspaceIpfs.Utils do
   iex> MyspaceIpfs.Utils.unokify({:ok, "data"})
   "data"
   """
-  @spec unokify({:ok, any}) :: any
-  def unokify({:ok, data}) do
-    data
+  @spec unokify(any) :: {:ok, any} | nil
+  def unokify(data) do
+    case data do
+      {:ok, data} -> data
+      _ -> data
+    end
   end
 
   @doc """

@@ -2,6 +2,8 @@ defmodule MyspaceIpfs.BitswapLedger do
   @moduledoc """
   A struct that represents the ledger for a peer in the bitswap network.
   """
+  import MyspaceIpfs.Utils
+
   defstruct [:exchanged, :peer, :recv, :sent, :value]
 
   @typep peer_id :: MyspaceIpfs.PeerID.t()
@@ -24,6 +26,8 @@ defmodule MyspaceIpfs.BitswapLedger do
 
   @spec new(map) :: MyspaceIpfs.BitswapLedger.t()
   def new(opts) do
+    opts = snake_atomize(opts)
+
     %__MODULE__{
       exchanged: opts.exchanged,
       peer: opts.peer,

@@ -30,7 +30,7 @@ defmodule MyspaceIpfs.Api do
   @typedoc """
   The structure of a normal response from the node.
   """
-  @type tesla_error :: {:error, Tesla.Env.t()}
+  @type tesla_error :: {:error, Tesla.Env.t()} | {:error, atom}
   @typedoc """
   The structure of an error response from the node.
   """
@@ -58,6 +58,8 @@ defmodule MyspaceIpfs.Api do
   plug(Tesla.Middleware.BaseUrl, @api_url)
   plug(Tesla.Middleware.JSON)
   plug(Tesla.Middleware.Logger)
+  # ??
+  plug(Tesla.Middleware.Timeout, timeout: 60_000)
 
   @doc """
   High level function allowing to perform POST requests to the node.
@@ -122,6 +124,9 @@ defmodule MyspaceIpfs.Api do
 
       {:error, {Tesla.Middleware.JSON, :decode, json_error}} ->
         extract_data_from_json_error(json_error.data)
+
+      {:error, :timeout} ->
+        {:error, :timeout}
     end
   end
 end
