@@ -3,6 +3,8 @@ defmodule MyspaceIpfs.BitswapStat do
   A struct that represents the bitswap network statistics.
   """
 
+  import MyspaceIpfs.Utils
+
   defstruct blocks_received: nil,
             blocks_sent: nil,
             data_received: nil,
@@ -41,6 +43,7 @@ defmodule MyspaceIpfs.BitswapStat do
 
   @spec new(map) :: MyspaceIpfs.BitswapStat.t()
   def new(opts) do
+    opts = snake_atomize(opts)
     %__MODULE__{
       blocks_received: opts.blocks_received,
       blocks_sent: opts.blocks_sent,
