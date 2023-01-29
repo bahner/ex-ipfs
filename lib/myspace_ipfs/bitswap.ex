@@ -21,7 +21,6 @@ defmodule MyspaceIpfs.Bitswap do
   @spec reprovide() :: okresult()
   def reprovide() do
     post_query("/bitswap/reprovide")
-    |> handle_api_response()
   end
 
   @doc """
@@ -35,7 +34,6 @@ defmodule MyspaceIpfs.Bitswap do
   @spec wantlist() :: okresult()
   def wantlist() do
     post_query("/bitswap/wantlist")
-    |> handle_api_response()
     |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
     |> BitswapWantList.new()
     |> okify()
@@ -44,7 +42,6 @@ defmodule MyspaceIpfs.Bitswap do
   @spec wantlist(peer_id) :: {:ok, wantlist} | {:error, String.t()}
   def wantlist(peer) do
     post_query("/bitswap/wantlist?peer=" <> peer)
-    |> handle_api_response()
     |> snake_atomize()
     |> BitswapWantList.new()
     |> okify()
@@ -65,7 +62,6 @@ defmodule MyspaceIpfs.Bitswap do
   @spec stat(opts) :: {:ok, [stat]} | {:error, any()}
   def stat(opts \\ []) do
     post_query("/bitswap/stat", query: opts)
-    |> handle_api_response()
     |> snake_atomize()
     |> BitswapStat.new()
   end
@@ -81,7 +77,6 @@ defmodule MyspaceIpfs.Bitswap do
   @spec ledger(peer_id) :: {:ok, [ledger]} | {:error, any()}
   def ledger(peer) do
     post_query("/bitswap/ledger?arg=" <> peer)
-    |> handle_api_response()
     |> snake_atomize()
     |> BitswapLedger.new()
   end

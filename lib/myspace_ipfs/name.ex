@@ -33,7 +33,6 @@ defmodule MyspaceIpfs.Name do
   def publish(path, opts \\ []),
     do:
       post_query("/name/publish?arg=" <> path, query: opts)
-      |> handle_api_response()
       |> okify()
 
   @doc """
@@ -58,7 +57,6 @@ defmodule MyspaceIpfs.Name do
   def resolve(path, opts \\ []),
     do:
       post_query("/name/resolve?arg=" <> path, query: opts)
-      |> handle_api_response()
       |> okify()
 
   @doc """
@@ -72,7 +70,6 @@ defmodule MyspaceIpfs.Name do
   def pubsub_cancel(topic) do
     # with {:ok, base64topic} <- Multibase.encode(topic) do
     post_query("/name/pubsub/cancel?arg=#{topic}")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -82,7 +79,6 @@ defmodule MyspaceIpfs.Name do
   @spec pubsub_state :: okresult
   def pubsub_state do
     post_query("/name/pubsub/state")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -92,7 +88,6 @@ defmodule MyspaceIpfs.Name do
   @spec pubsub_subs :: okresult
   def pubsub_subs do
     post_query("/name/pubsub/subs")
-    |> handle_api_response()
     |> okify()
   end
 end

@@ -31,19 +31,16 @@ defmodule MyspaceIpfs.Config do
 
   def config(key, value, opts) when is_bitstring(key) and is_bitstring(value) do
     post_query("/config?arg=" <> key <> "&arg=" <> value, query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
   def config(key, value, opts) when is_bitstring(key) and is_nil(value) do
     post_query("/config?arg=" <> key, query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
   def config(key, _value, opts) when is_bitstring(key) and is_list(opts) do
     post_query("/config?arg=" <> key, query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -64,7 +61,6 @@ defmodule MyspaceIpfs.Config do
   @spec profile_apply(name, opts) :: result
   def profile_apply(profile, opts \\ []) when is_bitstring(profile) do
     post_query("/config/profile/apply?arg=" <> profile, query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -78,7 +74,6 @@ defmodule MyspaceIpfs.Config do
   def replace(fspath) do
     multipart(fspath)
     |> post_multipart("/config/replace")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -88,7 +83,6 @@ defmodule MyspaceIpfs.Config do
   @spec show() :: result
   def show() do
     post_query("/config/show")
-    |> handle_api_response()
     |> okify()
   end
 end

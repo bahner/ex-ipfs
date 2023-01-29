@@ -25,7 +25,6 @@ defmodule MyspaceIpfs.Dht do
   @spec query(peer_id) :: okresult
   def query(peer_id) do
     post_query("/dht/query?arg=" <> peer_id)
-    |> handle_api_response()
     |> okify()
   end
 end

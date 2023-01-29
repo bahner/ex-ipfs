@@ -21,7 +21,6 @@ defmodule MyspaceIpfs.Bootstrap do
   @spec bootstrap() :: {:ok, MyspaceIpfs.Peers.t()}
   def bootstrap do
     post_query("/bootstrap")
-    |> handle_api_response()
     |> snake_atomize()
     |> Peers.new()
     |> okify()
@@ -38,7 +37,6 @@ defmodule MyspaceIpfs.Bootstrap do
   @spec add(path) :: {:ok, MyspaceIpfs.Peers.t()}
   def add(peer) do
     post_query("/bootstrap/add?arg=" <> peer)
-    |> handle_api_response()
     |> snake_atomize()
     |> Peers.new()
     |> okify()
@@ -53,7 +51,6 @@ defmodule MyspaceIpfs.Bootstrap do
   @spec add_default() :: {:ok, MyspaceIpfs.Peers.t()}
   def add_default do
     post_query("/bootstrap/add/default")
-    |> handle_api_response()
     |> snake_atomize()
     |> Peers.new()
     |> okify()
@@ -68,7 +65,6 @@ defmodule MyspaceIpfs.Bootstrap do
   @spec list() :: {:ok, MyspaceIpfs.Peers.t()}
   def list do
     post_query("/bootstrap/list")
-    |> handle_api_response()
     |> snake_atomize()
     |> Peers.new()
     |> okify()
@@ -86,7 +82,6 @@ defmodule MyspaceIpfs.Bootstrap do
   @spec rm(path) :: {:ok, MyspaceIpfs.Peers.t()}
   def rm(peer) do
     post_query("/bootstrap/rm?arg=" <> peer)
-    |> handle_api_response()
     |> snake_atomize()
     |> Peers.new()
     |> okify()
@@ -101,6 +96,5 @@ defmodule MyspaceIpfs.Bootstrap do
   @spec rm_all() :: reply
   def rm_all do
     post_query("/bootstrap/rm/all")
-    |> handle_api_response()
   end
 end

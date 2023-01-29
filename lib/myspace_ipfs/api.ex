@@ -25,10 +25,32 @@ defmodule MyspaceIpfs.Api do
   # Types
   @typep path :: MyspaceIpfs.path()
   @typep opts :: MyspaceIpfs.opts()
-  @typep result :: MyspaceIpfs.result()
-  @typep okresult :: MyspaceIpfs.okresult()
   @typep multipart :: Tesla.Multipart.t()
-  @typep response :: Tesla.Env.t()
+
+  @typedoc """
+  The structure of a normal response from the node.
+  """
+  @type tesla_error :: {:error, Tesla.Env.t()}
+  @typedoc """
+  The structure of an error response from the node.
+  """
+  @type tesla_ok :: {:ok, Tesla.Env.t()}
+  @typedoc """
+  The structure of a normal response from the node.
+  """
+  @type tesla_response :: tesla_ok | tesla_error
+  @typedoc """
+  The structure of a normal response from the node.
+  """
+  @type okresult :: {:ok, any} | tesla_error
+  @typedoc """
+  The structure of a JSON response from the node.
+  """
+  @type result :: any | tesla_error
+  @typedoc """
+  A simple :ok or :error response from the node.
+  """
+  @type ok :: {:ok} | tesla_error
 
   @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0/")
 
@@ -56,13 +78,15 @@ defmodule MyspaceIpfs.Api do
 
   Data is sent first, so that it can easily be part of a pipe.
   """
-  @spec post_multipart(multipart, path, opts) :: result
+  @spec post_multipart(multipart, binary, list) ::
+          tesla_response
   def post_multipart(mp, path, opts \\ []) do
     post(path, mp, opts)
     |> handle_response()
   end
 
-  defp handle_response(response) do
+  @spec handle_response({:ok, Tesla.Env.t()}) :: tesla_response
+  def handle_response(response) do
     # Handles the response from the node. It returns the body of the response
     # if the status code is 200, otherwise it returns an error tuple.
     # ## Status codes that are handled
@@ -76,45 +100,28 @@ defmodule MyspaceIpfs.Api do
     # Removing categorised status codes from the case statement.
     # This is of no use to the user, and not for the code either, as far as I can think of.
     # It just gives us more to match against, which is needlessly complex.
-    case response do
-      {:ok, %Tesla.Env{status: 200}} -> response
-      {:ok, %Tesla.Env{status: 500}} -> {:error, unokify(response)}
-      {:ok, %Tesla.Env{status: 400}} -> {:error, unokify(response)}
-      {:ok, %Tesla.Env{status: 403}} -> {:error, unokify(response)}
-      {:ok, %Tesla.Env{status: 404}} -> {:error, unokify(response)}
-      {:ok, %Tesla.Env{status: 405}} -> {:error, unokify(response)}
-      {:error, _} -> {:error, response}
-    end
-  end
-
-  @spec handle_api_response({:ok, response}) :: any
-  def handle_api_response({:ok, response}) do
-    Logger.debug("handle_api_response_ok: #{inspect(response.headers)}")
-
-    response.body
-    # # At the moment this is a NOOP, but I want this choke point to be here.
-    # case get_header_value(response.headers, "content-type") do
-    #   "application/json" -> response.body
-    #   "plain/text" -> response.body
-    #   _ -> "response.body"
-    # end
-  end
-
-  def handle_api_response({:error, response}) do
-    Logger.debug("handle_api_response_error: #{inspect(response)}")
 
     case response do
-      # create_list_from_lines_of_json/1 is a helper function that takes a
-      # string of JSON objects separated by newlines and returns a list of
-      # JSON objects.
-      # If it fails it'll just return the original data.
+      {:ok, %Tesla.Env{status: 200, body: body}} ->
+        body
+
+      {:ok, %Tesla.Env{status: 500, body: body}} ->
+        ApiError.handle_api_error(body)
+
+      {:ok, %Tesla.Env{status: 400}} ->
+        {:error, unokify(response)}
+
+      {:ok, %Tesla.Env{status: 403}} ->
+        {:error, unokify(response)}
+
+      {:ok, %Tesla.Env{status: 404}} ->
+        {:error, unokify(response)}
+
+      {:ok, %Tesla.Env{status: 405}} ->
+        {:error, unokify(response)}
+
       {:error, {Tesla.Middleware.JSON, :decode, json_error}} ->
-        Logger.debug("JSON error: #{inspect(json_error)}")
         extract_data_from_json_error(json_error.data)
-
-      %Tesla.Env{status: 500} ->
-        Logger.debug("500 error: #{inspect(response.body)}")
-        ApiError.handle_api_error(response)
     end
   end
 end

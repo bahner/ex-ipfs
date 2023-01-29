@@ -13,7 +13,6 @@ defmodule MyspaceIpfs.Diag do
   @spec cmds() :: okresult
   def cmds() do
     post_query("/diag/cmds")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -23,7 +22,6 @@ defmodule MyspaceIpfs.Diag do
   @spec clear() :: okresult
   def clear do
     post_query("/diag/cmds/clear")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -36,7 +34,6 @@ defmodule MyspaceIpfs.Diag do
   @spec set_time(String.t()) :: okresult
   def set_time(time) do
     post_query("/diag/cmds/set-time?arg=" <> time)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -46,7 +43,6 @@ defmodule MyspaceIpfs.Diag do
   @spec sys() :: okresult
   def sys do
     post_query("/diag/sys")
-    |> handle_api_response()
     |> okify()
   end
 

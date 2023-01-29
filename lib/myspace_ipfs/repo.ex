@@ -20,7 +20,6 @@ defmodule MyspaceIpfs.Repo do
   @spec gc(opts) :: okresult
   def gc(opts \\ []) do
     post_query("/repo/gc", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -30,7 +29,6 @@ defmodule MyspaceIpfs.Repo do
   @spec ls :: okresult
   def ls() do
     post_query("/repo/ls")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -44,7 +42,6 @@ defmodule MyspaceIpfs.Repo do
   @spec migrate(opts) :: okresult
   def migrate(opts \\ []) do
     post_query("/repo/migrate", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -59,7 +56,6 @@ defmodule MyspaceIpfs.Repo do
   @spec stat(opts) :: okresult
   def stat(opts \\ []) do
     post_query("/repo/stat", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -69,7 +65,6 @@ defmodule MyspaceIpfs.Repo do
   @spec verify :: okresult
   def verify do
     post_query("/repo/verify")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -83,7 +78,6 @@ defmodule MyspaceIpfs.Repo do
   @spec version(opts) :: okresult
   def version(opts \\ []) do
     post_query("/repo/version", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 end

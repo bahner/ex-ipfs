@@ -74,8 +74,13 @@ defmodule MyspaceIpfs.Utils do
   Wraps the data in an elixir standard response tuple.
   {:ok, data} or {:error, data}
   """
-  @spec okify(any) :: {:ok, any} | {:error, any}
+  @spec okify(:ok, any) :: {:ok, any}
+  def okify(:ok, data), do: {:ok, data}
+
+  @spec okify(:error, any) :: {:error, any}
   def okify({:error, data}), do: {:error, data}
+
+  @spec okify(any) :: {:ok, any} | {:error, any}
   def okify(res), do: {:ok, res}
 
   @doc """
@@ -216,10 +221,10 @@ defmodule MyspaceIpfs.Utils do
   Creates a multipart request from a binary. The filename should always be "file". Because
   the IPFS API expects this.
   """
-  @spec multipart_content(binary) :: Multipart.t()
-  def multipart_content(data) do
+  @spec multipart_content(binary, binary) :: Multipart.t()
+  def multipart_content(data, type \\ "file") do
     Multipart.new()
-    |> Multipart.add_file_content(data, "file")
+    |> Multipart.add_file_content(data, type)
   end
 
   @doc """
@@ -235,6 +240,8 @@ defmodule MyspaceIpfs.Utils do
     - multipart: The multipart request to add the files to.
     - fspath: The path to the directory to add to the multipart request.
   """
+
+  @spec multipart_add_files(Multipart.t(), fspath) :: Multipart.t()
   def multipart_add_files(multipart, fspath) do
     with basedir <- Path.dirname(fspath) do
       ls_r(fspath)
@@ -276,19 +283,16 @@ defmodule MyspaceIpfs.Utils do
     {:error, data}
   end
 
+  @spec snake_atomize(nil) :: nil
+  def snake_atomize(nil) do
+    nil
+  end
+
   @spec snake_atomize(map) :: map
   def snake_atomize(map) when is_map(map) do
     map
     |> Recase.Enumerable.convert_keys(&Recase.to_snake/1)
     |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
-
-    # try do
-    #   map
-    #   |> Recase.Enumerable.convert_keys(&Recase.to_snake/1)
-    #   |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
-    # catch
-    #   _ -> map
-    # end
   end
 
   @spec spawn_client(

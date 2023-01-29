@@ -4,8 +4,6 @@ defmodule MyspaceIpfs.Dag do
   """
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
-  alias MyspaceIpfs.DagImportRoot
-  alias MyspaceIpfs.DagImportStats
   require Logger
 
   @typep cid :: MyspaceIpfs.cid()
@@ -24,7 +22,6 @@ defmodule MyspaceIpfs.Dag do
   @spec export(cid) :: okresult
   def export(cid) do
     post_query("/dag/export?arg=" <> cid)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -37,7 +34,7 @@ defmodule MyspaceIpfs.Dag do
   @spec get(path, opts) :: okresult
   def get(path, opts \\ []) do
     post_query("/dag/get?arg=" <> path, query: opts)
-    |> handle_api_response()
+    |> Jason.decode!()
     |> okify()
   end
 
@@ -52,32 +49,13 @@ defmodule MyspaceIpfs.Dag do
   """
   @spec import(binary, opts) :: okresult
   def import(data, opts \\ []) do
-    # Always fetch stats. We can decided later if we want to return them.
+    Logger.debug("import: #{inspect(opts)}")
     opts = Keyword.put(opts, :stats, true)
 
     multipart_content(data)
     |> post_multipart("/dag/import", query: opts)
-    |> handle_api_response()
-    |> Enum.map(&root_or_stats/1)
+    |> MyspaceIpfs.DagImport.new()
     |> okify()
-  end
-
-  defp root_or_stats(element) do
-    with element <- snake_atomize(element) do
-      try do
-        case element do
-          %{root: root} ->
-            root
-            |> DagImportRoot.new()
-
-          %{stats: stats} ->
-            stats
-            |> DagImportStats.new()
-        end
-      rescue
-        _ -> element
-      end
-    end
   end
 
   @doc """
@@ -100,7 +78,6 @@ defmodule MyspaceIpfs.Dag do
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/dag/put", query: opts)
-    |> handle_api_response()
     |> snake_atomize()
     |> Map.get(:cid, nil)
     |> MyspaceIpfs.RootCid.new()

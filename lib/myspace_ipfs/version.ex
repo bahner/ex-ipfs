@@ -20,7 +20,6 @@ defmodule MyspaceIpfs.Version do
   @spec version(binary) :: result
   def version(name \\ "all") do
     post_query("/version")
-    |> handle_api_response()
     |> List.flatten()
     |> return_version(name)
   end
@@ -48,7 +47,6 @@ defmodule MyspaceIpfs.Version do
   @spec deps() :: result
   def deps() do
     post_query("/version/deps")
-    |> handle_api_response()
     |> okify()
   end
 end
