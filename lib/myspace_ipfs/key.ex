@@ -28,9 +28,7 @@ defmodule MyspaceIpfs.Key do
   """
   @spec export(name, fspath | atom, opts) :: okresult
   def export(key, output \\ :memory, opts \\ []) do
-    key =
-      post_query("/key/export?arg=" <> key, query: opts)
-      |> handle_api_response()
+    key = post_query("/key/export?arg=" <> key, query: opts)
 
     case output do
       :memory -> okify(key)
@@ -57,7 +55,6 @@ defmodule MyspaceIpfs.Key do
   @spec gen(name, opts) :: okresult
   def gen(key, opts \\ []) do
     post_query("/key/gen?arg=" <> key, query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -81,7 +78,6 @@ defmodule MyspaceIpfs.Key do
   def import(name, key, opts \\ []) do
     multipart_content(key)
     |> post_multipart("/key/import?arg=" <> name, query: opts)
-    |> handle_api_response()
   end
 
   @doc """
@@ -99,7 +95,6 @@ defmodule MyspaceIpfs.Key do
   @spec list(opts) :: okresult
   def list(opts \\ []) do
     post_query("/key/list", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -122,7 +117,6 @@ defmodule MyspaceIpfs.Key do
   @spec rename(name, name, opts) :: okresult
   def rename(old, new, opts \\ []) do
     post_query("/key/rename?arg=" <> old <> "&arg=" <> new, query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -144,7 +138,6 @@ defmodule MyspaceIpfs.Key do
   @spec rm(name, opts) :: okresult
   def rm(key, opts \\ []) do
     post_query("/key/rm?arg=" <> key, query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -166,7 +159,6 @@ defmodule MyspaceIpfs.Key do
   @spec rotate(name, opts) :: okresult
   def rotate(oldkey, opts \\ []) do
     post_query("/key/rotate?arg=" <> oldkey, query: opts)
-    |> handle_api_response()
     |> okify()
   end
 end

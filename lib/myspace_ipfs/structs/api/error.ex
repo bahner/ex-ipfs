@@ -34,10 +34,10 @@ defmodule MyspaceIpfs.ApiError do
   Convert an IPFS error message into a tuple of {:error, struct}
   """
   @spec handle_api_error(map) :: {:error, MyspaceIpfs.ApiError.t()}
-  def handle_api_error(response) do
-    Logger.debug("IPFS error: #{inspect(response)}")
+  def handle_api_error(body) do
+    Logger.debug("IPFS error: #{inspect(body)}")
 
-    response.body
+    body
     |> snake_atomize()
     |> new()
     |> errify()

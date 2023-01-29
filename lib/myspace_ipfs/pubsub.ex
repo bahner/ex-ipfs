@@ -14,7 +14,6 @@ defmodule MyspaceIpfs.PubSub do
   @spec ls :: okresult
   def ls do
     post_query("/pubsub/ls")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -25,7 +24,6 @@ defmodule MyspaceIpfs.PubSub do
   @spec ls(:decode) :: okresult
   def ls(:decode) do
     post_query("/pubsub/ls")
-    |> handle_api_response()
     |> decode_topic()
     |> okify()
   end
@@ -49,7 +47,6 @@ defmodule MyspaceIpfs.PubSub do
     base64topic = Multibase.encode(topic)
 
     post_query("/pubsub/pub/arg?#{base64topic}")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -75,7 +72,6 @@ defmodule MyspaceIpfs.PubSub do
     with {:ok, base64topic} <- Multibase.encode(topic) do
       multipart_content(data, "data")
       |> post_multipart("/pubsub/pub?arg=" <> base64topic)
-      |> handle_api_response()
       |> okify()
     else
       _ -> {:error, "Could not encode topic"}

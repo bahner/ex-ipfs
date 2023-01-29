@@ -40,9 +40,7 @@ defmodule MyspaceIpfs.Get do
   defp get_get_data(path, opts) do
     options = create_query_opts(opts)
 
-    reply =
-      post_query("/get?arg=" <> path, options)
-      |> handle_api_response()
+    reply = post_query("/get?arg=" <> path, options)
 
     case reply do
       {:error, reason} ->

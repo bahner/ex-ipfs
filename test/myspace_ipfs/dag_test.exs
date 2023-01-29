@@ -22,7 +22,7 @@ defmodule MyspaceIpfs.DagTest do
     {:ok, value} = Dag.get("bafyreia353cr2t26iiuw5g2triyfelqehsu5peq4pn2u6t6q6oktrplzly/Key")
     assert value === "Value"
     {:ok, value} = Dag.get("bafyreia353cr2t26iiuw5g2triyfelqehsu5peq4pn2u6t6q6oktrplzly")
-    assert is_list(value)
+    assert is_map(value)
   end
 
   test "Should export dag OK" do

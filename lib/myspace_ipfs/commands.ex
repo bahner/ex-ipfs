@@ -17,7 +17,6 @@ defmodule MyspaceIpfs.Commands do
   @spec commands() :: okmapped()
   def commands() do
     post_query("/commands")
-    |> handle_api_response()
     |> snake_atomize()
     |> gen_commands()
     |> okify()

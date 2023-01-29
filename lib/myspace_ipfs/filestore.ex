@@ -14,7 +14,6 @@ defmodule MyspaceIpfs.Filestore do
   @spec dups() :: okresult
   def dups do
     post_query("/filestore/dups")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -33,7 +32,6 @@ defmodule MyspaceIpfs.Filestore do
   @spec ls(opts) :: okresult
   def ls(opts \\ []) do
     post_query("/filestore/ls", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -52,7 +50,6 @@ defmodule MyspaceIpfs.Filestore do
   @spec verify(opts) :: okresult
   def verify(opts \\ []) do
     post_query("/filestore/verify", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 end

@@ -47,7 +47,6 @@ defmodule MyspaceIpfs.Stats do
   @spec dht(name) :: MyspaceIpfs.okmapped()
   def dht(name) do
     post_query("/stats/dht?arg=#{name}")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -57,7 +56,6 @@ defmodule MyspaceIpfs.Stats do
   @spec provide() :: okresult
   def provide do
     post_query("/stats/provide")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -72,7 +70,6 @@ defmodule MyspaceIpfs.Stats do
   @spec repo(opts) :: okresult
   def repo(opts \\ []) do
     post_query("/stats/repo", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 end

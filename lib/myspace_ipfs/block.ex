@@ -22,7 +22,6 @@ defmodule MyspaceIpfs.Block do
   @spec get(cid) :: okmapped()
   def get(cid) do
     post_query("/block/get?arg=" <> cid)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -48,7 +47,6 @@ defmodule MyspaceIpfs.Block do
   def put(fspath, opts \\ []) do
     multipart(fspath)
     |> post_multipart("/block/put", query: opts)
-    |> handle_api_response()
     |> snake_atomize()
     |> KeySize.new()
     |> okify()
@@ -72,7 +70,6 @@ defmodule MyspaceIpfs.Block do
   @spec rm(cid) :: okmapped()
   def rm(cid) do
     post_query("/block/rm?arg=" <> cid)
-    |> handle_api_response()
     |> snake_atomize()
     |> Hash.new()
     |> okify()
@@ -88,7 +85,6 @@ defmodule MyspaceIpfs.Block do
   @spec stat(cid) :: okmapped()
   def stat(cid) do
     post_query("/block/stat?arg=" <> cid)
-    |> handle_api_response()
     |> okify()
   end
 end

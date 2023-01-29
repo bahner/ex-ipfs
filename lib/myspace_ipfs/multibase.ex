@@ -20,7 +20,6 @@ defmodule MyspaceIpfs.Multibase do
   def decode(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -34,7 +33,6 @@ defmodule MyspaceIpfs.Multibase do
   def decode_file(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -51,7 +49,6 @@ defmodule MyspaceIpfs.Multibase do
   def encode(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/multibase/encode", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -65,7 +62,6 @@ defmodule MyspaceIpfs.Multibase do
   @spec list(opts) :: okresult
   def list(opts \\ []) do
     post_query("/multibase/list", query: opts)
-    |> handle_api_response()
     |> filter_empties()
     |> snake_atomize()
     |> Enum.map(&MultibaseCodec.new/1)
@@ -85,7 +81,6 @@ defmodule MyspaceIpfs.Multibase do
   def transcode(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/multibase/transcode", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 end

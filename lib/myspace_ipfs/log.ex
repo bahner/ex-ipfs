@@ -19,7 +19,6 @@ defmodule MyspaceIpfs.Log do
   @spec level(name, name) :: okresult
   def level(subsys \\ "all", level) do
     post_query("/log/level?arg=" <> subsys <> "&arg=" <> level)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -29,7 +28,6 @@ defmodule MyspaceIpfs.Log do
   @spec ls() :: okresult
   def ls do
     post_query("/log/ls")
-    |> handle_api_response()
     |> okify()
   end
 
@@ -39,7 +37,6 @@ defmodule MyspaceIpfs.Log do
   @spec tail() :: okresult
   def tail do
     post_query("/log/tail")
-    |> handle_api_response()
     |> okify()
   end
 end

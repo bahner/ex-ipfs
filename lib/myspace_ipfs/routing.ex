@@ -21,7 +21,6 @@ defmodule MyspaceIpfs.Routing do
   @spec findpeer(peer_id, opts) :: okresult
   def findpeer(peer_id, opts \\ []) do
     post_query("/routing/findpeer?arg=#{peer_id}", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -36,7 +35,6 @@ defmodule MyspaceIpfs.Routing do
   @spec findprovs(peer_id, opts) :: okresult
   def findprovs(cid, opts \\ []) do
     post_query("/routing/findprovs?arg=#{cid}", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -51,7 +49,6 @@ defmodule MyspaceIpfs.Routing do
   @spec provide(name, opts) :: okresult
   def provide(name, opts \\ []) do
     post_query("/routing/provide?arg=#{name}", query: opts)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -69,7 +66,6 @@ defmodule MyspaceIpfs.Routing do
   def put(key, value, opts \\ []) do
     multipart_content(value)
     |> post_multipart("/routing/put?arg=" <> key, query: opts)
-    |> handle_api_response()
     |> okify()
   end
 end

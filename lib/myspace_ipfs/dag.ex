@@ -22,7 +22,6 @@ defmodule MyspaceIpfs.Dag do
   @spec export(cid) :: okresult
   def export(cid) do
     post_query("/dag/export?arg=" <> cid)
-    |> handle_api_response()
     |> okify()
   end
 
@@ -35,7 +34,6 @@ defmodule MyspaceIpfs.Dag do
   @spec get(path, opts) :: okresult
   def get(path, opts \\ []) do
     post_query("/dag/get?arg=" <> path, query: opts)
-    |> handle_api_response()
     |> Jason.decode!()
     |> okify()
   end
@@ -56,7 +54,6 @@ defmodule MyspaceIpfs.Dag do
 
     multipart_content(data)
     |> post_multipart("/dag/import", query: opts)
-    |> handle_api_response()
     |> MyspaceIpfs.DagImport.new()
     |> okify()
   end
@@ -81,7 +78,6 @@ defmodule MyspaceIpfs.Dag do
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/dag/put", query: opts)
-    |> handle_api_response()
     |> snake_atomize()
     |> Map.get(:cid, nil)
     |> MyspaceIpfs.RootCid.new()

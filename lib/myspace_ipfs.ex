@@ -121,7 +121,6 @@ defmodule MyspaceIpfs do
   def resolve(path, opts \\ []),
     do:
       post_query("/resolve?arg=" <> path, query: opts)
-      |> handle_api_response()
       |> okify()
 
   @doc """
@@ -140,7 +139,6 @@ defmodule MyspaceIpfs do
     do:
       multipart(fspath)
       |> post_multipart("/add", query: opts)
-      |> handle_api_response()
       |> okify()
 
   @doc """
@@ -181,9 +179,7 @@ defmodule MyspaceIpfs do
   """
   @spec cat(path, opts) :: result
   def cat(path, opts \\ []),
-    do:
-      post_query("/cat?arg=" <> path, query: opts)
-      |> handle_api_response()
+    do: post_query("/cat?arg=" <> path, query: opts)
 
   @doc """
   List the files in an IPFS object.
@@ -225,7 +221,6 @@ defmodule MyspaceIpfs do
   def ls(path, opts \\ []),
     do:
       post_query("/ls?arg=" <> path, query: opts)
-      |> handle_api_response()
       |> okify()
 
   @doc """
@@ -244,8 +239,9 @@ defmodule MyspaceIpfs do
   def id,
     do:
       post_query("/id")
-      |> handle_api_response()
       |> okify()
+
+  # |> okify()
 
   @doc """
   Ping a peer.
@@ -280,6 +276,5 @@ defmodule MyspaceIpfs do
   def mount(opts \\ []),
     do:
       post_query("/mount", query: opts)
-      |> handle_api_response()
       |> okify()
 end
