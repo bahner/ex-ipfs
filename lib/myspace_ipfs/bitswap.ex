@@ -7,6 +7,7 @@ defmodule MyspaceIpfs.Bitswap do
   alias MyspaceIpfs.BitswapStat
   alias MyspaceIpfs.BitswapWantList
   alias MyspaceIpfs.BitswapLedger
+  require Logger
 
   @typep okresult :: MySpaceIPFS.okresult()
   @typep peer_id :: MyspaceIpfs.peer_id()
@@ -15,12 +16,23 @@ defmodule MyspaceIpfs.Bitswap do
   @type ledger() :: MyspaceIpfs.BitswapLedger.t()
   @typep opts :: MyspaceIpfs.opts()
 
+  @spec reprovide(timeout) :: :okresult
   @doc """
   Reprovide blocks to the network.
+
+  NB! I am unsure what is supposed to happen here. Mostly I get no reply. I haven't been able to find any documentation on this endpoint.
   """
-  @spec reprovide() :: okresult()
-  def reprovide() do
-    post_query("/bitswap/reprovide")
+  def reprovide(timeout \\ 5_000) do
+    reprovide = Task.async(fn -> post_query("/bitswap/reprovide") end)
+
+    case Task.yield(reprovide, timeout) || Task.shutdown(reprovide) do
+      {:ok, result} ->
+        result
+
+      nil ->
+        Logger.warn("Bitswap.reprovide timed out after #{timeout}ms. That is probably OK.")
+        :ok
+    end
   end
 
   @doc """
@@ -34,7 +46,7 @@ defmodule MyspaceIpfs.Bitswap do
   @spec wantlist() :: okresult()
   def wantlist() do
     post_query("/bitswap/wantlist")
-    |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
+    |> snake_atomize()
     |> BitswapWantList.new()
     |> okify()
   end
@@ -80,19 +92,4 @@ defmodule MyspaceIpfs.Bitswap do
     |> snake_atomize()
     |> BitswapLedger.new()
   end
-
-  # defp new(opts) do
-  #   %MyspaceIpfs.BitswapLedger{}
-  #   |> struct(opts)
-  # end
-
-  # defp new(opts) do
-  #   %MyspaceIpfs.BitswapWantList{}
-  #   |> struct(opts)
-  # end
-
-  # defp new(opts) do
-  #   %MyspaceIpfs.BitswapStat{}
-  #   |> struct(opts)
-  # end
 end
