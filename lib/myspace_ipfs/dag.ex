@@ -4,8 +4,6 @@ defmodule MyspaceIpfs.Dag do
   """
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
-  alias MyspaceIpfs.DagImportRoot
-  alias MyspaceIpfs.DagImportStats
   require Logger
 
   @typep cid :: MyspaceIpfs.cid()
@@ -53,34 +51,14 @@ defmodule MyspaceIpfs.Dag do
   """
   @spec import(binary, opts) :: okresult
   def import(data, opts \\ []) do
-    # Always fetch stats. We can decided later if we want to return them.
+    Logger.debug("import: #{inspect(opts)}")
     opts = Keyword.put(opts, :stats, true)
 
     multipart_content(data)
     |> post_multipart("/dag/import", query: opts)
     |> handle_api_response()
-    |> Enum.map(&root_or_stats/1)
+    |> MyspaceIpfs.DagImport.new()
     |> okify()
-  end
-
-  defp root_or_stats(%{error: error}), do: error
-
-  defp root_or_stats(element) do
-    with element <- snake_atomize(element) do
-      try do
-        case element do
-          %{root: root} ->
-            root
-            |> DagImportRoot.new()
-
-          %{stats: stats} ->
-            stats
-            |> DagImportStats.new()
-        end
-      rescue
-        _ -> element
-      end
-    end
   end
 
   @doc """

@@ -13,6 +13,8 @@ defmodule MyspaceIpfs.ApiTest do
   test "get should return a binary when passed a valid key" do
     {:ok, bin} = Ipfs.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     assert is_binary(bin)
+    # Clean up
+    File.rm!("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
   end
 
   test "get should return a :server when passed nothing or invalid key" do

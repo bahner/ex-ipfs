@@ -283,19 +283,16 @@ defmodule MyspaceIpfs.Utils do
     {:error, data}
   end
 
+  @spec snake_atomize(nil) :: nil
+  def snake_atomize(nil) do
+    nil
+  end
+
   @spec snake_atomize(map) :: map
   def snake_atomize(map) when is_map(map) do
     map
     |> Recase.Enumerable.convert_keys(&Recase.to_snake/1)
     |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
-
-    # try do
-    #   map
-    #   |> Recase.Enumerable.convert_keys(&Recase.to_snake/1)
-    #   |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
-    # catch
-    #   _ -> map
-    # end
   end
 
   @spec spawn_client(

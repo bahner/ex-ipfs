@@ -108,6 +108,7 @@ defmodule MyspaceIpfs.Api do
       {:ok, %Tesla.Env{status: 403}} -> {:error, unokify(response)}
       {:ok, %Tesla.Env{status: 404}} -> {:error, unokify(response)}
       {:ok, %Tesla.Env{status: 405}} -> {:error, unokify(response)}
+      {:error, response} -> {:error, response}
     end
   end
 
@@ -132,7 +133,7 @@ defmodule MyspaceIpfs.Api do
       # string of JSON objects separated by newlines and returns a list of
       # JSON objects.
       # If it fails it'll just return the original data.
-      {:error, {Tesla.Middleware.JSON, :decode, json_error}} ->
+      {Tesla.Middleware.JSON, :decode, json_error} ->
         Logger.debug("JSON error: #{inspect(json_error)}")
         extract_data_from_json_error(json_error.data)
 
