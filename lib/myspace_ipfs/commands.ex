@@ -5,7 +5,7 @@ defmodule MyspaceIpfs.Commands do
 
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
-  import MyspaceIpfs.CommandsCommand
+  alias MyspaceIpfs.CommandsCommand
 
   @typep okmapped :: MySpaceIPFS.okmapped()
 
@@ -18,7 +18,7 @@ defmodule MyspaceIpfs.Commands do
   def commands() do
     post_query("/commands")
     |> snake_atomize()
-    |> gen_commands()
+    |> CommandsCommand.new()
     |> okify()
   end
 
