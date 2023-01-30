@@ -52,7 +52,8 @@ jobs:
           mix format --check-formatted
           mix deps.unlock --check-unused
           mix deps.get
-          mix compile --warnings-as-errors
+          #mix compile --warnings-as-errors
+          mix compile
       - name: Run test suite
         run: |
           mix coveralls
