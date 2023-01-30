@@ -4,6 +4,8 @@ defmodule MyspaceIpfs.CidCid do
   These structs are specific to the underlying IPFS API category.
   """
 
+  import MyspaceIpfs.Utils
+
   defstruct cid_str: nil, formatted: nil, error_msg: nil
 
   @type t :: %__MODULE__{
@@ -23,6 +25,8 @@ defmodule MyspaceIpfs.CidCid do
 
   @spec new(map) :: MyspaceIpfs.CidCid.t()
   def new(opts) when is_map(opts) do
+    opts = snake_atomize(opts)
+
     %__MODULE__{
       cid_str: opts.cid_str,
       formatted: opts.formatted,

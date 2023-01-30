@@ -26,7 +26,6 @@ defmodule MyspaceIpfs.Cid do
   def base32(cid),
     do:
       post_query("/cid/base32?arg=" <> cid)
-      |> snake_atomize()
       |> CidCid.new()
       |> okify()
 
@@ -38,7 +37,7 @@ defmodule MyspaceIpfs.Cid do
   def bases(opts \\ []),
     do:
       post_query("/cid/bases", query: opts)
-      |> snake_atomize()
+      |> Enum.map(&snake_atomize/1)
       |> Enum.map(&MultibaseEncoding.new/1)
       |> okify()
 
@@ -55,7 +54,7 @@ defmodule MyspaceIpfs.Cid do
   def codecs(opts \\ []),
     do:
       post_query("/cid/codecs", query: opts)
-      |> snake_atomize()
+      |> Enum.map(&snake_atomize/1)
       |> Enum.map(&MultiCodec.new/1)
       |> okify()
 
@@ -76,7 +75,6 @@ defmodule MyspaceIpfs.Cid do
   def format(cid, opts \\ []),
     do:
       post_query("/cid/format?arg=" <> cid, query: opts)
-      |> snake_atomize()
       |> CidCid.new()
       |> okify()
 
@@ -92,7 +90,7 @@ defmodule MyspaceIpfs.Cid do
   def hashes(opts \\ []),
     do:
       post_query("/cid/hashes", query: opts)
-      |> snake_atomize()
+      |> Enum.map(&snake_atomize/1)
       |> Enum.map(&MultiHash.new/1)
       |> okify()
 end
