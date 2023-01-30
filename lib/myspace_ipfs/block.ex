@@ -4,8 +4,8 @@ defmodule MyspaceIpfs.Block do
   """
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
+  alias MyspaceIpfs.ErrorHash
   alias MyspaceIpfs.KeySize
-  alias MyspaceIpfs.Hash
 
   @typep okmapped :: MySpaceIPFS.okmapped()
   @typep opts :: MySpaceIPFS.opts()
@@ -29,6 +29,33 @@ defmodule MyspaceIpfs.Block do
   Put file as an IPFS block.
 
   ## Parameters
+  `data` - The data to be stored as a block.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-put
+  ```
+  [
+    `cid-codec`: <string>, # CID codec to use.
+    `mhtype`: <string>, # Hash function to use.
+    `mhlen`: <int>, # Hash length.
+    `pin`: <bool>, # Pin added blocks recursively.
+    `allow-big-block`: <bool>, # Allow blocks larger than 1MiB.
+  ]
+  ```
+  """
+  @spec put(any, opts) :: okmapped
+  def put(data, opts \\ []) do
+    multipart_content(data)
+    |> post_multipart("/block/put", query: opts)
+    |> snake_atomize()
+    |> KeySize.new()
+    |> okify()
+  end
+
+  @doc """
+  Put file as an IPFS block.
+
+  ## Parameters
   `fspath` - The path to the file to be stored as a block.
 
   ## Options
@@ -43,9 +70,9 @@ defmodule MyspaceIpfs.Block do
   ]
   ```
   """
-  @spec put(fspath, opts) :: okmapped
-  def put(fspath, opts \\ []) do
-    multipart(fspath)
+  @spec put_file(fspath, opts) :: okmapped
+  def put_file(file, opts \\ []) do
+    multipart(file)
     |> post_multipart("/block/put", query: opts)
     |> snake_atomize()
     |> KeySize.new()
@@ -71,7 +98,7 @@ defmodule MyspaceIpfs.Block do
   def rm(cid) do
     post_query("/block/rm?arg=" <> cid)
     |> snake_atomize()
-    |> Hash.new()
+    |> ErrorHash.new()
     |> okify()
   end
 
@@ -85,6 +112,8 @@ defmodule MyspaceIpfs.Block do
   @spec stat(cid) :: okmapped()
   def stat(cid) do
     post_query("/block/stat?arg=" <> cid)
+    |> snake_atomize()
+    |> KeySize.new()
     |> okify()
   end
 end

@@ -4,6 +4,7 @@ defmodule MyspaceIpfs.Utils do
   """
 
   require Logger
+  alias MyspaceIpfs.Log
   alias Tesla.Multipart
 
   @type fspath :: MyspaceIpfs.fspath()
@@ -283,12 +284,8 @@ defmodule MyspaceIpfs.Utils do
 
   @spec snake_atomize({:error, any}) :: {:error, any}
   def snake_atomize({:error, data}) do
+    Logger.error("Error: #{inspect(data)}")
     {:error, data}
-  end
-
-  @spec snake_atomize(nil) :: nil
-  def snake_atomize(nil) do
-    nil
   end
 
   @spec snake_atomize(map) :: map
@@ -296,6 +293,19 @@ defmodule MyspaceIpfs.Utils do
     map
     |> Recase.Enumerable.convert_keys(&Recase.to_snake/1)
     |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
+  end
+
+  # Need to handle some empty cases.
+  @spec snake_atomize(nil) :: nil
+  def snake_atomize(nil) do
+    Logger.error("Error: nil")
+    nil
+  end
+
+  @spec snake_atomize(binary) :: binary
+  def snake_atomize("") do
+    Logger.error("Error: empty string")
+    ""
   end
 
   @spec spawn_client(
