@@ -4,7 +4,6 @@ defmodule MyspaceIpfs.Utils do
   """
 
   require Logger
-  alias MyspaceIpfs.Log
   alias Tesla.Multipart
 
   @type fspath :: MyspaceIpfs.fspath()
