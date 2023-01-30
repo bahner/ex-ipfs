@@ -1,4 +1,4 @@
-defmodule MyspaceIpfs.DagTest do
+defmodule MyspaceIpfs.BitswapTest do
   @moduledoc """
   Test the MyspaceIpfs API
 
