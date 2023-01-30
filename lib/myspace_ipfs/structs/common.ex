@@ -35,8 +35,13 @@ defmodule MyspaceIpfs.KeySize do
 
   @type t :: %__MODULE__{key: binary, size: non_neg_integer}
 
+
+  # Pass on errors.
+  @spec new({:error, any}) :: {:error, any}
+  def new({:error, data}), do: {:error, data}
+
   @spec new(map) :: MyspaceIpfs.KeySize.t()
-  def new(opts) do
+  def new(opts) when is_map(opts) do
     %__MODULE__{
       key: opts.key,
       size: opts.size
@@ -55,30 +60,16 @@ defmodule MyspaceIpfs.KeyValue do
   @type t :: %__MODULE__{key: binary, value: binary}
 
   @spec new(map) :: MyspaceIpfs.KeyValue.t()
-  def new(opts) do
+  def new(opts) when is_map(opts) do
     %__MODULE__{
       key: opts.key,
       value: opts.value
     }
   end
-end
 
-defmodule MyspaceIpfs.Hash do
-  @moduledoc """
-  This struct is very simple. Some results are listed as "Size": size. This is a
-  convenience struct to make it easier match on the result.
-  """
-
-  defstruct hash: nil
-
-  @type t :: %__MODULE__{hash: MyspaceIpfs.cid()}
-
-  @spec new(map) :: MyspaceIpfs.Hash.t()
-  def new(opts) do
-    %__MODULE__{
-      hash: opts.hash
-    }
-  end
+  # Pass on errors.
+  @spec new({:error, any}) :: {:error, any}
+  def new({:error, data}), do: {:error, data}
 end
 
 defmodule MyspaceIpfs.ErrorHash do
@@ -86,17 +77,21 @@ defmodule MyspaceIpfs.ErrorHash do
   This struct is very simple. Some results are listed as "Error": error, "Hash": hash. This is a
   """
 
-  defstruct error: nil, hash: nil
+  defstruct error: "", hash: nil
 
   @type t :: %__MODULE__{error: binary, hash: binary}
 
   @spec new(map) :: MyspaceIpfs.ErrorHash.t()
-  def new(opts) do
+  def new(opts) when is_map(opts) do
     %__MODULE__{
-      error: opts.error,
+      error: Map.get(opts, :error, ""),
       hash: opts.hash
     }
   end
+
+  # Pass on errors.
+  @spec new({:error, any}) :: {:error, any}
+  def new({:error, data}), do: {:error, data}
 end
 
 defmodule MyspaceIpfs.Add do
@@ -116,7 +111,7 @@ defmodule MyspaceIpfs.Add do
         }
 
   @spec new(map) :: MyspaceIpfs.Add.t()
-  def new(opts) do
+  def new(opts) when is_map(opts) do
     %__MODULE__{
       bytes: opts.bytes,
       hash: opts.hash,
@@ -124,6 +119,10 @@ defmodule MyspaceIpfs.Add do
       type: opts.type
     }
   end
+
+  # Pass on errors.
+  @spec new({:error, any}) :: {:error, any}
+  def new({:error, data}), do: {:error, data}
 end
 
 defmodule MyspaceIpfs.Peers do
@@ -138,9 +137,13 @@ defmodule MyspaceIpfs.Peers do
           peers: list[path] | nil
         }
   @spec new(map) :: MyspaceIpfs.Peers.t()
-  def new(opts) do
+  def new(opts) when is_map(opts) do
     %__MODULE__{
       peers: opts.peers
     }
   end
+
+  # Pass on errors.
+  @spec new({:error, any}) :: {:error, any}
+  def new({:error, data}), do: {:error, data}
 end
