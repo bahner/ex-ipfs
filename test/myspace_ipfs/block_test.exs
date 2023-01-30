@@ -68,8 +68,8 @@ defmodule MyspaceIpfs.BlockTest do
   test "repeated rm QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx give error" do
     {:ok, _} = MyspaceIpfs.Block.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     # It takes some time for the blocvk to be removed
-    {:ok, hash} = MyspaceIpfs.Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
-    {:ok, hash} = MyspaceIpfs.Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
+    {:ok, _} = MyspaceIpfs.Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
+    {:ok, _} = MyspaceIpfs.Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     {:ok, hash} = MyspaceIpfs.Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     assert is_map(hash)
     assert %MyspaceIpfs.ErrorHash{} = hash
