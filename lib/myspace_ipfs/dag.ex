@@ -37,7 +37,8 @@ defmodule MyspaceIPFS.Dag do
   def get(path, opts \\ []) do
     with data <- post_query("/dag/get?arg=" <> path, query: opts) do
       data
-      # |> okify()
+      |> Jason.decode!()
+      |> okify()
     end
   end
 

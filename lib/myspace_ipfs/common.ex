@@ -16,6 +16,7 @@ defmodule MyspaceIPFS.RootCid do
   @spec new(any) :: MyspaceIPFS.RootCid.t()
   def new(cid) do
     IO.inspect(cid, label: "cid")
+
     case cid do
       %{"/" => something} ->
         %__MODULE__{/: something}

@@ -19,8 +19,7 @@ defmodule BlockTest do
   end
 
   test "stat 'heisan' returns proper keysize" do
-    {:ok, keysize} =
-      Block.stat("bafkreidqdr4pgdzfhf5zrwbqhiyqdapniknge6eux74ixk77s2hintta24")
+    {:ok, keysize} = Block.stat("bafkreidqdr4pgdzfhf5zrwbqhiyqdapniknge6eux74ixk77s2hintta24")
 
     assert is_map(keysize)
     assert %MyspaceIPFS.KeySize{} = keysize
