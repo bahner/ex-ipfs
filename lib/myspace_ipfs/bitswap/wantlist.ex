@@ -6,10 +6,8 @@ defmodule MyspaceIpfs.BitswapWantList do
   import MyspaceIpfs.Utils
   defstruct keys: []
 
-  @typep rootcid :: MyspaceIpfs.RootCid.t()
-
   @type t :: %__MODULE__{
-          keys: list[rootcid] | nil
+          keys: list | nil
         }
 
   @doc """

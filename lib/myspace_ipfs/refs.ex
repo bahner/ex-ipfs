@@ -22,7 +22,7 @@ defmodule MyspaceIpfs.Refs do
           Err: String.t()
         }
 
-  @typep okmapped :: MyspaceIpfs.okmapped()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
   @typep opts :: MyspaceIpfs.opts()
   @typep path :: MyspaceIpfs.path()
 
@@ -31,7 +31,7 @@ defmodule MyspaceIpfs.Refs do
 
   Response is a list of Refs.t().
   """
-  @spec local :: okmapped
+  @spec local :: {:ok, any} | api_error
   def local,
     do:
       post_query("/refs/local")
@@ -43,7 +43,7 @@ defmodule MyspaceIpfs.Refs do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-refs
   """
-  @spec refs(path, opts) :: okmapped
+  @spec refs(path, opts) :: {:ok, any} | api_error
   def refs(path, opts \\ []),
     do:
       post_query("/refs?arg=" <> path, query: opts)

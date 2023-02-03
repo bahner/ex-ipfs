@@ -28,29 +28,13 @@ defmodule MyspaceIpfs.Api do
   @typep multipart :: Tesla.Multipart.t()
 
   @typedoc """
-  The structure of a normal response from the node.
+  The response from the API. It can be a binary, a map, a list or an error.
   """
-  @type tesla_error :: {:error, Tesla.Env.t()} | {:error, atom}
+  @type api_response :: binary | map | list | api_error
   @typedoc """
-  The structure of an error response from the node.
+  The error response from the API after we have handle it.
   """
-  @type tesla_ok :: {:ok, Tesla.Env.t()}
-  @typedoc """
-  The structure of a normal response from the node.
-  """
-  @type tesla_response :: tesla_ok | tesla_error
-  @typedoc """
-  The structure of a normal response from the node.
-  """
-  @type okresult :: {:ok, any} | tesla_error
-  @typedoc """
-  The structure of a JSON response from the node.
-  """
-  @type result :: any | tesla_error
-  @typedoc """
-  A simple :ok or :error response from the node.
-  """
-  @type ok :: {:ok} | tesla_error
+  @type api_error :: {:error, MyspaceIpfs.ApiError.t()} | {:error, Tesla.Env.t()} | {:error, atom}
 
   @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0/")
 
@@ -58,8 +42,6 @@ defmodule MyspaceIpfs.Api do
   plug(Tesla.Middleware.BaseUrl, @api_url)
   plug(Tesla.Middleware.JSON)
   plug(Tesla.Middleware.Logger)
-  # ??
-  plug(Tesla.Middleware.Timeout, timeout: 60_000)
 
   @doc """
   High level function allowing to perform POST requests to the node.
@@ -67,7 +49,7 @@ defmodule MyspaceIpfs.Api do
   dependent on the endpoint that will get hit.
   NB! This is not a GET request, but a POST request. IPFS uses POST requests.
   """
-  @spec post_query(path, opts) :: okresult
+  @spec post_query(path, opts) :: api_response
   def post_query(path, opts \\ []) do
     post(path, <<>>, opts)
     |> handle_response()
@@ -80,14 +62,13 @@ defmodule MyspaceIpfs.Api do
 
   Data is sent first, so that it can easily be part of a pipe.
   """
-  @spec post_multipart(multipart, binary, list) ::
-          tesla_response
+  @spec post_multipart(multipart, binary, list) :: api_response
   def post_multipart(mp, path, opts \\ []) do
     post(path, mp, opts)
     |> handle_response()
   end
 
-  @spec handle_response({:ok, Tesla.Env.t()}) :: tesla_response
+  @spec handle_response({:ok, Tesla.Env.t()}) :: api_response
   def handle_response(response) do
     # Handles the response from the node. It returns the body of the response
     # if the status code is 200, otherwise it returns an error tuple.

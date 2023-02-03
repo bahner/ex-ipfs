@@ -130,15 +130,37 @@ defmodule MyspaceIpfs.Peers do
   """
   defstruct peers: []
 
-  @typep path :: MyspaceIpfs.path()
-
   @type t :: %__MODULE__{
-          peers: list[path] | nil
+          peers: list | nil
         }
   @spec new(map) :: MyspaceIpfs.Peers.t()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       peers: opts.peers
+    }
+  end
+
+  # Pass on errors.
+  @spec new({:error, any}) :: {:error, any}
+  def new({:error, data}), do: {:error, data}
+end
+
+defmodule MyspaceIpfs.Path do
+  @moduledoc """
+  A struct that a resolved IPFS/IPNS path.
+  """
+  defstruct path: nil
+
+  @typep path :: MyspaceIpfs.path()
+
+  @type t :: %__MODULE__{
+          path: path | nil
+        }
+
+  @spec new(map) :: MyspaceIpfs.Path.t()
+  def new(opts) when is_map(opts) do
+    %__MODULE__{
+      path: opts["Path"]
     }
   end
 

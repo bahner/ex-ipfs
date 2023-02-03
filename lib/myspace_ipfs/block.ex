@@ -7,10 +7,10 @@ defmodule MyspaceIpfs.Block do
   alias MyspaceIpfs.ErrorHash
   alias MyspaceIpfs.KeySize
 
-  @typep okmapped :: MySpaceIPFS.okmapped()
-  @typep opts :: MySpaceIPFS.opts()
-  @typep cid :: MySpaceIPFS.cid()
-  @typep fspath :: MySpaceIPFS.fspath()
+  @type api_error :: MyspaceIpfs.Api.api_error()
+  @typep opts :: MyspaceIpfs.opts()
+  @typep cid :: MyspaceIpfs.cid()
+  @typep fspath :: MyspaceIpfs.fspath()
 
   @doc """
   Get a raw IPFS block.
@@ -19,7 +19,7 @@ defmodule MyspaceIpfs.Block do
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-get
   `cid` - The CID of the block to get.
   """
-  @spec get(cid) :: okmapped()
+  @spec get(cid) :: {:ok, any} | api_error()
   def get(cid) do
     post_query("/block/get?arg=" <> cid)
     |> okify()
@@ -43,7 +43,7 @@ defmodule MyspaceIpfs.Block do
   ]
   ```
   """
-  @spec put(any, opts) :: okmapped
+  @spec put(any, opts) :: {:ok, any} | api_error()
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/block/put", query: opts)
@@ -70,7 +70,7 @@ defmodule MyspaceIpfs.Block do
   ]
   ```
   """
-  @spec put_file(fspath, opts) :: okmapped
+  @spec put_file(fspath, opts) :: {:ok, any} | api_error()
   def put_file(file, opts \\ []) do
     multipart(file)
     |> post_multipart("/block/put", query: opts)
@@ -94,7 +94,7 @@ defmodule MyspaceIpfs.Block do
   ]
   ```
   """
-  @spec rm(cid) :: okmapped()
+  @spec rm(cid) :: {:ok, any} | api_error()
   def rm(cid) do
     post_query("/block/rm?arg=" <> cid)
     |> snake_atomize()
@@ -109,7 +109,7 @@ defmodule MyspaceIpfs.Block do
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-stat
   `cid` - The CID of the block to stat.
   """
-  @spec stat(cid) :: okmapped()
+  @spec stat(cid) :: {:ok, any} | api_error()
   def stat(cid) do
     post_query("/block/stat?arg=" <> cid)
     |> snake_atomize()

@@ -7,14 +7,14 @@ defmodule MyspaceIpfs.Commands do
   import MyspaceIpfs.Utils
   alias MyspaceIpfs.CommandsCommand
 
-  @typep okmapped :: MySpaceIPFS.okmapped()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
 
   @doc """
   List all available commands.
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-commands
 
   """
-  @spec commands() :: okmapped()
+  @spec commands() :: {:ok, any} | api_error
   def commands() do
     post_query("/commands")
     |> snake_atomize()
@@ -34,7 +34,7 @@ defmodule MyspaceIpfs.Commands do
   `shell` - The shell to generate the autocompletion script for. Currently
   `bash` and `fish` are supported.
   """
-  @spec completion(binary) :: okmapped()
+  @spec completion(binary) :: {:ok, any} | api_error
   def completion(shell) do
     System.cmd("ipfs", ["commands", "completion", shell])
     |> elem(0)

@@ -5,7 +5,7 @@ defmodule MyspaceIpfs.Name do
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
 
-  @typep okresult :: MyspaceIpfs.okresult()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
   @typep path :: MyspaceIpfs.path()
   @typep opts :: MyspaceIpfs.opts()
 
@@ -29,7 +29,7 @@ defmodule MyspaceIpfs.Name do
   ]
   ```
   """
-  @spec publish(path, opts) :: okresult
+  @spec publish(path, opts) :: {:ok, any} | api_error()
   def publish(path, opts \\ []),
     do:
       post_query("/name/publish?arg=" <> path, query: opts)
@@ -53,7 +53,7 @@ defmodule MyspaceIpfs.Name do
   ]
   ```
   """
-  @spec resolve(path, opts) :: okresult
+  @spec resolve(path, opts) :: {:ok, any} | api_error()
   def resolve(path, opts \\ []),
     do:
       post_query("/name/resolve?arg=" <> path, query: opts)
@@ -66,7 +66,7 @@ defmodule MyspaceIpfs.Name do
   https://docs.ipfs.io/reference/http/api/#api-v0-pubsub-cancel
     `topic` - The topic to cancel the subscription to.
   """
-  @spec pubsub_cancel(binary) :: okresult
+  @spec pubsub_cancel(binary) :: {:ok, any} | api_error()
   def pubsub_cancel(topic) do
     # with {:ok, base64topic} <- Multibase.encode(topic) do
     post_query("/name/pubsub/cancel?arg=#{topic}")
@@ -76,7 +76,7 @@ defmodule MyspaceIpfs.Name do
   @doc """
   Show the current pubsub state.
   """
-  @spec pubsub_state :: okresult
+  @spec pubsub_state :: {:ok, any} | api_error()
   def pubsub_state do
     post_query("/name/pubsub/state")
     |> okify()
@@ -85,7 +85,7 @@ defmodule MyspaceIpfs.Name do
   @doc """
   Show the current pubsub subscribers.
   """
-  @spec pubsub_subs :: okresult
+  @spec pubsub_subs :: {:ok, any} | api_error()
   def pubsub_subs do
     post_query("/name/pubsub/subs")
     |> okify()

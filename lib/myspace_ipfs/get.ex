@@ -10,7 +10,7 @@ defmodule MyspaceIpfs.Get do
   @typep path :: MyspaceIpfs.path()
   @typep fspath :: MyspaceIpfs.fspath()
   @typep opts :: MyspaceIpfs.opts()
-  @typep tesla_error :: MyspaceIpfs.tesla_error()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
 
   @typep t :: %__MODULE__{
            path: path,
@@ -23,7 +23,7 @@ defmodule MyspaceIpfs.Get do
   @doc """
   Get a file from IPFS and write it to a file or directory.
   """
-  @spec get(path, opts) :: {:ok, fspath} | tesla_error
+  @spec get(path, opts) :: {:ok, fspath} | api_error
   def get(path, opts \\ []) do
     content = get_get_data(path, opts)
 

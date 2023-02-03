@@ -6,7 +6,7 @@ defmodule MyspaceIpfs.Routing do
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
 
-  @typep okresult :: MyspaceIpfs.okresult()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
   @typep peer_id :: MyspaceIpfs.peer_id()
   @typep opts :: MyspaceIpfs.opts()
   @typep name :: MyspaceIpfs.name()
@@ -18,7 +18,7 @@ defmodule MyspaceIpfs.Routing do
   https://docs.ipfs.io/reference/http/api/#api-v0-routing-findpeer
     verbose - <bool>, # Write extra information.
   """
-  @spec findpeer(peer_id, opts) :: okresult
+  @spec findpeer(peer_id, opts) :: {:ok, any} | api_error()
   def findpeer(peer_id, opts \\ []) do
     post_query("/routing/findpeer?arg=#{peer_id}", query: opts)
     |> okify()
@@ -32,7 +32,7 @@ defmodule MyspaceIpfs.Routing do
     verbose - <bool>, # Write extra information.
     num-providers - <int>, # The number of providers to find.
   """
-  @spec findprovs(peer_id, opts) :: okresult
+  @spec findprovs(peer_id, opts) :: {:ok, any} | api_error()
   def findprovs(cid, opts \\ []) do
     post_query("/routing/findprovs?arg=#{cid}", query: opts)
     |> okify()
@@ -46,7 +46,7 @@ defmodule MyspaceIpfs.Routing do
     recursive - <bool>, # Recursively provide entire graph.
     verbose - <bool>, # Write extra information.
   """
-  @spec provide(name, opts) :: okresult
+  @spec provide(name, opts) :: {:ok, any} | api_error()
   def provide(name, opts \\ []) do
     post_query("/routing/provide?arg=#{name}", query: opts)
     |> okify()
@@ -62,7 +62,7 @@ defmodule MyspaceIpfs.Routing do
   https://docs.ipfs.io/reference/http/api/#api-v0-routing-put
     verbose - <bool>, # Write extra information.
   """
-  @spec put(name, binary, opts) :: okresult
+  @spec put(name, binary, opts) :: {:ok, any} | api_error()
   def put(key, value, opts \\ []) do
     multipart_content(value)
     |> post_multipart("/routing/put?arg=" <> key, query: opts)

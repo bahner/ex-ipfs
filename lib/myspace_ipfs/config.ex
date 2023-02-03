@@ -6,9 +6,9 @@ defmodule MyspaceIpfs.Config do
   import MyspaceIpfs.Utils
 
   @typep name :: MyspaceIpfs.name()
-  @typep result :: MyspaceIpfs.result()
   @typep opts :: MyspaceIpfs.opts()
   @typep fspath :: MyspaceIpfs.fspath()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
 
   @doc """
   Get the value of a config key.
@@ -26,19 +26,22 @@ defmodule MyspaceIpfs.Config do
   ]
   ```
   """
-  @spec config(name, name, opts) :: result
+  # FIXME: clean up this mess
   def config(key, value \\ nil, opts \\ [])
 
+  @spec config(name, name, opts) :: {:ok, any} | api_error
   def config(key, value, opts) when is_bitstring(key) and is_bitstring(value) do
     post_query("/config?arg=" <> key <> "&arg=" <> value, query: opts)
     |> okify()
   end
 
+  @spec config(name, name, opts) :: {:ok, any} | api_error
   def config(key, value, opts) when is_bitstring(key) and is_nil(value) do
     post_query("/config?arg=" <> key, query: opts)
     |> okify()
   end
 
+  @spec config(name, name, opts) :: {:ok, any} | api_error
   def config(key, _value, opts) when is_bitstring(key) and is_list(opts) do
     post_query("/config?arg=" <> key, query: opts)
     |> okify()
@@ -58,7 +61,7 @@ defmodule MyspaceIpfs.Config do
   ]
   ```
   """
-  @spec profile_apply(name, opts) :: result
+  @spec profile_apply(name, opts) :: {:ok, any} | api_error
   def profile_apply(profile, opts \\ []) when is_bitstring(profile) do
     post_query("/config/profile/apply?arg=" <> profile, query: opts)
     |> okify()
@@ -70,7 +73,7 @@ defmodule MyspaceIpfs.Config do
   ## Parameters
   fspath: The path to the config file to use.
   """
-  @spec replace(fspath) :: result
+  @spec replace(fspath) :: {:ok, any} | api_error
   def replace(fspath) do
     multipart(fspath)
     |> post_multipart("/config/replace")
@@ -80,7 +83,7 @@ defmodule MyspaceIpfs.Config do
   @doc """
   Show the current config.
   """
-  @spec show() :: result
+  @spec show() :: {:ok, any} | api_error
   def show() do
     post_query("/config/show")
     |> okify()

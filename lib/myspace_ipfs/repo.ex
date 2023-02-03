@@ -5,7 +5,7 @@ defmodule MyspaceIpfs.Repo do
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
 
-  @typep okresult :: MyspaceIpfs.okresult()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
   @typep opts :: MyspaceIpfs.opts()
 
   @doc """
@@ -17,7 +17,7 @@ defmodule MyspaceIpfs.Repo do
     quiet <bool>, # Write minimal output.
     silent <bool>, # Write no output.
   """
-  @spec gc(opts) :: okresult
+  @spec gc(opts) :: {:ok, any} | api_error()
   def gc(opts \\ []) do
     post_query("/repo/gc", query: opts)
     |> okify()
@@ -26,7 +26,7 @@ defmodule MyspaceIpfs.Repo do
   @doc """
   List all local repo blocks.
   """
-  @spec ls :: okresult
+  @spec ls :: {:ok, any} | api_error()
   def ls() do
     post_query("/repo/ls")
     |> okify()
@@ -39,7 +39,7 @@ defmodule MyspaceIpfs.Repo do
   https://docs.ipfs.io/reference/http/api/#api-v0-repo-migrate
     allow-downgrade - <bool>, # Allow downgrading repo version.
   """
-  @spec migrate(opts) :: okresult
+  @spec migrate(opts) :: {:ok, any} | api_error()
   def migrate(opts \\ []) do
     post_query("/repo/migrate", query: opts)
     |> okify()
@@ -53,7 +53,7 @@ defmodule MyspaceIpfs.Repo do
     human - <bool>, # Output human-readable numbers.
     size-only - <bool>, # Only output the RepoSize.
   """
-  @spec stat(opts) :: okresult
+  @spec stat(opts) :: {:ok, any} | api_error()
   def stat(opts \\ []) do
     post_query("/repo/stat", query: opts)
     |> okify()
@@ -62,7 +62,7 @@ defmodule MyspaceIpfs.Repo do
   @doc """
   Verify all blocks in repo are not corrupted.
   """
-  @spec verify :: okresult
+  @spec verify :: {:ok, any} | api_error()
   def verify do
     post_query("/repo/verify")
     |> okify()
@@ -75,7 +75,7 @@ defmodule MyspaceIpfs.Repo do
   https://docs.ipfs.io/reference/http/api/#api-v0-repo-version
     quiet - <bool>, # Write minimal output.
   """
-  @spec version(opts) :: okresult
+  @spec version(opts) :: {:ok, any} | api_error()
   def version(opts \\ []) do
     post_query("/repo/version", query: opts)
     |> okify()

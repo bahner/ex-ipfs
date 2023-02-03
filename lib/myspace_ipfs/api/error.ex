@@ -24,9 +24,9 @@ defmodule MyspaceIpfs.ApiError do
   @spec new(map) :: MyspaceIpfs.ApiError.t()
   def new(map) do
     %MyspaceIpfs.ApiError{
-      code: map.code,
-      message: map.message,
-      type: map.type
+      code: map["Code"],
+      message: map["Message"],
+      type: map["Type"]
     }
   end
 
@@ -38,7 +38,6 @@ defmodule MyspaceIpfs.ApiError do
     Logger.debug("IPFS error: #{inspect(body)}")
 
     body
-    |> snake_atomize()
     |> new()
     |> errify()
   end

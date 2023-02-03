@@ -10,9 +10,10 @@ defmodule MyspaceIpfs.Cid do
   alias MyspaceIpfs.MultiCodec
   alias MyspaceIpfs.CidCid
 
-  @typep okmapped :: MySpaceIPFS.okmapped()
-  @typep opts :: MySpaceIPFS.opts()
-  @typep cid :: MySpaceIPFS.cid()
+  @typep opts :: MyspaceIpfs.opts()
+  @typep cid :: MyspaceIpfs.cid()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
+  @type multibase_codec :: MyspaceIpfs.MultibaseCodec.t()
 
   @doc """
   Convert to base32 CID version 1.
@@ -22,7 +23,7 @@ defmodule MyspaceIpfs.Cid do
   `cid` - The CID to convert to base32.
   """
 
-  @spec base32(binary) :: okmapped()
+  @spec base32(binary) :: {:ok, any} | api_error
   def base32(cid),
     do:
       post_query("/cid/base32?arg=" <> cid)
@@ -33,7 +34,7 @@ defmodule MyspaceIpfs.Cid do
   List available multibase encodings.
 
   """
-  @spec bases(opts) :: okmapped()
+  @spec bases(opts) :: {:ok, any} | api_error
   def bases(opts \\ []),
     do:
       post_query("/cid/bases", query: opts)
@@ -50,7 +51,7 @@ defmodule MyspaceIpfs.Cid do
   `numeric` <bool> - Show codec numeric code.
   `supported` <bool> - Show only supported codecs.
   """
-  @spec codecs(opts) :: {:ok, [MultibaseCodec.t()]} | {:error, any()}
+  @spec codecs(opts) :: {:ok, [multibase_codec]} | api_error
   def codecs(opts \\ []),
     do:
       post_query("/cid/codecs", query: opts)
@@ -71,7 +72,7 @@ defmodule MyspaceIpfs.Cid do
   `b` <string> - Multibase to display CID in.
   `mc` <string> - Multicodec.
   """
-  @spec format(cid, opts) :: okmapped()
+  @spec format(cid, opts) :: {:ok, any} | api_error
   def format(cid, opts \\ []),
     do:
       post_query("/cid/format?arg=" <> cid, query: opts)
@@ -86,7 +87,7 @@ defmodule MyspaceIpfs.Cid do
 
   `supported` <bool> - Show only supported hashes.
   """
-  @spec hashes(opts) :: okmapped()
+  @spec hashes(opts) :: {:ok, any} | api_error
   def hashes(opts \\ []),
     do:
       post_query("/cid/hashes", query: opts)

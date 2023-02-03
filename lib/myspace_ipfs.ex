@@ -13,10 +13,17 @@ defmodule MyspaceIpfs do
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
 
-  # Types
+  @typep api_error :: MyspaceIpfs.Api.api_error()
+  @typep api_response :: MyspaceIpfs.Api.api_response()
 
-  @typep okresult :: MyspaceIpfs.Api.okresult()
-  @typep result :: MyspaceIpfs.Api.result()
+  @typedoc """
+  The name of the file or data to be sent to the node. Sometimes you cant't
+  use paths, but have to use a cid. This is because prefixes like /ipfs/ or
+  /ipns/ are not allowed.
+
+  Not sure how to verify this type.
+  """
+  @type name :: binary
 
   @typedoc """
   The name of the file or data to be sent to the node. Sometimes you cant't
@@ -37,10 +44,12 @@ defmodule MyspaceIpfs do
   @type fspath :: Path.t()
 
   @typedoc """
-  The options to be sent to the node. These are dependent on the endpoint.
-  it's because prefixes like /ipfs/ or /ipns/ are not allowed.
+  The query options to be sent to the node.
+
+  Thi smeans your canæt send tesla: timeout or things like that.
   """
   @type opts :: list
+
   @typedoc """
   The path to the endpoint to be hit. For example, `/add` or `/cat`.
   It's called path because sometimes the MultiHash is not enough to
@@ -117,7 +126,8 @@ defmodule MyspaceIpfs do
   ]
   ```
   """
-  @spec resolve(path, opts) :: okresult
+  # FIXME: Path need sto be compile for testing
+  @spec resolve(path, opts) :: {:ok, MyspaceIpfs.Path.t()} | api_error
   def resolve(path, opts \\ []),
     do:
       post_query("/resolve?arg=" <> path, query: opts)
@@ -134,7 +144,8 @@ defmodule MyspaceIpfs do
 
 
   """
-  @spec add(fspath, opts) :: okresult
+  # FIXME return a struct
+  @spec add(fspath, opts) :: api_response
   def add(fspath, opts \\ []),
     do:
       multipart(fspath)
@@ -160,7 +171,7 @@ defmodule MyspaceIpfs do
   If you feel that you need more timeouts, you can use the `:timeout` option in the `opts` list.
   But the default should be enough for most cases. More likely your content isn't available....
   """
-  @spec get(path, opts) :: okresult
+  @spec get(path, opts) :: api_response
   defdelegate get(path, opts \\ []), to: MyspaceIpfs.Get
 
   @doc """
@@ -177,7 +188,8 @@ defmodule MyspaceIpfs do
   ]
   ```
   """
-  @spec cat(path, opts) :: result
+  # FIXME: return a struct
+  @spec cat(path, opts) :: api_response
   def cat(path, opts \\ []),
     do: post_query("/cat?arg=" <> path, query: opts)
 
@@ -217,7 +229,8 @@ defmodule MyspaceIpfs do
   }
   ```
   """
-  @spec ls(path, opts) :: okresult
+  # FIXME: return a struct
+  @spec ls(path, opts) :: api_response
   def ls(path, opts \\ []),
     do:
       post_query("/ls?arg=" <> path, query: opts)
@@ -235,7 +248,8 @@ defmodule MyspaceIpfs do
     - ProtocolVersion: the protocol version of the node.
     - Protocols: the protocols of the node.
   """
-  @spec id :: okresult
+  # FIXME: return a struct
+  @spec id :: api_response
   def id,
     do:
       post_query("/id")
@@ -256,6 +270,7 @@ defmodule MyspaceIpfs do
   ]
   ```
   """
+  # FIXME verify return type
   @spec(ping(pid, peer_id, atom | integer, opts) :: :ignore | {:ok, pid}, {:error, reason})
   def ping(pid, peer, timeout \\ 10, opts \\ []),
     do: MyspaceIpfs.Ping.start_link(pid, peer, timeout, opts)
@@ -272,7 +287,8 @@ defmodule MyspaceIpfs do
   ]
   ```
   """
-  @spec mount(opts) :: okresult
+  # FIXME veridy return type
+  @spec mount(opts) :: api_response
   def mount(opts \\ []),
     do:
       post_query("/mount", query: opts)

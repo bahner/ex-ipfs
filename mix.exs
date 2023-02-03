@@ -31,14 +31,15 @@ defmodule MyspaceIpfs.Mixfile do
 
   defp deps do
     [
-      {:hackney, "~> 1.13"},
+      {:hackney, "~> 1.18"},
       {:jason, "~> 1.4"},
       {:nanoid, "~> 2.0"},
       {:recase, "~> 0.7.0"},
-      {:tesla, "~> 1.4"},
+      {:tesla, "~> 1.5"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.15", only: :test, runtime: false},
-      {:ex_doc, "~> 0.29", only: :dev, runtime: false}
+      {:dialyxir, "~> 1.2", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.29", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.15", only: :test, runtime: false}
     ]
   end
 

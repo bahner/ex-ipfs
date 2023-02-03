@@ -9,14 +9,15 @@ defmodule MyspaceIpfs.Bitswap do
   alias MyspaceIpfs.BitswapLedger
   require Logger
 
-  @typep okresult :: MySpaceIPFS.okresult()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
+  @typep api_response :: MyspaceIpfs.Api.api_response()
   @typep peer_id :: MyspaceIpfs.peer_id()
   @type wantlist :: MyspaceIpfs.BitswapWantList.t()
   @type stat :: MyspaceIpfs.BitswapStat.t()
   @type ledger() :: MyspaceIpfs.BitswapLedger.t()
   @typep opts :: MyspaceIpfs.opts()
 
-  @spec reprovide(timeout) :: :okresult
+  @spec reprovide(timeout) :: :ok
   @doc """
   Reprovide blocks to the network.
 
@@ -43,14 +44,14 @@ defmodule MyspaceIpfs.Bitswap do
 
   `peer` - The peer ID to get the wantlist for. Optional.
   """
-  @spec wantlist() :: okresult()
+  @spec wantlist() :: {:ok, wantlist} | api_error()
   def wantlist() do
     post_query("/bitswap/wantlist")
     |> BitswapWantList.new()
     |> okify()
   end
 
-  @spec wantlist(peer_id) :: {:ok, wantlist} | {:error, String.t()}
+  @spec wantlist(peer_id) :: {:ok, wantlist} | api_error()
   def wantlist(peer) do
     post_query("/bitswap/wantlist?peer=" <> peer)
     |> BitswapWantList.new()
@@ -69,7 +70,7 @@ defmodule MyspaceIpfs.Bitswap do
   ]
   ```
   """
-  @spec stat(opts) :: {:ok, [stat]} | {:error, any()}
+  @spec stat(opts) :: {:ok, [stat]} | api_response
   def stat(opts \\ []) do
     post_query("/bitswap/stat", query: opts)
     |> BitswapStat.new()
@@ -84,7 +85,7 @@ defmodule MyspaceIpfs.Bitswap do
 
   `peer` - The peer ID to get the ledger for.
   """
-  @spec ledger(peer_id) :: {:ok, [ledger]} | {:error, any()}
+  @spec ledger(peer_id) :: {:ok, [ledger]} | api_error
   def ledger(peer) do
     post_query("/bitswap/ledger?arg=" <> peer)
     |> BitswapLedger.new()

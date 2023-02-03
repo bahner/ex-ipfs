@@ -5,7 +5,7 @@ defmodule MyspaceIpfs.Key do
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
 
-  @typep okresult :: MyspaceIpfs.okresult()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
   @typep opts :: MyspaceIpfs.opts()
   @typep name :: MyspaceIpfs.name()
   @typep fspath :: MyspaceIpfs.fspath()
@@ -26,7 +26,7 @@ defmodule MyspaceIpfs.Key do
   ]
   ```
   """
-  @spec export(name, fspath | atom, opts) :: okresult
+  @spec export(name, fspath | atom, opts) :: {:ok, any} | api_error()
   def export(key, output \\ :memory, opts \\ []) do
     key = post_query("/key/export?arg=" <> key, query: opts)
 
@@ -52,7 +52,7 @@ defmodule MyspaceIpfs.Key do
   ]
   ```
   """
-  @spec gen(name, opts) :: okresult
+  @spec gen(name, opts) :: {:ok, any} | api_error()
   def gen(key, opts \\ []) do
     post_query("/key/gen?arg=" <> key, query: opts)
     |> okify()
@@ -74,7 +74,7 @@ defmodule MyspaceIpfs.Key do
   ]
   ```
   """
-  @spec import(name, binary, opts) :: okresult
+  @spec import(name, binary, opts) :: {:ok, any} | api_error()
   def import(name, key, opts \\ []) do
     multipart_content(key)
     |> post_multipart("/key/import?arg=" <> name, query: opts)
@@ -92,7 +92,7 @@ defmodule MyspaceIpfs.Key do
   ]
   ```
   """
-  @spec list(opts) :: okresult
+  @spec list(opts) :: {:ok, any} | api_error()
   def list(opts \\ []) do
     post_query("/key/list", query: opts)
     |> okify()
@@ -114,7 +114,7 @@ defmodule MyspaceIpfs.Key do
   ]
   ```
   """
-  @spec rename(name, name, opts) :: okresult
+  @spec rename(name, name, opts) :: {:ok, any} | api_error()
   def rename(old, new, opts \\ []) do
     post_query("/key/rename?arg=" <> old <> "&arg=" <> new, query: opts)
     |> okify()
@@ -135,7 +135,7 @@ defmodule MyspaceIpfs.Key do
   ]
   ```
   """
-  @spec rm(name, opts) :: okresult
+  @spec rm(name, opts) :: {:ok, any} | api_error()
   def rm(key, opts \\ []) do
     post_query("/key/rm?arg=" <> key, query: opts)
     |> okify()
@@ -156,7 +156,7 @@ defmodule MyspaceIpfs.Key do
   ]
   ```
   """
-  @spec rotate(name, opts) :: okresult
+  @spec rotate(name, opts) :: {:ok, any} | api_error()
   def rotate(oldkey, opts \\ []) do
     post_query("/key/rotate?arg=" <> oldkey, query: opts)
     |> okify()

@@ -8,7 +8,7 @@ defmodule MyspaceIpfs.CommandsCommand do
   @type t :: %__MODULE__{
           name: binary,
           options: list,
-          subcommands: list[t]
+          subcommands: list
         }
 
   require Logger
@@ -33,7 +33,7 @@ defmodule MyspaceIpfs.CommandsCommand do
   @doc """
   Generate command struct subcommands of a command object
   """
-  @spec gen_commands(map) :: list[t]
+  @spec gen_commands(map) :: MyspaceIpfs.CommandsCommand.t() | list
   def gen_commands(command) when is_map(command) do
     if has_subcommands?(command) do
       Logger.debug("Generating subcommands for #{command.name}")
@@ -43,10 +43,6 @@ defmodule MyspaceIpfs.CommandsCommand do
       new(command)
     end
   end
-
-  # defp has_subcommands?(command) when is_list(command) do
-  #   command != []
-  # end
 
   defp has_subcommands?(command) when is_map(command) do
     Map.has_key?(command, :subcommands) && command.subcommands != []

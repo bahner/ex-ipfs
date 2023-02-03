@@ -5,13 +5,13 @@ defmodule MyspaceIpfs.Filestore do
   import MyspaceIpfs.Api
   import MyspaceIpfs.Utils
 
-  @typep okresult :: MyspaceIpfs.okresult()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
   @typep opts :: MyspaceIpfs.opts()
 
   @doc """
   List blocks that are both in the filestore and standard block storage.
   """
-  @spec dups() :: okresult
+  @spec dups() :: {:ok, any} | api_error()
   def dups do
     post_query("/filestore/dups")
     |> okify()
@@ -29,7 +29,7 @@ defmodule MyspaceIpfs.Filestore do
   ]
   ```
   """
-  @spec ls(opts) :: okresult
+  @spec ls(opts) :: {:ok, any} | api_error()
   def ls(opts \\ []) do
     post_query("/filestore/ls", query: opts)
     |> okify()
@@ -47,7 +47,7 @@ defmodule MyspaceIpfs.Filestore do
   ]
   ```
   """
-  @spec verify(opts) :: okresult
+  @spec verify(opts) :: {:ok, any} | api_error()
   def verify(opts \\ []) do
     post_query("/filestore/verify", query: opts)
     |> okify()

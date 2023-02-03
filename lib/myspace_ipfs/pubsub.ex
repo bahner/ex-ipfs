@@ -6,32 +6,25 @@ defmodule MyspaceIpfs.PubSub do
   import MyspaceIpfs.Utils
   alias MyspaceIpfs.Multibase
 
-  @typep okresult :: MyspaceIpfs.okresult()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
 
   @doc """
   List the topics you are currently subscribed to.
   """
-  @spec ls :: okresult
+  # FIXME: The stringlist should probably be a struct, which can handle the decoding.
+  @spec ls :: {:ok, any} | api_error()
   def ls do
     post_query("/pubsub/ls")
+    |> decode_string_list()
     |> okify()
   end
 
-  @doc """
-  List the topics you are currently subscribed to
-  and decode the base64 encoded topic names, if needed.
-  """
-  @spec ls(:decode) :: okresult
-  def ls(:decode) do
-    post_query("/pubsub/ls")
-    |> decode_topic()
-    |> okify()
-  end
-
-  defp decode_topic(topic) do
-    case Multibase.decode(topic) do
-      {:ok, decoded_topic} -> decoded_topic
-      _ -> topic
+  # Pull out the string list from the response and decode it.
+  # The recreate the map with the decoded list.
+  defp decode_string_list(map) when is_map(map) do
+    with strings <- map["Strings"] do
+      Enum.map(strings, &Multibase.decode!/1)
+      |> (fn x -> %{"Strings" => x} end).()
     end
   end
 
@@ -42,7 +35,7 @@ defmodule MyspaceIpfs.PubSub do
   https://docs.ipfs.io/reference/http/api/#api-v0-pubsub-peers
     `topic` - The topic to list peers for.
   """
-  @spec peers(binary) :: okresult
+  @spec peers(binary) :: {:ok, any} | api_error()
   def peers(topic) do
     base64topic = Multibase.encode(topic)
 
@@ -67,7 +60,7 @@ defmodule MyspaceIpfs.PubSub do
 
   """
 
-  @spec pub(binary, binary) :: okresult
+  @spec pub(binary, binary) :: {:ok, any} | api_error()
   def pub(data, topic) do
     with {:ok, base64topic} <- Multibase.encode(topic) do
       multipart_content(data, "data")
@@ -86,7 +79,8 @@ defmodule MyspaceIpfs.PubSub do
     `topic` - The topic to subscribe to.
     `pid`   - The process to send the messages to.
   """
-  @spec sub(pid, binary) :: any
+  # FIXME: what does genserver return?
+  @spec sub(pid, binary) :: any | api_error()
   def sub(pid, topic) do
     MyspaceIpfs.PubSubChannel.start_link(pid, topic)
   end

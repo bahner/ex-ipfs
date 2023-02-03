@@ -7,7 +7,7 @@ defmodule MyspaceIpfs.Multibase do
   import MyspaceIpfs.Utils
   alias MyspaceIpfs.MultibaseCodec
 
-  @typep okresult :: MyspaceIpfs.okresult()
+  @typep api_error :: MyspaceIpfs.Api.api_error()
   @typep opts :: MyspaceIpfs.opts()
 
   @doc """
@@ -16,11 +16,23 @@ defmodule MyspaceIpfs.Multibase do
   ## Parameters
     `data` - Data to decode.
   """
-  @spec decode(binary) :: okresult
+  @spec decode(binary) :: {:ok, any} | api_error()
   def decode(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
     |> okify()
+  end
+
+  @doc """
+  Decode a multibase encoded string.
+
+  ## Parameters
+    `data` - Data to decode.
+  """
+  @spec decode!(binary) :: any | api_error()
+  def decode!(data) do
+    multipart_content(data)
+    |> post_multipart("/multibase/decode")
   end
 
   @doc """
@@ -29,7 +41,7 @@ defmodule MyspaceIpfs.Multibase do
   ## Parameters
     `data` - File to decode.
   """
-  @spec decode_file(Path.t()) :: okresult
+  @spec decode_file(Path.t()) :: {:ok, any} | api_error()
   def decode_file(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
@@ -45,7 +57,7 @@ defmodule MyspaceIpfs.Multibase do
   ## Options
     `b` - Multibase encoding to use.
   """
-  @spec encode(binary, opts) :: okresult
+  @spec encode(binary, opts) :: {:ok, any} | api_error()
   def encode(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/multibase/encode", query: opts)
@@ -59,7 +71,7 @@ defmodule MyspaceIpfs.Multibase do
     prefix - Only list encodings with the given prefix.
     numeric - Only list encodings with the given numeric code.
   """
-  @spec list(opts) :: okresult
+  @spec list(opts) :: {:ok, any} | api_error()
   def list(opts \\ []) do
     post_query("/multibase/list", query: opts)
     |> filter_empties()
@@ -77,7 +89,7 @@ defmodule MyspaceIpfs.Multibase do
   ## Options
     `b` - Multibase encoding to use
   """
-  @spec transcode(binary, opts) :: okresult
+  @spec transcode(binary, opts) :: {:ok, any} | api_error()
   def transcode(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/multibase/transcode", query: opts)
