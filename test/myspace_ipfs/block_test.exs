@@ -1,37 +1,37 @@
-defmodule MyspaceIpfs.BlockTest do
+defmodule BlockTest do
   @moduledoc """
-  Test the MyspaceIpfs API
+  Test the MyspaceIPFS API
 
-  This test suite is designed to test the MyspaceIpfs API. It is not designed to test the IPFS API
-  itself. It is designed to test the MyspaceIpfs API wrapper. This test suite is designed to be run
+  This test suite is designed to test the MyspaceIPFS API. It is not designed to test the IPFS API
+  itself. It is designed to test the MyspaceIPFS API wrapper. This test suite is designed to be run
 
   NB! The tests are not mocked. They are designed to be run against a live IPFS node. This is
   """
   use ExUnit.Case, async: true
-  alias MyspaceIpfs.Block
+  alias MyspaceIPFS.Block
 
   test "put 'heisan' returns proper keysize" do
-    {:ok, keysize} = MyspaceIpfs.Block.put("heisan")
+    {:ok, keysize} = Block.put("heisan")
     assert is_map(keysize)
-    assert %MyspaceIpfs.KeySize{} = keysize
+    assert %MyspaceIPFS.KeySize{} = keysize
     assert keysize.key === "bafkreidqdr4pgdzfhf5zrwbqhiyqdapniknge6eux74ixk77s2hintta24"
     assert keysize.size === 6
   end
 
   test "stat 'heisan' returns proper keysize" do
     {:ok, keysize} =
-      MyspaceIpfs.Block.stat("bafkreidqdr4pgdzfhf5zrwbqhiyqdapniknge6eux74ixk77s2hintta24")
+      Block.stat("bafkreidqdr4pgdzfhf5zrwbqhiyqdapniknge6eux74ixk77s2hintta24")
 
     assert is_map(keysize)
-    assert %MyspaceIpfs.KeySize{} = keysize
+    assert %MyspaceIPFS.KeySize{} = keysize
     assert keysize.key === "bafkreidqdr4pgdzfhf5zrwbqhiyqdapniknge6eux74ixk77s2hintta24"
     assert keysize.size === 6
   end
 
   test "Put file larger than 1Mb returns error" do
-    {:error, api_error} = MyspaceIpfs.Block.put_file("/bin/bash")
+    {:error, api_error} = Block.put_file("/bin/bash")
     assert is_map(api_error)
-    assert %MyspaceIpfs.ApiError{} = api_error
+    assert %MyspaceIPFS.ApiError{} = api_error
     assert api_error.code === 0
 
     assert api_error.message ===
@@ -41,15 +41,15 @@ defmodule MyspaceIpfs.BlockTest do
   end
 
   test "put large file with allow-big-block returns proper keysize" do
-    {:ok, keysize} = MyspaceIpfs.Block.put_file("/bin/bash", "allow-big-block": true)
+    {:ok, keysize} = Block.put_file("/bin/bash", "allow-big-block": true)
     assert is_map(keysize)
-    assert %MyspaceIpfs.KeySize{} = keysize
+    assert %MyspaceIPFS.KeySize{} = keysize
     assert String.starts_with?(keysize.key, "baf")
     assert is_integer(keysize.size)
   end
 
   test "get QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx returns correct block value" do
-    {:ok, block} = MyspaceIpfs.Block.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
+    {:ok, block} = Block.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     assert is_binary(block)
 
     assert block ===
@@ -58,21 +58,21 @@ defmodule MyspaceIpfs.BlockTest do
   end
 
   test "get and rm QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx" do
-    {:ok, _} = MyspaceIpfs.Block.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
-    {:ok, hash} = MyspaceIpfs.Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
+    {:ok, _} = Block.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
+    {:ok, hash} = Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     assert is_map(hash)
-    assert %MyspaceIpfs.ErrorHash{} = hash
+    assert %MyspaceIPFS.ErrorHash{} = hash
     assert hash.hash === "QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx"
   end
 
   test "repeated rm QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx give error" do
-    {:ok, _} = MyspaceIpfs.Block.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
+    {:ok, _} = Block.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     # It takes some time for the blocvk to be removed
-    {:ok, _} = MyspaceIpfs.Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
-    {:ok, _} = MyspaceIpfs.Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
-    {:ok, hash} = MyspaceIpfs.Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
+    {:ok, _} = Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
+    {:ok, _} = Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
+    {:ok, hash} = Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     assert is_map(hash)
-    assert %MyspaceIpfs.ErrorHash{} = hash
+    assert %MyspaceIPFS.ErrorHash{} = hash
     assert hash.hash === "QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx"
     assert hash.error === "ipld: could not find QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx"
   end

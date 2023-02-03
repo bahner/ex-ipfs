@@ -1,10 +1,10 @@
-defmodule MyspaceIpfs.CidCid do
+defmodule MyspaceIPFS.CidCid do
   @moduledoc """
   A struct that represents a CID as return from conversion function in IPFS.
   These structs are specific to the underlying IPFS API category.
   """
 
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Utils
 
   defstruct cid_str: nil, formatted: nil, error_msg: nil
 
@@ -23,7 +23,7 @@ defmodule MyspaceIpfs.CidCid do
     {:error, data}
   end
 
-  @spec new(map) :: MyspaceIpfs.CidCid.t()
+  @spec new(map) :: MyspaceIPFS.CidCid.t()
   def new(opts) when is_map(opts) do
     opts = snake_atomize(opts)
 

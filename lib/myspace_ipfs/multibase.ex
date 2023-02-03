@@ -1,14 +1,14 @@
-defmodule MyspaceIpfs.Multibase do
+defmodule MyspaceIPFS.Multibase do
   @moduledoc """
-  MyspaceIpfs.Multibase is where the multibase commands of the IPFS API reside.
+  MyspaceIPFS.Multibase is where the multibase commands of the IPFS API reside.
   """
 
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
-  alias MyspaceIpfs.MultibaseCodec
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
+  alias MyspaceIPFS.MultibaseCodec
 
-  @typep api_error :: MyspaceIpfs.Api.api_error()
-  @typep opts :: MyspaceIpfs.opts()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep opts :: MyspaceIPFS.opts()
 
   @doc """
   Decode a multibase encoded string.

@@ -1,9 +1,9 @@
-defmodule MyspaceIpfs.Version do
+defmodule MyspaceIPFS.Version do
   @moduledoc """
-  MyspaceIpfs.Version is a collection of functions for the MyspaceIpfs library.
+  MyspaceIPFS.Version is a collection of functions for the MyspaceIPFS library.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
   @doc """
   Get the version of the IPFS daemon.
@@ -15,20 +15,20 @@ defmodule MyspaceIpfs.Version do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-version
   """
-  @spec version() :: {:ok, MyspaceIpfs.VersionVersion.t()}
+  @spec version() :: {:ok, MyspaceIPFS.VersionVersion.t()}
   def version() do
     post_query("/version")
-    |> MyspaceIpfs.VersionVersion.new()
+    |> MyspaceIPFS.VersionVersion.new()
     |> okify()
   end
 
   @doc """
   Get the depdency versions of the IPFS daemon.
   """
-  @spec deps() :: {:ok, [MyspaceIpfs.VersionDeps.t()]}
+  @spec deps() :: {:ok, [MyspaceIPFS.VersionDeps.t()]}
   def deps() do
     post_query("/version/deps")
-    |> Enum.map(&MyspaceIpfs.VersionDeps.new/1)
+    |> Enum.map(&MyspaceIPFS.VersionDeps.new/1)
     |> okify()
   end
 end

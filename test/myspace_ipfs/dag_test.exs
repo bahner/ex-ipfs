@@ -1,19 +1,19 @@
-defmodule MyspaceIpfs.DagTest do
+defmodule MyspaceIPFS.DagTest do
   @moduledoc """
-  Test the MyspaceIpfs API
+  Test the MyspaceIPFS API
 
-  This test suite is designed to test the MyspaceIpfs API. It is not designed to test the IPFS API
-  itself. It is designed to test the MyspaceIpfs API wrapper. This test suite is designed to be run
+  This test suite is designed to test the MyspaceIPFS API. It is not designed to test the IPFS API
+  itself. It is designed to test the MyspaceIPFS API wrapper. This test suite is designed to be run
 
   NB! The tests are not mocked. They are designed to be run against a live IPFS node. This is
   """
   use ExUnit.Case, async: true
-  alias MyspaceIpfs.Dag, as: Dag
+  alias MyspaceIPFS.Dag, as: Dag
 
   test "Should return ok RootCID" do
     {:ok, root} = Dag.put("{\"Key\":\"Value\"}")
     assert is_map(root)
-    assert %MyspaceIpfs.RootCid{} = root
+    assert %MyspaceIPFS.RootCid{} = root
     assert is_bitstring(root./)
     assert root./ === "bafyreia353cr2t26iiuw5g2triyfelqehsu5peq4pn2u6t6q6oktrplzly"
   end
@@ -36,14 +36,14 @@ defmodule MyspaceIpfs.DagTest do
     assert is_map(import)
     assert is_map(import.root)
     assert is_map(import.stats)
-    assert %MyspaceIpfs.DagImport{} = import
-    assert %MyspaceIpfs.DagImportRoot{} = import.root
-    assert %MyspaceIpfs.DagImportStats{} = import.stats
+    assert %MyspaceIPFS.DagImport{} = import
+    assert %MyspaceIPFS.DagImportRoot{} = import.root
+    assert %MyspaceIPFS.DagImportStats{} = import.stats
     assert import.root.cid./ === "bafyreia353cr2t26iiuw5g2triyfelqehsu5peq4pn2u6t6q6oktrplzly"
     assert import.root.pin_error_msg === ""
     assert is_integer(import.stats.block_bytes_count)
     assert is_integer(import.stats.block_count)
   end
 
-  doctest MyspaceIpfs.Dag
+  doctest MyspaceIPFS.Dag
 end

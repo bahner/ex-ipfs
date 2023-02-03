@@ -1,9 +1,9 @@
-defmodule MyspaceIpfs.Ping do
+defmodule MyspaceIPFS.Ping do
   @moduledoc false
   use GenServer
 
   require Logger
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Utils
 
   defstruct success: nil, time: nil, text: nil
 
@@ -12,7 +12,7 @@ defmodule MyspaceIpfs.Ping do
           time: non_neg_integer,
           text: binary
         }
-  @typep peer_id :: MyspaceIpfs.peer_id()
+  @typep peer_id :: MyspaceIPFS.peer_id()
 
   # @api_url Application.get_env(:myspace_ipfs, :api_url)
   # @default_topic Application.get_env(:myspace_ipfs, :default_topic)
@@ -69,7 +69,7 @@ defmodule MyspaceIpfs.Ping do
   end
 
   defp new(opts) do
-    %MyspaceIpfs.Ping{}
+    %MyspaceIPFS.Ping{}
     |> struct(opts)
   end
 end

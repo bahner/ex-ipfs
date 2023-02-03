@@ -1,4 +1,4 @@
-defmodule MyspaceIpfs.Utils do
+defmodule MyspaceIPFS.Utils do
   @moduledoc """
   Some common functions that are used throughout the library.
   """
@@ -6,7 +6,7 @@ defmodule MyspaceIpfs.Utils do
   require Logger
   alias Tesla.Multipart
 
-  @type fspath :: MyspaceIpfs.fspath()
+  @type fspath :: MyspaceIPFS.fspath()
 
   @doc """
   Converts a string to a boolean or integer or vise versa
@@ -126,7 +126,7 @@ defmodule MyspaceIpfs.Utils do
 
   ## Examples
 
-  iex> MyspaceIpfs.Utils.unokify({:ok, "data"})
+  iex> MyspaceIPFS.Utils.unokify({:ok, "data"})
   "data"
   """
   @spec unokify(any) :: {:ok, any} | nil
@@ -152,11 +152,11 @@ defmodule MyspaceIpfs.Utils do
   ## Examples
 
   iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
-  iex> MyspaceIpfs.Utils.recase_headers(headers, :kebab)
+  iex> MyspaceIPFS.Utils.recase_headers(headers, :kebab)
   [{"content-type", "application/json"}, {"x-my-header", "value"}]
 
   iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
-  iex> MyspaceIpfs.Utils.recase_headers(headers, :snake)
+  iex> MyspaceIPFS.Utils.recase_headers(headers, :snake)
   [{"content_type", "application/json"}, {"x_my_header", "value"}]
 
   """

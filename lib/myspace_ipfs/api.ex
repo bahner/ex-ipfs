@@ -1,4 +1,4 @@
-defmodule MyspaceIpfs.Api do
+defmodule MyspaceIPFS.Api do
   @moduledoc """
   IPFS (the InterPlanetary File Syste
   new hypermedia distribution protocol, addressed by
@@ -18,13 +18,13 @@ defmodule MyspaceIpfs.Api do
   Based on https://github.com/tableturn/ipfs/blob/master/lib/ipfs.ex
   """
   use Tesla, docs: false
-  import MyspaceIpfs.Utils
-  alias MyspaceIpfs.ApiError
+  import MyspaceIPFS.Utils
+  alias MyspaceIPFS.ApiError
   require Logger
 
   # Types
-  @typep path :: MyspaceIpfs.path()
-  @typep opts :: MyspaceIpfs.opts()
+  @typep path :: MyspaceIPFS.path()
+  @typep opts :: MyspaceIPFS.opts()
   @typep multipart :: Tesla.Multipart.t()
 
   @typedoc """
@@ -34,7 +34,7 @@ defmodule MyspaceIpfs.Api do
   @typedoc """
   The error response from the API after we have handle it.
   """
-  @type api_error :: {:error, MyspaceIpfs.ApiError.t()} | {:error, Tesla.Env.t()} | {:error, atom}
+  @type api_error :: {:error, MyspaceIPFS.ApiError.t()} | {:error, Tesla.Env.t()} | {:error, atom}
 
   @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0/")
 

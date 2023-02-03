@@ -1,49 +1,51 @@
-defmodule MyspaceIpfs.Config do
+defmodule MyspaceIPFS.Config do
   @moduledoc """
-  MyspaceIpfs.Config is where the config commands of the IPFS API reside.
+  MyspaceIPFS.Config is where the config commands of the IPFS API reside.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
-  @typep name :: MyspaceIpfs.name()
-  @typep opts :: MyspaceIpfs.opts()
-  @typep fspath :: MyspaceIpfs.fspath()
-  @typep api_error :: MyspaceIpfs.Api.api_error()
+  @typep name :: MyspaceIPFS.name()
+  @typep opts :: MyspaceIPFS.opts()
+  @typep fspath :: MyspaceIPFS.fspath()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
 
   @doc """
   Get the value of a config key.
 
   ## Parameters
   key: The key to get the value of.
-  value: the value to set the key to (optional).
-
-  ## Options
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-config
-  ```
-  [
-    "bool" - <bool>, # Set a boolean value.
-    "json" - <bool>, # Parse stringified JSON.
-  ]
-  ```
   """
   # FIXME: clean up this mess
-  def config(key, value \\ nil, opts \\ [])
-
-  @spec config(name, name, opts) :: {:ok, any} | api_error
-  def config(key, value, opts) when is_bitstring(key) and is_bitstring(value) do
-    post_query("/config?arg=" <> key <> "&arg=" <> value, query: opts)
+  @spec get(name) :: {:ok, any} | api_error
+  def get(key) do
+    post_query("/config?arg=" <> key)
     |> okify()
   end
 
-  @spec config(name, name, opts) :: {:ok, any} | api_error
-  def config(key, value, opts) when is_bitstring(key) and is_nil(value) do
-    post_query("/config?arg=" <> key, query: opts)
+  @doc """
+  Get the entire config.
+  """
+  @spec get() :: {:ok, any} | api_error
+  def get() do
+    post_query("/config")
     |> okify()
   end
 
-  @spec config(name, name, opts) :: {:ok, any} | api_error
-  def config(key, _value, opts) when is_bitstring(key) and is_list(opts) do
-    post_query("/config?arg=" <> key, query: opts)
+  @doc """
+  Set the value of a config key. This command accepts a JSON object  or a boolean as the value.
+
+  JSON objects must be passed as a string.
+  """
+  @spec set(binary, binary) :: {:ok, any} | api_error
+  def set(key, value) when is_binary(key) and is_binary(value) do
+    post_query("/config?arg=" <> key <> "&arg=" <> value, query: [json: true, bool: false])
+    |> okify()
+  end
+
+  @spec set(binary, boolean) :: {:ok, any} | api_error
+  def set(key, value) when is_bitstring(key) and is_boolean(value) do
+    post_query("/config?arg=" <> key <> "&arg=#{value}", query: [json: false, bool: true])
     |> okify()
   end
 

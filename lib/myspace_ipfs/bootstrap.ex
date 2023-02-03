@@ -1,24 +1,24 @@
-defmodule MyspaceIpfs.Bootstrap do
+defmodule MyspaceIPFS.Bootstrap do
   @moduledoc """
-  MyspaceIpfs.Bootstrap is where the bootstrap commands of the IPFS API reside.
+  MyspaceIPFS.Bootstrap is where the bootstrap commands of the IPFS API reside.
   """
 
   defstruct Peers: []
 
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
-  alias MyspaceIpfs.Peers
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
+  alias MyspaceIPFS.Peers
 
   @type t :: %__MODULE__{
           Peers: list
         }
   @typep reply :: {:ok, [t()]} | {:error, any()}
-  @typep path :: MyspaceIpfs.path()
+  @typep path :: MyspaceIPFS.path()
 
   @doc """
   List peers in bootstrap list.
   """
-  @spec bootstrap() :: {:ok, MyspaceIpfs.Peers.t()}
+  @spec bootstrap() :: {:ok, MyspaceIPFS.Peers.t()}
   def bootstrap do
     post_query("/bootstrap")
     |> snake_atomize()
@@ -34,7 +34,7 @@ defmodule MyspaceIpfs.Bootstrap do
   `peer` - The peer ID to add to the bootstrap list. The format is a multiaddr
   in the form of `<multiaddr>/<peerID>`
   """
-  @spec add(path) :: {:ok, MyspaceIpfs.Peers.t()}
+  @spec add(path) :: {:ok, MyspaceIPFS.Peers.t()}
   def add(peer) do
     post_query("/bootstrap/add?arg=" <> peer)
     |> snake_atomize()
@@ -48,7 +48,7 @@ defmodule MyspaceIpfs.Bootstrap do
   ## Parameters
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bootstrap-add-default
   """
-  @spec add_default() :: {:ok, MyspaceIpfs.Peers.t()}
+  @spec add_default() :: {:ok, MyspaceIPFS.Peers.t()}
   def add_default do
     post_query("/bootstrap/add/default")
     |> snake_atomize()
@@ -62,7 +62,7 @@ defmodule MyspaceIpfs.Bootstrap do
   ## Parameters
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bootstrap-list
   """
-  @spec list() :: {:ok, MyspaceIpfs.Peers.t()}
+  @spec list() :: {:ok, MyspaceIPFS.Peers.t()}
   def list do
     post_query("/bootstrap/list")
     |> snake_atomize()
@@ -79,7 +79,7 @@ defmodule MyspaceIpfs.Bootstrap do
   in the form of `<multiaddr>/<peerID>`
 
   """
-  @spec rm(path) :: {:ok, MyspaceIpfs.Peers.t()}
+  @spec rm(path) :: {:ok, MyspaceIPFS.Peers.t()}
   def rm(peer) do
     post_query("/bootstrap/rm?arg=" <> peer)
     |> snake_atomize()

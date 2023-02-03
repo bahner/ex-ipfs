@@ -35,24 +35,24 @@ export MYSPACE_IPFS_API_URL="http://127.0.0.1:5001"
 The documentation is very unbalanced. I am feeling my way forward as to how much I should document here. Each command will receive a link to the official documentation at least.
 
 ## Usage
-Make sure ipfs is running. Then you can start using the module. If ipfs isn't running, you may try `MyspaceIpfs.daemon()`.
+Make sure ipfs is running. Then you can start using the module. If ipfs isn't running, you may try `MyspaceIPFS.daemon()`.
 
 To use do:
 ```elixir
-alias MyspaceIpfs, as: IPFS
+alias MyspaceIPFS, as: IPFS
 IPFS.id()
 
-MyspaceIpfs.Refs.refs("/ipns/myspace.bahner.com")
+MyspaceIPFS.Refs.refs("/ipns/myspace.bahner.com")
 
-alias MyspaceIpfs.Refs
+alias MyspaceIPFS.Refs
 Refs.local()
 
 # Subscribe to a PubSub Channel and send the message to my inbox
-MyspaceIpfs.PubSub.Channel.start_link(self(), "mychannel")
+MyspaceIPFS.PubSub.Channel.start_link(self(), "mychannel")
 flush
 ```
 Some commands, like channel and tail that streams data needs a pid to send messages to. 
 
-The basic commands are in the MyspaceIpfs module. The grouped ipfs commands each have their separate module, eg. MyspaceIpfs.Refs, MyspaceIpfs.Blocks etc.
+The basic commands are in the MyspaceIPFS module. The grouped ipfs commands each have their separate module, eg. MyspaceIPFS.Refs, MyspaceIPFS.Blocks etc.
 
 

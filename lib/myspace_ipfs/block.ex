@@ -1,16 +1,16 @@
-defmodule MyspaceIpfs.Block do
+defmodule MyspaceIPFS.Block do
   @moduledoc """
-  MyspaceIpfs.Block is where the block commands of the IPFS API reside.
+  MyspaceIPFS.Block is where the block commands of the IPFS API reside.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
-  alias MyspaceIpfs.ErrorHash
-  alias MyspaceIpfs.KeySize
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
+  alias MyspaceIPFS.ErrorHash
+  alias MyspaceIPFS.KeySize
 
-  @type api_error :: MyspaceIpfs.Api.api_error()
-  @typep opts :: MyspaceIpfs.opts()
-  @typep cid :: MyspaceIpfs.cid()
-  @typep fspath :: MyspaceIpfs.fspath()
+  @type api_error :: MyspaceIPFS.Api.api_error()
+  @typep opts :: MyspaceIPFS.opts()
+  @typep cid :: MyspaceIPFS.cid()
+  @typep fspath :: MyspaceIPFS.fspath()
 
   @doc """
   Get a raw IPFS block.

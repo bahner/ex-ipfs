@@ -1,13 +1,13 @@
-defmodule MyspaceIpfs.Commands do
+defmodule MyspaceIPFS.Commands do
   @moduledoc """
-  MyspaceIpfs.Commands is where the commands commands of the IPFS API reside.
+  MyspaceIPFS.Commands is where the commands commands of the IPFS API reside.
   """
 
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
-  alias MyspaceIpfs.CommandsCommand
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
+  alias MyspaceIPFS.CommandsCommand
 
-  @typep api_error :: MyspaceIpfs.Api.api_error()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
 
   @doc """
   List all available commands.

@@ -1,9 +1,9 @@
-defmodule MyspaceIpfs.Diag.Profile do
+defmodule MyspaceIPFS.Diag.Profile do
   @moduledoc false
   use GenServer
 
   require Logger
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Utils
 
   defstruct ref: nil,
             output: nil,
@@ -11,7 +11,7 @@ defmodule MyspaceIpfs.Diag.Profile do
             writer: nil,
             timeout: "30s"
 
-  @typep fspath :: MyspaceIpfs.fspath()
+  @typep fspath :: MyspaceIPFS.fspath()
 
   @type t :: %__MODULE__{
           output: fspath,
@@ -44,7 +44,7 @@ defmodule MyspaceIpfs.Diag.Profile do
   def start_link(query_options) do
     GenServer.start_link(
       __MODULE__,
-      %MyspaceIpfs.Diag.Profile{query_options: query_options}
+      %MyspaceIPFS.Diag.Profile{query_options: query_options}
     )
   end
 

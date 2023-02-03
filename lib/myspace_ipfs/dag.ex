@@ -1,15 +1,15 @@
-defmodule MyspaceIpfs.Dag do
+defmodule MyspaceIPFS.Dag do
   @moduledoc """
-  MyspaceIpfs.Dag is where the cid commands of the IPFS API reside.
+  MyspaceIPFS.Dag is where the cid commands of the IPFS API reside.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
   require Logger
 
-  @typep cid :: MyspaceIpfs.cid()
-  @typep opts :: MyspaceIpfs.opts()
-  @typep path :: MyspaceIpfs.path()
-  @typep api_error :: MyspaceIpfs.Api.api_error()
+  @typep cid :: MyspaceIPFS.cid()
+  @typep opts :: MyspaceIPFS.opts()
+  @typep path :: MyspaceIPFS.path()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
 
   @doc """
   Streams the selected DAG as a .car stream on stdout.
@@ -37,7 +37,6 @@ defmodule MyspaceIpfs.Dag do
   def get(path, opts \\ []) do
     with data <- post_query("/dag/get?arg=" <> path, query: opts) do
       data
-      # |> Jason.decode!()
       # |> okify()
     end
   end
@@ -51,14 +50,14 @@ defmodule MyspaceIpfs.Dag do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-dag-import
   """
-  @spec import(binary, opts) :: {:ok, MyspaceIpfs.DagImport.t()} | api_error()
+  @spec import(binary, opts) :: {:ok, MyspaceIPFS.DagImport.t()} | api_error()
   def import(data, opts \\ []) do
     Logger.debug("import: #{inspect(opts)}")
     opts = Keyword.put(opts, :stats, true)
 
     multipart_content(data)
     |> post_multipart("/dag/import", query: opts)
-    |> MyspaceIpfs.DagImport.new()
+    |> MyspaceIPFS.DagImport.new()
     |> okify()
   end
 
@@ -78,14 +77,12 @@ defmodule MyspaceIpfs.Dag do
   ]
   ```
   """
-  @spec put(binary, opts) :: {:ok, MyspaceIpfs.RootCid} | api_error()
+  @spec put(binary, opts) :: {:ok, MyspaceIPFS.RootCid} | api_error()
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/dag/put", query: opts)
-    |> snake_atomize()
-    |> Map.get(:cid, nil)
-
-    # |> MyspaceIpfs.RootCid.new()
-    # |> okify()
+    |> Map.get("Cid", nil)
+    |> MyspaceIPFS.RootCid.new()
+    |> okify()
   end
 end

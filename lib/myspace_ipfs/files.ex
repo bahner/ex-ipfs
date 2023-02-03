@@ -1,14 +1,14 @@
-defmodule MyspaceIpfs.Files do
+defmodule MyspaceIPFS.Files do
   @moduledoc """
-  MyspaceIpfs.Files is where the files commands of the IPFS API reside.
+  MyspaceIPFS.Files is where the files commands of the IPFS API reside.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIpfs.Api.api_error()
-  @typep opts :: MyspaceIpfs.opts()
-  @typep path :: MyspaceIpfs.path()
-  @typep fspath :: MyspaceIpfs.fspath()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep opts :: MyspaceIPFS.opts()
+  @typep path :: MyspaceIPFS.path()
+  @typep fspath :: MyspaceIPFS.fspath()
 
   @doc """
   Copy files into mfs.

@@ -1,6 +1,6 @@
-defmodule MyspaceIpfs.VersionDeps do
+defmodule MyspaceIPFS.VersionDeps do
   @moduledoc """
-  MyspaceIpfs.VersionDeps is a struct to show deps of the IPFS daemon.
+  MyspaceIPFS.VersionDeps is a struct to show deps of the IPFS daemon.
   """
 
   defstruct path: nil, replaced_by: nil, sum: nil, version: nil

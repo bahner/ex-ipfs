@@ -1,6 +1,6 @@
-defmodule MyspaceIpfs.VersionVersion do
+defmodule MyspaceIPFS.VersionVersion do
   @moduledoc """
-  MyspaceIpfs.Version is a struct to show the version of the IPFS daemon.
+  MyspaceIPFS.Version is a struct to show the version of the IPFS daemon.
   """
 
   defstruct [:commit, :golang, :version, :repo, :system]

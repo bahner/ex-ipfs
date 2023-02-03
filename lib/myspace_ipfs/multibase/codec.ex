@@ -1,6 +1,6 @@
-defmodule MyspaceIpfs.MultibaseCodec do
+defmodule MyspaceIPFS.MultibaseCodec do
   @moduledoc """
-  MyspaceIpfs.MultibaseCodec is a struct representing a multibase codec.
+  MyspaceIPFS.MultibaseCodec is a struct representing a multibase codec.
   """
   @enforce_keys [:name, :code]
   defstruct [:name, :code, prefix: nil, description: nil]

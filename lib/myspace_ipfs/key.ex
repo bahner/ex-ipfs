@@ -1,14 +1,14 @@
-defmodule MyspaceIpfs.Key do
+defmodule MyspaceIPFS.Key do
   @moduledoc """
-  MyspaceIpfs.Key is where the key commands of the IPFS API reside.
+  MyspaceIPFS.Key is where the key commands of the IPFS API reside.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIpfs.Api.api_error()
-  @typep opts :: MyspaceIpfs.opts()
-  @typep name :: MyspaceIpfs.name()
-  @typep fspath :: MyspaceIpfs.fspath()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep opts :: MyspaceIPFS.opts()
+  @typep name :: MyspaceIPFS.name()
+  @typep fspath :: MyspaceIPFS.fspath()
 
   @doc """
   Export a keypair.

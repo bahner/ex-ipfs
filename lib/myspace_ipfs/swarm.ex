@@ -1,13 +1,13 @@
-defmodule MyspaceIpfs.Swarm do
+defmodule MyspaceIPFS.Swarm do
   @moduledoc """
-  MyspaceIpfs.Swarm is where the swarm commands of the IPFS API reside.
+  MyspaceIPFS.Swarm is where the swarm commands of the IPFS API reside.
   """
 
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIpfs.Api.api_error()
-  @typep peer_id :: MyspaceIpfs.peer_id()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep peer_id :: MyspaceIPFS.peer_id()
 
   @doc """
   List the addresses of known peers.

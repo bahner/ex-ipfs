@@ -1,16 +1,16 @@
-defmodule MyspaceIpfs.Get do
+defmodule MyspaceIPFS.Get do
   @moduledoc false
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
   require Logger
 
   @enforce_keys [:path, :fspath, :content]
   defstruct [:path, :fspath, :name, :content, archive: false]
 
-  @typep path :: MyspaceIpfs.path()
-  @typep fspath :: MyspaceIpfs.fspath()
-  @typep opts :: MyspaceIpfs.opts()
-  @typep api_error :: MyspaceIpfs.Api.api_error()
+  @typep path :: MyspaceIPFS.path()
+  @typep fspath :: MyspaceIPFS.fspath()
+  @typep opts :: MyspaceIPFS.opts()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
 
   @typep t :: %__MODULE__{
            path: path,
@@ -62,7 +62,7 @@ defmodule MyspaceIpfs.Get do
     # which is the IPFS CID.
     # We also store this to :name because we need to know it for extraction
     # from the tarball.
-    %MyspaceIpfs.Get{
+    %MyspaceIPFS.Get{
       path: path,
       fspath: Keyword.get(opts, :output, :filename.basename(path)),
       name: :filename.basename(path),

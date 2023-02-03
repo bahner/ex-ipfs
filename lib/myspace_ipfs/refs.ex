@@ -1,10 +1,10 @@
-defmodule MyspaceIpfs.Refs do
+defmodule MyspaceIPFS.Refs do
   @moduledoc """
-  MyspaceIpfs.Refs is where the main commands of the IPFS API reside.
+  MyspaceIPFS.Refs is where the main commands of the IPFS API reside.
   """
 
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
   defstruct [
     :Ref,
@@ -22,9 +22,9 @@ defmodule MyspaceIpfs.Refs do
           Err: String.t()
         }
 
-  @typep api_error :: MyspaceIpfs.Api.api_error()
-  @typep opts :: MyspaceIpfs.opts()
-  @typep path :: MyspaceIpfs.path()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep opts :: MyspaceIPFS.opts()
+  @typep path :: MyspaceIPFS.path()
 
   @doc """
   Get a list of all local references.

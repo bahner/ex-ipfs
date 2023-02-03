@@ -1,13 +1,13 @@
-defmodule MyspaceIpfs.Stats do
+defmodule MyspaceIPFS.Stats do
   @moduledoc """
-  MyspaceIpfs.Stats is where the stats commands of the IPFS API reside.
+  MyspaceIPFS.Stats is where the stats commands of the IPFS API reside.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIpfs.Api.api_error()
-  @typep opts :: MyspaceIpfs.opts()
-  @typep name :: MyspaceIpfs.name()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep opts :: MyspaceIPFS.opts()
+  @typep name :: MyspaceIPFS.name()
 
   @doc """
   Show some diagnostic information on the bitswap agent.

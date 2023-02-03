@@ -1,13 +1,13 @@
-defmodule MyspaceIpfs.Name do
+defmodule MyspaceIPFS.Name do
   @moduledoc """
-  MyspaceIpfs.Name is where the name commands of the IPFS API reside.
+  MyspaceIPFS.Name is where the name commands of the IPFS API reside.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIpfs.Api.api_error()
-  @typep path :: MyspaceIpfs.path()
-  @typep opts :: MyspaceIpfs.opts()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep path :: MyspaceIPFS.path()
+  @typep opts :: MyspaceIPFS.opts()
 
   @doc """
   Publish IPNS names.

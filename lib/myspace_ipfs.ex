@@ -1,20 +1,20 @@
-defmodule MyspaceIpfs do
+defmodule MyspaceIPFS do
   @moduledoc """
-  MyspaceIpfs is where the main commands of the IPFS API reside.
+  MyspaceIPFS is where the main commands of the IPFS API reside.
   Alias this library and you can run the commands via Api.<cmd_name>.
 
         ## Examples
 
-        iex> alias MyspaceIpfs, as: Ipfs
+        iex> alias MyspaceIPFS, as: Ipfs
         iex> Ipfs.cat(QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
         <<0, 19, 148, 0, ... >>
   """
 
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIpfs.Api.api_error()
-  @typep api_response :: MyspaceIpfs.Api.api_response()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep api_response :: MyspaceIPFS.Api.api_response()
 
   @typedoc """
   The name of the file or data to be sent to the node. Sometimes you cant't
@@ -127,7 +127,7 @@ defmodule MyspaceIpfs do
   ```
   """
   # FIXME: Path need sto be compile for testing
-  @spec resolve(path, opts) :: {:ok, MyspaceIpfs.Path.t()} | api_error
+  @spec resolve(path, opts) :: {:ok, MyspaceIPFS.Path.t()} | api_error
   def resolve(path, opts \\ []),
     do:
       post_query("/resolve?arg=" <> path, query: opts)
@@ -172,7 +172,7 @@ defmodule MyspaceIpfs do
   But the default should be enough for most cases. More likely your content isn't available....
   """
   @spec get(path, opts) :: api_response
-  defdelegate get(path, opts \\ []), to: MyspaceIpfs.Get
+  defdelegate get(path, opts \\ []), to: MyspaceIPFS.Get
 
   @doc """
   Get the contents of a file from ipfs.
@@ -273,7 +273,7 @@ defmodule MyspaceIpfs do
   # FIXME verify return type
   @spec(ping(pid, peer_id, atom | integer, opts) :: :ignore | {:ok, pid}, {:error, reason})
   def ping(pid, peer, timeout \\ 10, opts \\ []),
-    do: MyspaceIpfs.Ping.start_link(pid, peer, timeout, opts)
+    do: MyspaceIPFS.Ping.start_link(pid, peer, timeout, opts)
 
   @doc """
   Mount an IPFS read-only mountpoint.

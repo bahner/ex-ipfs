@@ -1,14 +1,14 @@
-defmodule MyspaceIpfs.Pin do
+defmodule MyspaceIPFS.Pin do
   @moduledoc """
-  MyspaceIpfs.Pin is where the pin commands of the IPFS API reside.
+  MyspaceIPFS.Pin is where the pin commands of the IPFS API reside.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
-  @type api_error :: MyspaceIpfs.Api.api_error()
-  @type name :: MyspaceIpfs.name()
-  @type opts :: MyspaceIpfs.opts()
-  @type path :: MyspaceIpfs.path()
+  @type api_error :: MyspaceIPFS.Api.api_error()
+  @type name :: MyspaceIPFS.name()
+  @type opts :: MyspaceIPFS.opts()
+  @type path :: MyspaceIPFS.path()
   @type url :: Tesla.Env.url()
 
   ### Local Pinning

@@ -1,4 +1,4 @@
-defmodule MyspaceIpfs.RootCid do
+defmodule MyspaceIPFS.RootCid do
   @moduledoc """
   This struct is very simple. Some results are listed as `%{"/": cid}`. This is a
   convenience struct to make it easier match on the result.
@@ -7,16 +7,17 @@ defmodule MyspaceIpfs.RootCid do
   leading slash.
   """
 
-  @typep cid :: MyspaceIpfs.cid()
+  @typep cid :: MyspaceIPFS.cid()
   # The CID of the root object.
   defstruct /: nil
 
   @type t :: %__MODULE__{/: cid}
 
-  @spec new(any) :: MyspaceIpfs.RootCid.t()
+  @spec new(any) :: MyspaceIPFS.RootCid.t()
   def new(cid) do
+    IO.inspect(cid, label: "cid")
     case cid do
-      %{/: something} ->
+      %{"/" => something} ->
         %__MODULE__{/: something}
 
       _ ->
@@ -25,7 +26,7 @@ defmodule MyspaceIpfs.RootCid do
   end
 end
 
-defmodule MyspaceIpfs.KeySize do
+defmodule MyspaceIPFS.KeySize do
   @moduledoc """
   This struct is very simple. Some results are listed as "Size": size. This is a
   convenience struct to make it easier match on the result.
@@ -39,7 +40,7 @@ defmodule MyspaceIpfs.KeySize do
   @spec new({:error, any}) :: {:error, any}
   def new({:error, data}), do: {:error, data}
 
-  @spec new(map) :: MyspaceIpfs.KeySize.t()
+  @spec new(map) :: MyspaceIPFS.KeySize.t()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       key: opts.key,
@@ -48,7 +49,7 @@ defmodule MyspaceIpfs.KeySize do
   end
 end
 
-defmodule MyspaceIpfs.KeyValue do
+defmodule MyspaceIPFS.KeyValue do
   @moduledoc """
   This struct is very simple. Some results are listed as "Value": size. This is a
   convenience struct to make it easier match on the result.
@@ -58,7 +59,7 @@ defmodule MyspaceIpfs.KeyValue do
 
   @type t :: %__MODULE__{key: binary, value: binary}
 
-  @spec new(map) :: MyspaceIpfs.KeyValue.t()
+  @spec new(map) :: MyspaceIPFS.KeyValue.t()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       key: opts.key,
@@ -71,7 +72,7 @@ defmodule MyspaceIpfs.KeyValue do
   def new({:error, data}), do: {:error, data}
 end
 
-defmodule MyspaceIpfs.ErrorHash do
+defmodule MyspaceIPFS.ErrorHash do
   @moduledoc """
   This struct is very simple. Some results are listed as "Error": error, "Hash": hash. This is a
   """
@@ -80,7 +81,7 @@ defmodule MyspaceIpfs.ErrorHash do
 
   @type t :: %__MODULE__{error: binary, hash: binary}
 
-  @spec new(map) :: MyspaceIpfs.ErrorHash.t()
+  @spec new(map) :: MyspaceIPFS.ErrorHash.t()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       error: Map.get(opts, :error, ""),
@@ -93,7 +94,7 @@ defmodule MyspaceIpfs.ErrorHash do
   def new({:error, data}), do: {:error, data}
 end
 
-defmodule MyspaceIpfs.Add do
+defmodule MyspaceIPFS.Add do
   @moduledoc """
   This struct is very simple. Some results are listed as "Bytes": bytes, "Hash": hash, "Size": size, "Type": type. This is a
   convenience struct to make it easier match on the result.
@@ -109,7 +110,7 @@ defmodule MyspaceIpfs.Add do
           type: binary
         }
 
-  @spec new(map) :: MyspaceIpfs.Add.t()
+  @spec new(map) :: MyspaceIPFS.Add.t()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       bytes: opts.bytes,
@@ -124,7 +125,7 @@ defmodule MyspaceIpfs.Add do
   def new({:error, data}), do: {:error, data}
 end
 
-defmodule MyspaceIpfs.Peers do
+defmodule MyspaceIPFS.Peers do
   @moduledoc """
   A struct that represents the wantlist for a peer in the bitswap network.
   """
@@ -133,7 +134,7 @@ defmodule MyspaceIpfs.Peers do
   @type t :: %__MODULE__{
           peers: list | nil
         }
-  @spec new(map) :: MyspaceIpfs.Peers.t()
+  @spec new(map) :: MyspaceIPFS.Peers.t()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       peers: opts.peers
@@ -145,19 +146,19 @@ defmodule MyspaceIpfs.Peers do
   def new({:error, data}), do: {:error, data}
 end
 
-defmodule MyspaceIpfs.Path do
+defmodule MyspaceIPFS.Path do
   @moduledoc """
   A struct that a resolved IPFS/IPNS path.
   """
   defstruct path: nil
 
-  @typep path :: MyspaceIpfs.path()
+  @typep path :: MyspaceIPFS.path()
 
   @type t :: %__MODULE__{
           path: path | nil
         }
 
-  @spec new(map) :: MyspaceIpfs.Path.t()
+  @spec new(map) :: MyspaceIPFS.Path.t()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       path: opts["Path"]

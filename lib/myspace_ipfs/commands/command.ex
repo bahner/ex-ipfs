@@ -1,6 +1,6 @@
-defmodule MyspaceIpfs.CommandsCommand do
+defmodule MyspaceIPFS.CommandsCommand do
   @moduledoc """
-  MyspaceIpfs.Commands is where the commands commands of the IPFS API reside.
+  MyspaceIPFS.Commands is where the commands commands of the IPFS API reside.
   """
 
   defstruct name: nil, options: [], subcommands: []
@@ -33,7 +33,7 @@ defmodule MyspaceIpfs.CommandsCommand do
   @doc """
   Generate command struct subcommands of a command object
   """
-  @spec gen_commands(map) :: MyspaceIpfs.CommandsCommand.t() | list
+  @spec gen_commands(map) :: MyspaceIPFS.CommandsCommand.t() | list
   def gen_commands(command) when is_map(command) do
     if has_subcommands?(command) do
       Logger.debug("Generating subcommands for #{command.name}")

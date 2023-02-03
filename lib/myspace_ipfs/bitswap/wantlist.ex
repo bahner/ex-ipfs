@@ -1,9 +1,9 @@
-defmodule MyspaceIpfs.BitswapWantList do
+defmodule MyspaceIPFS.BitswapWantList do
   @moduledoc """
   A struct that represents the wantlist for a peer in the bitswap network.
   """
 
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Utils
   defstruct keys: []
 
   @type t :: %__MODULE__{
@@ -19,7 +19,7 @@ defmodule MyspaceIpfs.BitswapWantList do
     {:error, data}
   end
 
-  @spec new(map) :: MyspaceIpfs.BitswapWantList.t()
+  @spec new(map) :: MyspaceIPFS.BitswapWantList.t()
   def new(opts) do
     opts = snake_atomize(opts)
 

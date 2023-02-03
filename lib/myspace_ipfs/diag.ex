@@ -1,11 +1,11 @@
-defmodule MyspaceIpfs.Diag do
+defmodule MyspaceIPFS.Diag do
   @moduledoc """
-  MyspaceIpfs.Diag is where the diag commands of the IPFS API reside.
+  MyspaceIPFS.Diag is where the diag commands of the IPFS API reside.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIpfs.Api.api_error()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
 
   @doc """
   List commands run by the daemon.
@@ -76,7 +76,7 @@ defmodule MyspaceIpfs.Diag do
   # FIXME: verify return value
   @spec profile(list) :: {:ok, any} | api_error()
   def profile(options \\ []) do
-    MyspaceIpfs.Diag.Profile.start_link(options)
+    MyspaceIPFS.Diag.Profile.start_link(options)
     |> okify()
   end
 end

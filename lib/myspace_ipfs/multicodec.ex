@@ -1,6 +1,6 @@
-defmodule MyspaceIpfs.MultiCodec do
+defmodule MyspaceIPFS.MultiCodec do
   @moduledoc """
-  MyspaceIpfs.MultibaseCodec is a struct representing a hash. Seems much like a codec structure to me, but hey. Things may differ.
+  MyspaceIPFS.MultibaseCodec is a struct representing a hash. Seems much like a codec structure to me, but hey. Things may differ.
   """
   @enforce_keys [:name, :code]
   defstruct [:name, :code]
@@ -16,7 +16,7 @@ defmodule MyspaceIpfs.MultiCodec do
   """
   @spec new({:error, map}) :: {:error, map}
   def new({:error, data}), do: {:error, data}
-  @spec new(map) :: MyspaceIpfs.MultiCodec.t()
+  @spec new(map) :: MyspaceIPFS.MultiCodec.t()
   def new(opts) do
     # code and name are required and must be present.
     %__MODULE__{

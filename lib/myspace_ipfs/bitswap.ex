@@ -1,21 +1,21 @@
-defmodule MyspaceIpfs.Bitswap do
+defmodule MyspaceIPFS.Bitswap do
   @moduledoc """
-  MyspaceIpfs.Bitswap is where the bitswap commands of the IPFS API reside.
+  MyspaceIPFS.Bitswap is where the bitswap commands of the IPFS API reside.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
-  alias MyspaceIpfs.BitswapStat
-  alias MyspaceIpfs.BitswapWantList
-  alias MyspaceIpfs.BitswapLedger
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
+  alias MyspaceIPFS.BitswapStat
+  alias MyspaceIPFS.BitswapWantList
+  alias MyspaceIPFS.BitswapLedger
   require Logger
 
-  @typep api_error :: MyspaceIpfs.Api.api_error()
-  @typep api_response :: MyspaceIpfs.Api.api_response()
-  @typep peer_id :: MyspaceIpfs.peer_id()
-  @type wantlist :: MyspaceIpfs.BitswapWantList.t()
-  @type stat :: MyspaceIpfs.BitswapStat.t()
-  @type ledger() :: MyspaceIpfs.BitswapLedger.t()
-  @typep opts :: MyspaceIpfs.opts()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep api_response :: MyspaceIPFS.Api.api_response()
+  @typep peer_id :: MyspaceIPFS.peer_id()
+  @type wantlist :: MyspaceIPFS.BitswapWantList.t()
+  @type stat :: MyspaceIPFS.BitswapStat.t()
+  @type ledger() :: MyspaceIPFS.BitswapLedger.t()
+  @typep opts :: MyspaceIPFS.opts()
 
   @spec reprovide(timeout) :: :ok
   @doc """

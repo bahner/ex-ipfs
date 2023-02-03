@@ -1,19 +1,19 @@
-defmodule MyspaceIpfs.Cid do
+defmodule MyspaceIPFS.Cid do
   @moduledoc """
-  MyspaceIpfs.Cid is where the cid commands of the IPFS API reside.
+  MyspaceIPFS.Cid is where the cid commands of the IPFS API reside.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
-  alias MyspaceIpfs.MultiCodec
-  alias MyspaceIpfs.MultiHash
-  alias MyspaceIpfs.MultibaseEncoding
-  alias MyspaceIpfs.MultiCodec
-  alias MyspaceIpfs.CidCid
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
+  alias MyspaceIPFS.MultiCodec
+  alias MyspaceIPFS.MultiHash
+  alias MyspaceIPFS.MultibaseEncoding
+  alias MyspaceIPFS.MultiCodec
+  alias MyspaceIPFS.CidCid
 
-  @typep opts :: MyspaceIpfs.opts()
-  @typep cid :: MyspaceIpfs.cid()
-  @typep api_error :: MyspaceIpfs.Api.api_error()
-  @type multibase_codec :: MyspaceIpfs.MultibaseCodec.t()
+  @typep opts :: MyspaceIPFS.opts()
+  @typep cid :: MyspaceIPFS.cid()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @type multibase_codec :: MyspaceIPFS.MultibaseCodec.t()
 
   @doc """
   Convert to base32 CID version 1.

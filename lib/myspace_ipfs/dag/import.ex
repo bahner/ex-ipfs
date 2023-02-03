@@ -1,16 +1,15 @@
-defmodule MyspaceIpfs.DagImport do
+defmodule MyspaceIPFS.DagImport do
   @moduledoc """
   Object returned from importing a dag into IPFS.
   """
 
-  import MyspaceIpfs.Utils
   require Logger
 
   defstruct root: nil, stats: %{}
 
   @type t :: %__MODULE__{
-          root: MyspaceIpfs.Structs.DagImportRoot,
-          stats: MyspaceIpfs.Structs.DagImportStats
+          root: MyspaceIPFS.Structs.DagImportRoot,
+          stats: MyspaceIPFS.Structs.DagImportStats
         }
 
   @doc """
@@ -24,24 +23,23 @@ defmodule MyspaceIpfs.DagImport do
 
   @spec new(list) :: t
   def new(list) do
-    list = Enum.map(list, &snake_atomize/1)
     [root | [stats]] = list
 
     %__MODULE__{
-      root: MyspaceIpfs.DagImportRoot.new(root.root),
-      stats: MyspaceIpfs.DagImportStats.new(stats.stats)
+      root: MyspaceIPFS.DagImportRoot.new(root["Root"]),
+      stats: MyspaceIPFS.DagImportStats.new(stats["Stats"])
     }
   end
 end
 
-defmodule MyspaceIpfs.DagImportRoot do
+defmodule MyspaceIPFS.DagImportRoot do
   @moduledoc false
 
   require Logger
   defstruct cid: nil, pin_error_msg: nil
 
   @type t :: %__MODULE__{
-          cid: MyspaceIpfs.RootCid.t(),
+          cid: MyspaceIPFS.RootCid.t(),
           pin_error_msg: binary
         }
 
@@ -57,13 +55,13 @@ defmodule MyspaceIpfs.DagImportRoot do
   @spec new(map) :: t
   def new(root) do
     %__MODULE__{
-      cid: MyspaceIpfs.RootCid.new(root.cid),
-      pin_error_msg: root.pin_error_msg
+      cid: MyspaceIPFS.RootCid.new(root["Cid"]),
+      pin_error_msg: root["PinErrorMsg"]
     }
   end
 end
 
-defmodule MyspaceIpfs.DagImportStats do
+defmodule MyspaceIPFS.DagImportStats do
   @moduledoc false
 
   require Logger
@@ -88,8 +86,8 @@ defmodule MyspaceIpfs.DagImportStats do
     Logger.debug("DagImportStats.new(): #{inspect(stats)}")
 
     %__MODULE__{
-      block_bytes_count: stats.block_bytes_count,
-      block_count: stats.block_count
+      block_bytes_count: stats["BlockBytesCount"],
+      block_count: stats["BlockCount"]
     }
   end
 end

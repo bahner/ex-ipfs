@@ -1,6 +1,6 @@
-defmodule MyspaceIpfs.Log.Tail do
+defmodule MyspaceIPFS.Log.Tail do
   @moduledoc """
-  MyspaceIpfs.PubSubChannel is a GenServer that subscribes to a topic and
+  MyspaceIPFS.PubSubChannel is a GenServer that subscribes to a topic and
   forwards messages to a target process.
 
   The topic *must* be a base64 encoded string, but we will encode it for you.
@@ -8,20 +8,20 @@ defmodule MyspaceIpfs.Log.Tail do
   ## Options
     raw: true | false
       If true, the message will be sent to the target process as a
-      MyspaceIpfs.PubSubChannelMessage struct containing the message data and the topic.
+      MyspaceIPFS.PubSubChannelMessage struct containing the message data and the topic.
       If false, only the message
       data will be sent to the target process.
 
   ## Example
-      iex> {:ok, pid} = MyspaceIpfs.PubSubChannel.start_link(self(), "mytopic")
-      iex> MyspaceIpfs.PubSub.pub("mytopic", "Hello, world!")
+      iex> {:ok, pid} = MyspaceIPFS.PubSubChannel.start_link(self(), "mytopic")
+      iex> MyspaceIPFS.PubSub.pub("mytopic", "Hello, world!")
       iex> flush()
       "Hello, world!"
       :ok
   """
   use GenServer
   require Logger
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Utils
 
   # @api_url Application.get_env(:myspace_ipfs, :api_url)
   # @default_topic Application.get_env(:myspace_ipfs, :default_topic)

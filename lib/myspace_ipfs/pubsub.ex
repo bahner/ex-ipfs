@@ -1,12 +1,12 @@
-defmodule MyspaceIpfs.PubSub do
+defmodule MyspaceIPFS.PubSub do
   @moduledoc """
-  MyspaceIpfs.PubSub is where the pubsub commands of the IPFS API reside.
+  MyspaceIPFS.PubSub is where the pubsub commands of the IPFS API reside.
   """
-  import MyspaceIpfs.Api
-  import MyspaceIpfs.Utils
-  alias MyspaceIpfs.Multibase
+  import MyspaceIPFS.Api
+  import MyspaceIPFS.Utils
+  alias MyspaceIPFS.Multibase
 
-  @typep api_error :: MyspaceIpfs.Api.api_error()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
 
   @doc """
   List the topics you are currently subscribed to.
@@ -55,7 +55,7 @@ defmodule MyspaceIpfs.PubSub do
 
   ## Usage
   ```
-  MyspaceIpfs.PubSub.sub("mymessage", "mytopic")
+  MyspaceIPFS.PubSub.sub("mymessage", "mytopic")
   ```
 
   """
@@ -82,6 +82,6 @@ defmodule MyspaceIpfs.PubSub do
   # FIXME: what does genserver return?
   @spec sub(pid, binary) :: any | api_error()
   def sub(pid, topic) do
-    MyspaceIpfs.PubSubChannel.start_link(pid, topic)
+    MyspaceIPFS.PubSubChannel.start_link(pid, topic)
   end
 end

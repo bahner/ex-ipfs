@@ -1,6 +1,6 @@
-defmodule MyspaceIpfs.PubSubChannel do
+defmodule MyspaceIPFS.PubSubChannel do
   @moduledoc """
-  MyspaceIpfs.PubSubChannel is a GenServer that subscribes to a topic and
+  MyspaceIPFS.PubSubChannel is a GenServer that subscribes to a topic and
   forwards messages to a target process.
 
   The topic *must* be a base64 encoded string, but we will encode it for you.
@@ -8,13 +8,13 @@ defmodule MyspaceIpfs.PubSubChannel do
   ## Options
     raw: true | false
       If true, the message will be sent to the target process as a
-      MyspaceIpfs.PubSubChannelMessage struct containing the message data and the topic.
+      MyspaceIPFS.PubSubChannelMessage struct containing the message data and the topic.
       If false, only the message
       data will be sent to the target process.
 
   ## Example
-      iex> {:ok, pid} = MyspaceIpfs.PubSubChannel.start_link(self(), "mytopic")
-      iex> MyspaceIpfs.PubSub.pub("mytopic", "Hello, world!")
+      iex> {:ok, pid} = MyspaceIPFS.PubSubChannel.start_link(self(), "mytopic")
+      iex> MyspaceIPFS.PubSub.pub("mytopic", "Hello, world!")
       iex> flush()
       "Hello, world!"
       :ok
@@ -23,9 +23,9 @@ defmodule MyspaceIpfs.PubSubChannel do
 
   require Logger
 
-  import MyspaceIpfs.Utils
+  import MyspaceIPFS.Utils
 
-  alias MyspaceIpfs.Multibase
+  alias MyspaceIPFS.Multibase
 
   @enforce_keys [:topic, :target]
   defstruct base64url_topic: nil, client: nil, raw: false, target: nil, topic: nil
@@ -132,9 +132,9 @@ defmodule MyspaceIpfs.PubSubChannel do
   end
 end
 
-defmodule MyspaceIpfs.PubSubChannelMessage do
+defmodule MyspaceIPFS.PubSubChannelMessage do
   @moduledoc """
-  MyspaceIpfs.PubSubChannelMessage is a struct that represents a message as it
+  MyspaceIPFS.PubSubChannelMessage is a struct that represents a message as it
   is received from the IPFS pubsub API.
   """
   @enforce_keys [:from, :data, :seqno, :topic_ids]
