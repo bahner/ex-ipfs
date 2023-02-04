@@ -13,7 +13,7 @@ defmodule BlockTest do
   test "put 'heisan' returns proper keysize" do
     {:ok, keysize} = Block.put("heisan")
     assert is_map(keysize)
-    assert %MyspaceIPFS.KeySize{} = keysize
+    assert %MyspaceIPFS.BlockKeySize{} = keysize
     assert keysize.key === "bafkreidqdr4pgdzfhf5zrwbqhiyqdapniknge6eux74ixk77s2hintta24"
     assert keysize.size === 6
   end
@@ -22,7 +22,7 @@ defmodule BlockTest do
     {:ok, keysize} = Block.stat("bafkreidqdr4pgdzfhf5zrwbqhiyqdapniknge6eux74ixk77s2hintta24")
 
     assert is_map(keysize)
-    assert %MyspaceIPFS.KeySize{} = keysize
+    assert %MyspaceIPFS.BlockKeySize{} = keysize
     assert keysize.key === "bafkreidqdr4pgdzfhf5zrwbqhiyqdapniknge6eux74ixk77s2hintta24"
     assert keysize.size === 6
   end
@@ -42,7 +42,7 @@ defmodule BlockTest do
   test "put large file with allow-big-block returns proper keysize" do
     {:ok, keysize} = Block.put_file("/bin/bash", "allow-big-block": true)
     assert is_map(keysize)
-    assert %MyspaceIPFS.KeySize{} = keysize
+    assert %MyspaceIPFS.BlockKeySize{} = keysize
     assert String.starts_with?(keysize.key, "baf")
     assert is_integer(keysize.size)
   end
@@ -60,7 +60,7 @@ defmodule BlockTest do
     {:ok, _} = Block.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     {:ok, hash} = Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     assert is_map(hash)
-    assert %MyspaceIPFS.ErrorHash{} = hash
+    assert %MyspaceIPFS.BlockErrorHash{} = hash
     assert hash.hash === "QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx"
   end
 
@@ -71,7 +71,7 @@ defmodule BlockTest do
     {:ok, _} = Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     {:ok, hash} = Block.rm("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
     assert is_map(hash)
-    assert %MyspaceIPFS.ErrorHash{} = hash
+    assert %MyspaceIPFS.BlockErrorHash{} = hash
     assert hash.hash === "QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx"
     assert hash.error === "ipld: could not find QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx"
   end

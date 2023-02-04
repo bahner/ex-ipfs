@@ -2,118 +2,141 @@ defmodule MyspaceIPFS.Block do
   @moduledoc """
   MyspaceIPFS.Block is where the block commands of the IPFS API reside.
   """
+
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
-  alias MyspaceIPFS.ErrorHash
-  alias MyspaceIPFS.KeySize
 
-  @type api_error :: MyspaceIPFS.ApiError.t()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep cid :: MyspaceIPFS.cid()
-  @typep fspath :: MyspaceIPFS.fspath()
+  alias MyspaceIPFS.BlockErrorHash
+  alias MyspaceIPFS.BlockKeySize
+
+  @typedoc """
+  A structure from the API that is a key and its size.
+  ```
+  %MyspaceIPFS.KeySize{
+    key: binary,
+    size: non_neg_integer
+  }
+  ```
+  """
+  @type key_size :: MyspaceIPFS.KeySize.t()
+
+  @typedoc """
+  A structure from the API that is an error and its hash.
+  ```
+  %MyspaceIPFS.BlockErrorHash{
+    error: binary,
+    hash: binary
+  }
+  ```
+  """
+  @type error_hash :: MyspaceIPFS.BlockErrorHash.t()
 
   @doc """
   Get a raw IPFS block.
 
-  ## Parameters
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-get
+
+  ## Parameters
   `cid` - The CID of the block to get.
   """
-  @spec get(cid) :: {:ok, any} | api_error()
+  @spec get(binary) :: {:ok, bitstring()} | MyspaceIPFS.Api.api_error()
   def get(cid) do
     post_query("/block/get?arg=" <> cid)
     |> okify()
   end
 
   @doc """
-  Put file as an IPFS block.
+  Put data as an IPFS block.
+
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-put
 
   ## Parameters
   `data` - The data to be stored as a block.
 
   ## Options
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-put
   ```
   [
-    `cid-codec`: <string>, # CID codec to use.
-    `mhtype`: <string>, # Hash function to use.
-    `mhlen`: <int>, # Hash length.
-    `pin`: <bool>, # Pin added blocks recursively.
-    `allow-big-block`: <bool>, # Allow blocks larger than 1MiB.
+    'cid-codec': <string>, # CID codec to use.
+    'mhtype': <string>, # Hash function to use.
+    'mhlen': <int>, # Hash length.
+    'pin': <bool>, # Pin added blocks recursively.
+    'allow-big-block': <bool>, # Allow blocks larger than 1MiB.
   ]
   ```
   """
-  @spec put(any, opts) :: {:ok, any} | api_error()
+  @spec put(any, list) :: {:ok, key_size()} | MyspaceIPFS.Api.api_error()
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/block/put", query: opts)
-    |> snake_atomize()
-    |> KeySize.new()
+    |> BlockKeySize.new()
     |> okify()
   end
 
   @doc """
   Put file as an IPFS block.
 
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-put
+
   ## Parameters
   `fspath` - The path to the file to be stored as a block.
 
   ## Options
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-put
   ```
   [
-    `cid-codec`: <string>, # CID codec to use.
-    `mhtype`: <string>, # Hash function to use.
-    `mhlen`: <int>, # Hash length.
-    `pin`: <bool>, # Pin added blocks recursively.
-    `allow-big-block`: <bool>, # Allow blocks larger than 1MiB.
+    'cid-codec': <string>, # CID codec to use.
+    'mhtype': <string>, # Hash function to use.
+    'mhlen': <int>, # Hash length.
+    'pin': <bool>, # Pin added blocks recursively.
+    'allow-big-block': <bool>, # Allow blocks larger than 1MiB.
   ]
   ```
   """
-  @spec put_file(fspath, opts) :: {:ok, any} | api_error()
+  @spec put_file(Path.t(), list) ::
+          {:ok, key_size()} | MyspaceIPFS.Api.api_error()
   def put_file(file, opts \\ []) do
     multipart(file)
     |> post_multipart("/block/put", query: opts)
-    |> snake_atomize()
-    |> KeySize.new()
+    |> BlockKeySize.new()
     |> okify()
   end
 
   @doc """
   Remove a block from the blockstore.
 
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-rm
+
   ## Parameters
   `cid` - The CID of the block to remove.
 
   ## Options
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-rm
   ```
   [
-    `force`: <bool>, # Ignore nonexistent blocks.
-    `quiet`: <bool>, # Write minimal output.
+    'force': <bool>, # Ignore nonexistent blocks.
+    'quiet': <bool>, # Write minimal output.
   ]
   ```
   """
-  @spec rm(cid) :: {:ok, any} | api_error()
+  @spec rm(binary()) ::
+          {:ok, error_hash()} | MyspaceIPFS.Api.api_error()
   def rm(cid) do
     post_query("/block/rm?arg=" <> cid)
-    |> snake_atomize()
-    |> ErrorHash.new()
+    |> BlockErrorHash.new()
     |> okify()
   end
 
   @doc """
   Get block stat.
 
-  ## Parameters
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-block-stat
+
+  ## Parameters
   `cid` - The CID of the block to stat.
   """
-  @spec stat(cid) :: {:ok, any} | api_error()
+  @spec stat(binary()) ::
+          {:ok, key_size()} | MyspaceIPFS.Api.api_error()
   def stat(cid) do
     post_query("/block/stat?arg=" <> cid)
-    |> snake_atomize()
-    |> KeySize.new()
+    |> BlockKeySize.new()
     |> okify()
   end
 end
