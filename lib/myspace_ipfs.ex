@@ -45,7 +45,7 @@ defmodule MyspaceIPFS do
   @typedoc """
   The query options to be sent to the node.
 
-  Thi smeans your canæt send tesla: timeout or things like that.
+  This means your can't send tesla: timeout or things like that.
   """
   @type opts :: list
 

@@ -1,7 +1,5 @@
 defmodule MyspaceIPFS.BitswapWantList do
-  @moduledoc """
-  A struct that represents the wantlist for a peer in the bitswap network.
-  """
+  @moduledoc false
 
   # API actually returns null, not an empty list.
   defstruct keys: nil
@@ -10,7 +8,6 @@ defmodule MyspaceIPFS.BitswapWantList do
           keys: list | nil
         }
 
-  @doc false
   @spec new({:error, map}) :: {:error, map}
   def new({:error, data}) do
     {:error, data}

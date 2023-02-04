@@ -1,8 +1,5 @@
 defmodule MyspaceIPFS.BitswapStat do
-  @moduledoc """
-  A struct that represents the bitswap network statistics.
-  """
-
+  @moduledoc false
   defstruct blocks_received: nil,
             blocks_sent: nil,
             data_received: nil,

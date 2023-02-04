@@ -1,21 +1,21 @@
 defmodule MyspaceIPFS.ApiError do
-  @moduledoc """
-  IPFS error struct when API sends back a 500 status code.
-  """
+  @moduledoc false
+
   import MyspaceIPFS.Utils
   require Logger
 
   defstruct code: nil, message: nil, type: nil
 
+  # @typedoc """
+  # A struct that represents an error returned by the IPFS API.
+  # """
   @type t :: %__MODULE__{
           code: integer,
           message: binary,
           type: binary
         }
 
-  @doc """
-  Generate an IPFS error struct from a map or passthrough an error message
-  """
+  @doc false
   @spec new({:error, map}) :: {:error, map}
   def new({:error, data}) do
     {:error, data}
@@ -30,9 +30,7 @@ defmodule MyspaceIPFS.ApiError do
     }
   end
 
-  @doc """
-  Convert an IPFS error message into a tuple of {:error, struct}
-  """
+  @doc false
   @spec handle_api_error(map) :: {:error, MyspaceIPFS.ApiError.t()}
   def handle_api_error(body) do
     Logger.debug("IPFS error: #{inspect(body)}")

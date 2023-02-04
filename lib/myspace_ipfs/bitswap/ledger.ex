@@ -1,7 +1,5 @@
 defmodule MyspaceIPFS.BitswapLedger do
-  @moduledoc """
-  A struct that represents the ledger for a peer in the bitswap network.
-  """
+  @moduledoc false
   import MyspaceIPFS.Utils
 
   defstruct [:exchanged, :peer, :recv, :sent, :value]

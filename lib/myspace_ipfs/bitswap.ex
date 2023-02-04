@@ -9,11 +9,52 @@ defmodule MyspaceIPFS.Bitswap do
   alias MyspaceIPFS.BitswapLedger
   require Logger
 
-  @typep api_error :: MyspaceIPFS.ApiError.t()
-  @typep peer_id :: MyspaceIPFS.peer_id()
-  @typep opts :: MyspaceIPFS.opts()
-
   @spec reprovide(timeout) :: :ok
+
+  @typedoc """
+  A struct that represents the stats for the bitswap network.
+
+  ```
+  %MyspaceIPFS.BitswapStat{
+    blocks_received: non_neg_integer(),
+    blocks_sent: non_neg_integer(),
+    data_received: non_neg_integer(),
+    data_sent: non_neg_integer(),
+    dup_blks_received: non_neg_integer(),
+    dup_data_received: non_neg_integer(),
+    provide_buf_len: non_neg_integer(),
+    wantlist: list(),
+    peers: list()
+  }
+  ```
+  """
+  @type stat :: MyspaceIPFS.BitswapStat.t()
+
+  @typedoc """
+  A struct that represents the wantlist for a peer in the bitswap network.
+
+  ```
+  %MyspaceIPFS.BitswapWantList{
+    keys: list()
+  }
+  ```
+  """
+  @type wantlist :: MyspaceIPFS.BitswapWantList.t()
+
+  @typedoc """
+  A struct that represents the ledger for a peer in the bitswap network.
+  ```
+  %MyspaceIPFS.BitswapLedger{{
+    exchanged: pos_integer(),
+    peer: peer_id,
+    recv: pos_integer(),
+    sent: pos_integer(),
+    value: float()
+  }
+  ```
+  """
+  @type ledger :: MyspaceIPFS.BitswapLedger.t()
+
   @doc """
   Reprovide blocks to the network.
 
@@ -40,7 +81,7 @@ defmodule MyspaceIPFS.Bitswap do
 
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-wantlist
   """
-  @spec wantlist() :: {:ok, MyspaceIPFS.BitswapWantList.t()} | api_error()
+  @spec wantlist() :: {:ok, wantlist()} | MyspaceIPFS.Api.error_response()
   def wantlist() do
     post_query("/bitswap/wantlist")
     |> BitswapWantList.new()
@@ -55,7 +96,7 @@ defmodule MyspaceIPFS.Bitswap do
   ## Parameters
   `peer` - The peer ID to get the wantlist for. Optional.
   """
-  @spec wantlist(peer_id) :: {:ok, MyspaceIPFS.BitswapWantList.t()} | api_error()
+  @spec wantlist(MyspaceIPFS.peer_id()) :: {:ok, wantlist()} | MyspaceIPFS.Api.error_response()
   def wantlist(peer) when is_binary(peer) do
     post_query("/bitswap/wantlist?peer=" <> peer)
     |> BitswapWantList.new()
@@ -67,7 +108,11 @@ defmodule MyspaceIPFS.Bitswap do
 
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-stat
   """
-  @spec stat(opts) :: {:ok, [MyspaceIPFS.BitswapStat.t()]} | api_error
+  # @spec stat(MyspaceIPFS.opts()) ::
+  #         {:ok, [MyspaceIPFS.BitswapStat.t()]}
+  #         | MyspaceIPFS.Api.error_response()
+  @spec stat(MyspaceIPFS.opts()) :: {:ok, [stat]} | MyspaceIPFS.Api.error_response()
+
   def stat(opts \\ []) do
     post_query("/bitswap/stat", query: opts)
     |> BitswapStat.new()
@@ -82,7 +127,7 @@ defmodule MyspaceIPFS.Bitswap do
   ## Parameters
   `peer` - The peer ID to get the ledger for.
   """
-  @spec ledger(peer_id) :: {:ok, [MyspaceIPFS.BitswapLedger.t()]} | api_error
+  @spec ledger(MyspaceIPFS.peer_id()) :: {:ok, [ledger()]} | MyspaceIPFS.Api.error_response()
   def ledger(peer) do
     post_query("/bitswap/ledger?arg=" <> peer)
     |> BitswapLedger.new()
