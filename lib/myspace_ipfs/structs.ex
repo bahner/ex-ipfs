@@ -175,37 +175,6 @@ defmodule MyspaceIPFS.ErrorHash do
   def new({:error, data}), do: {:error, data}
 end
 
-defmodule MyspaceIPFS.Add do
-  @moduledoc """
-  This struct is very simple. Some results are listed as "Bytes": bytes, "Hash": hash, "Size": size, "Type": type. This is a
-  convenience struct to make it easier match on the result.
-
-  This is returned when you add a file or directory to IPFS.
-  """
-  defstruct bytes: nil, hash: nil, size: nil, type: nil
-
-  @type t :: %__MODULE__{
-          bytes: non_neg_integer,
-          hash: binary,
-          size: non_neg_integer,
-          type: binary
-        }
-
-  @spec new(map) :: MyspaceIPFS.Add.t()
-  def new(opts) when is_map(opts) do
-    %__MODULE__{
-      bytes: opts.bytes,
-      hash: opts.hash,
-      size: opts.size,
-      type: opts.type
-    }
-  end
-
-  # Pass on errors.
-  @spec new({:error, any}) :: {:error, any}
-  def new({:error, data}), do: {:error, data}
-end
-
 defmodule MyspaceIPFS.Peers do
   @moduledoc """
   A struct that represents the wantlist for a peer in the bitswap network.
@@ -215,7 +184,7 @@ defmodule MyspaceIPFS.Peers do
   @type t :: %__MODULE__{
           peers: list | nil
         }
-  @spec new(map) :: MyspaceIPFS.Peers.t()
+  @spec new(map) :: t()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       peers: opts.peers

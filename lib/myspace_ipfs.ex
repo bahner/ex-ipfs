@@ -150,6 +150,7 @@ defmodule MyspaceIPFS do
     do:
       multipart(fspath)
       |> post_multipart("/add", query: opts)
+      |> MyspaceIPFS.Add.new()
       |> okify()
 
   @doc """
