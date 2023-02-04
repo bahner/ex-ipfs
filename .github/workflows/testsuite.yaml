@@ -54,6 +54,9 @@ jobs:
           mix deps.get
           #mix compile --warnings-as-errors
           mix compile
+      - name: Run dialyzer integrety checks
+        run: |
+          mix dialyzer
       - name: Run test suite
         run: |
           mix coveralls

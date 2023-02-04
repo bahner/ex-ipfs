@@ -6,42 +6,47 @@ all: deps format compile
 	mix format
 	mix compile
 
-mix: all
-	iex -S mix
+commited:
+	./.check.uncommited
 
-tag:
-	git tag $(VERSION)
-
-release: tag
-	mix hex.publish
-	git push --tags
-
-compile: format
+compile: deps format
 	mix compile
 
 deps:
 	mix deps.get
 
+dialyzer:
+	mix dialyzer
+
 docker:
 	mkdir -p .docker/ipfs_staging .docker_data/ipfs_data
 	docker-compose up -d
-
-format:
-	mix format
 
 docs: compile
 	mix docs
 	xdg-open doc/index.html
 
+format:
+	mix format
+
+mix: all
+	iex -S mix
+
+proper: distclean compile test
+
 push: format commited all
 	git pull
 	git push
 
-test:
-	mix test
+release: tag
+	mix hex.publish
+	git push --tags
 
-commited:
-	./.check.uncommited
+tag:
+	git tag $(VERSION)
+
+test: dialyzer
+	mix test
 
 distclean: clean
 	rm -rf _build deps mix.lock
