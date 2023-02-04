@@ -9,8 +9,7 @@ defmodule MyspaceIPFS.Bitswap do
   alias MyspaceIPFS.BitswapLedger
   require Logger
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-  @typep api_response :: MyspaceIPFS.Api.api_response()
+  @typep api_error :: MyspaceIPFS.ApiError.t()
   @typep peer_id :: MyspaceIPFS.peer_id()
   @typep opts :: MyspaceIPFS.opts()
 
@@ -68,7 +67,7 @@ defmodule MyspaceIPFS.Bitswap do
 
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-stat
   """
-  @spec stat(opts) :: {:ok, [MyspaceIPFS.BitswapWantStat.t()]} | api_response
+  @spec stat(opts) :: {:ok, [MyspaceIPFS.BitswapStat.t()]} | api_error
   def stat(opts \\ []) do
     post_query("/bitswap/stat", query: opts)
     |> BitswapStat.new()

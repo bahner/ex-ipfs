@@ -6,7 +6,7 @@ defmodule MyspaceIPFS.Swarm do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep api_error :: MyspaceIPFS.ApiError.t()
   @typep peer_id :: MyspaceIPFS.peer_id()
 
   @doc """

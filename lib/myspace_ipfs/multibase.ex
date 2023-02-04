@@ -7,7 +7,7 @@ defmodule MyspaceIPFS.Multibase do
   import MyspaceIPFS.Utils
   alias MyspaceIPFS.MultibaseCodec
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep api_error :: MyspaceIPFS.ApiError.t()
   @typep opts :: MyspaceIPFS.opts()
 
   @doc """

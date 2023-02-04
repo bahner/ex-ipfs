@@ -7,7 +7,7 @@ defmodule MyspaceIPFS.Commands do
   import MyspaceIPFS.Utils
   alias MyspaceIPFS.CommandsCommand
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep api_error :: MyspaceIPFS.ApiError.t()
 
   @doc """
   List all available commands.

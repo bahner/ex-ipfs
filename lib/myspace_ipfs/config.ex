@@ -8,7 +8,7 @@ defmodule MyspaceIPFS.Config do
   @typep name :: MyspaceIPFS.name()
   @typep opts :: MyspaceIPFS.opts()
   @typep fspath :: MyspaceIPFS.fspath()
-  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep api_error :: MyspaceIPFS.ApiError.t()
 
   @doc """
   Get the value of a config key.

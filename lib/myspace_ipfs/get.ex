@@ -1,5 +1,7 @@
 defmodule MyspaceIPFS.Get do
-  @moduledoc false
+  @moduledoc """
+  Get a file from IPFS and write it to a file or directory.
+  """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
   require Logger
@@ -10,19 +12,17 @@ defmodule MyspaceIPFS.Get do
   @typep path :: MyspaceIPFS.path()
   @typep fspath :: MyspaceIPFS.fspath()
   @typep opts :: MyspaceIPFS.opts()
-  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep api_error :: MyspaceIPFS.ApiError.t()
 
-  @typep t :: %__MODULE__{
-           path: path,
-           fspath: fspath,
-           name: binary,
-           content: binary,
-           archive: boolean
-         }
+  # @typep t :: %__MODULE__{
+  #          path: path,
+  #          fspath: fspath,
+  #          name: binary,
+  #          content: binary,
+  #          archive: boolean
+  #        }
 
-  @doc """
-  Get a file from IPFS and write it to a file or directory.
-  """
+  @doc false
   @spec get(path, opts) :: {:ok, fspath} | api_error
   def get(path, opts \\ []) do
     content = get_get_data(path, opts)
@@ -37,6 +37,7 @@ defmodule MyspaceIPFS.Get do
     end
   end
 
+  # @spec get_get_data(path, opts) :: {:ok, fspath} | api_error
   defp get_get_data(path, opts) do
     options = create_query_opts(opts)
 
@@ -62,7 +63,7 @@ defmodule MyspaceIPFS.Get do
     # which is the IPFS CID.
     # We also store this to :name because we need to know it for extraction
     # from the tarball.
-    %MyspaceIPFS.Get{
+    %__MODULE__{
       path: path,
       fspath: Keyword.get(opts, :output, :filename.basename(path)),
       name: :filename.basename(path),
@@ -71,7 +72,7 @@ defmodule MyspaceIPFS.Get do
     }
   end
 
-  @spec handle_output(t) :: {:ok, fspath} | {:error, any}
+  # @spec handle_output(t) :: {:ok, fspath} | {:error, any}
   defp handle_output(get) do
     {:ok, tmp} = write_temp_file(get.content)
 
@@ -85,7 +86,7 @@ defmodule MyspaceIPFS.Get do
     end
   end
 
-  @spec extract_elem_from_tar_to(fspath, fspath, fspath, fspath) :: :ok | {:error, any}
+  # @spec extract_elem_from_tar_to(fspath, fspath, fspath, fspath) :: :ok | {:error, any}
   defp extract_elem_from_tar_to(file, elem, output, parent_tmp_dir \\ "/tmp") do
     with cwd when is_bitstring(cwd) <- mktempdir(parent_tmp_dir),
          extract_result <- :erl_tar.extract(file, [{:cwd, ~c'#{cwd}'}]) do

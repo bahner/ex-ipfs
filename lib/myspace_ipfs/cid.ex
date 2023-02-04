@@ -12,7 +12,7 @@ defmodule MyspaceIPFS.Cid do
 
   @typep opts :: MyspaceIPFS.opts()
   @typep cid :: MyspaceIPFS.cid()
-  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep api_error :: MyspaceIPFS.ApiError.t()
   @type multibase_codec :: MyspaceIPFS.MultibaseCodec.t()
 
   @doc """

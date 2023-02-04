@@ -5,7 +5,7 @@ defmodule MyspaceIPFS.Pin do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @type api_error :: MyspaceIPFS.Api.api_error()
+  @type api_error :: MyspaceIPFS.ApiError.t()
   @type name :: MyspaceIPFS.name()
   @type opts :: MyspaceIPFS.opts()
   @type path :: MyspaceIPFS.path()

@@ -13,8 +13,7 @@ defmodule MyspaceIPFS do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-  @typep api_response :: MyspaceIPFS.Api.api_response()
+  @typep api_error :: MyspaceIPFS.ApiError.t()
 
   @typedoc """
   The name of the file or data to be sent to the node. Sometimes you cant't
@@ -172,7 +171,7 @@ defmodule MyspaceIPFS do
   If you feel that you need more timeouts, you can use the `:timeout` option in the `opts` list.
   But the default should be enough for most cases. More likely your content isn't available....
   """
-  @spec get(path, opts) :: api_response
+  @spec get(path, opts) :: {:ok, fspath} | api_error
   defdelegate get(path, opts \\ []), to: MyspaceIPFS.Get
 
   @doc """
@@ -190,7 +189,7 @@ defmodule MyspaceIPFS do
   ```
   """
   # FIXME: return a struct
-  @spec cat(path, opts) :: api_response
+  @spec cat(path, opts) :: {:ok, any} | api_error
   def cat(path, opts \\ []),
     do: post_query("/cat?arg=" <> path, query: opts)
 
@@ -231,7 +230,7 @@ defmodule MyspaceIPFS do
   ```
   """
   # FIXME: return a struct
-  @spec ls(path, opts) :: api_response
+  @spec ls(path, opts) :: {:ok, MyspaceIPFS.Objects.t()} | api_error
   def ls(path, opts \\ []),
     do:
       post_query("/ls?arg=" <> path, query: opts)
@@ -251,13 +250,11 @@ defmodule MyspaceIPFS do
     - Protocols: the protocols of the node.
   """
   # FIXME: return a struct
-  @spec id :: api_response
+  @spec id :: {:ok, map} | api_error
   def id,
     do:
       post_query("/id")
       |> okify()
-
-  # |> okify()
 
   @doc """
   Ping a peer.
@@ -290,7 +287,7 @@ defmodule MyspaceIPFS do
   ```
   """
   # FIXME veridy return type
-  @spec mount(opts) :: api_response
+  @spec mount(opts) :: {:ok, any} | api_error
   def mount(opts \\ []),
     do:
       post_query("/mount", query: opts)

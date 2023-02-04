@@ -13,7 +13,8 @@ defmodule MyspaceIPFS.Api do
   @typep multipart :: Tesla.Multipart.t()
 
   @typep api_response :: binary | map | list | api_error
-  @typep api_error :: {:error, MyspaceIPFS.ApiError.t()} | {:error, Tesla.Env.t()} | {:error, atom}
+  @typep api_error ::
+           {:error, MyspaceIPFS.ApiError.t()} | {:error, Tesla.Env.t()} | {:error, atom}
 
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @api_url)

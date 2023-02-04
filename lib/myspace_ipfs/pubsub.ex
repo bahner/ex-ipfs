@@ -6,7 +6,7 @@ defmodule MyspaceIPFS.PubSub do
   import MyspaceIPFS.Utils
   alias MyspaceIPFS.Multibase
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep api_error :: MyspaceIPFS.ApiError.t()
 
   @doc """
   List the topics you are currently subscribed to.

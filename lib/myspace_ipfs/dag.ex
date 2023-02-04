@@ -11,7 +11,7 @@ defmodule MyspaceIPFS.Dag do
   @typep cid :: MyspaceIPFS.cid()
   @typep opts :: MyspaceIPFS.opts()
   @typep path :: MyspaceIPFS.path()
-  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep api_error :: MyspaceIPFS.ApiError.t()
 
   @doc """
   Streams the selected DAG as a .car stream on stdout.

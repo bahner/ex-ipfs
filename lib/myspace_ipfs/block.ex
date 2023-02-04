@@ -7,7 +7,7 @@ defmodule MyspaceIPFS.Block do
   alias MyspaceIPFS.ErrorHash
   alias MyspaceIPFS.KeySize
 
-  @type api_error :: MyspaceIPFS.Api.api_error()
+  @type api_error :: MyspaceIPFS.ApiError.t()
   @typep opts :: MyspaceIPFS.opts()
   @typep cid :: MyspaceIPFS.cid()
   @typep fspath :: MyspaceIPFS.fspath()

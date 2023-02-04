@@ -5,7 +5,7 @@ defmodule MyspaceIPFS.Diag do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
+  @typep api_error :: MyspaceIPFS.ApiError.t()
 
   @doc """
   List commands run by the daemon.
