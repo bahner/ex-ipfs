@@ -37,7 +37,7 @@ defmodule MyspaceIPFS.Mixfile do
       {:recase, "~> 0.7.0"},
       {:tesla, "~> 1.5"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.2", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.29", only: :dev, runtime: false},
       {:excoveralls, "~> 0.15", only: :test, runtime: false}
     ]
