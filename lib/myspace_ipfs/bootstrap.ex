@@ -1,27 +1,23 @@
 defmodule MyspaceIPFS.Bootstrap do
   @moduledoc """
   MyspaceIPFS.Bootstrap is where the bootstrap commands of the IPFS API reside.
-  """
 
-  defstruct Peers: []
+  When you start an IPFS node, it will not necessarily know about any other peers on the
+  network. To find other peers, you need to connect to a bootstrap node. A bootstrap node
+  is a node that is trusted to help you find other peers on the network. The IPFS daemon
+  will connect to a bootstrap node automatically when it starts up.
+  """
 
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
   alias MyspaceIPFS.Peers
 
-  @type t :: %__MODULE__{
-          Peers: list
-        }
-  @typep reply :: {:ok, [t()]} | {:error, any()}
-  @typep path :: MyspaceIPFS.path()
-
   @doc """
   List peers in bootstrap list.
   """
-  @spec bootstrap() :: {:ok, MyspaceIPFS.Peers.t()}
+  @spec bootstrap() :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.Api.api_error()
   def bootstrap do
     post_query("/bootstrap")
-    |> snake_atomize()
     |> Peers.new()
     |> okify()
   end
@@ -29,43 +25,59 @@ defmodule MyspaceIPFS.Bootstrap do
   @doc """
   Add peers to the bootstrap list.
 
-  ## Parameters
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bootstrap-add
+
+  ## Parameters
   `peer` - The peer ID to add to the bootstrap list. The format is a multiaddr
-  in the form of `<multiaddr>/<peerID>`
+  in the form of `<multiaddr>/<peerID>` OR a list of peers.
   """
-  @spec add(path) :: {:ok, MyspaceIPFS.Peers.t()}
-  def add(peer) do
+  @spec add(Path.t()) :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.Api.api_error()
+  def add(peer) when is_binary(peer) do
     post_query("/bootstrap/add?arg=" <> peer)
-    |> snake_atomize()
     |> Peers.new()
     |> okify()
   end
 
+  def add(peers) when is_list(peers) do
+    peers
+    |> Enum.map(fn p -> add(p) end)
+    |> okify()
+  end
+
   @doc """
-  Add default peers to the bootstrap list.
+  Add peer to the default bootstrap list.
+
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bootstrap-add-default
 
   ## Parameters
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bootstrap-add-default
+  `peer` - The peer ID to add to the bootstrap list. The format is a multiaddr
+
+  in the form of `<multiaddr>/<peerID>` OR a list of peers.
   """
-  @spec add_default() :: {:ok, MyspaceIPFS.Peers.t()}
-  def add_default do
-    post_query("/bootstrap/add/default")
-    |> snake_atomize()
+  @spec add_default(Path.t()) :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.Api.api_error()
+  def add_default(peer) when is_binary(peer) do
+    post_query("/bootstrap/add?arg=" <> peer)
     |> Peers.new()
+    |> okify()
+  end
+
+  def add_default(peers) when is_list(peers) do
+    peers
+    |> Enum.map(fn p -> add_default(p) end)
     |> okify()
   end
 
   @doc """
   Show peers in bootstrap list.
 
-  ## Parameters
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bootstrap-list
+
+  NB! /bootstrap/list is the same as /bootstrap, but that doesn't work
+  well with Elixir because of the same name as the module.
   """
-  @spec list() :: {:ok, MyspaceIPFS.Peers.t()}
+  @spec list() :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.Api.api_error()
   def list do
     post_query("/bootstrap/list")
-    |> snake_atomize()
     |> Peers.new()
     |> okify()
   end
@@ -73,16 +85,16 @@ defmodule MyspaceIPFS.Bootstrap do
   @doc """
   Remove peer to the bootstrap list.
 
-  ## Parameters
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bootstrap-rm
+
+  ## Parameters
   `peer` - The peer ID to remove from the bootstrap list. The format is a multiaddr
   in the form of `<multiaddr>/<peerID>`
 
   """
-  @spec rm(path) :: {:ok, MyspaceIPFS.Peers.t()}
+  @spec rm(Path.t()) :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.Api.api_error()
   def rm(peer) do
     post_query("/bootstrap/rm?arg=" <> peer)
-    |> snake_atomize()
     |> Peers.new()
     |> okify()
   end
@@ -90,11 +102,11 @@ defmodule MyspaceIPFS.Bootstrap do
   @doc """
   Remove all peers from the bootstrap list.
 
-  ## Parameters
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bootstrap-rm-all
   """
-  @spec rm_all() :: reply
+  @spec rm_all() :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.Api.api_error()
   def rm_all do
     post_query("/bootstrap/rm/all")
+    |> okify()
   end
 end

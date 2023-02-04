@@ -10,7 +10,7 @@ defmodule MyspaceIPFS.Peers do
   @spec new(map) :: t()
   def new(opts) when is_map(opts) do
     %__MODULE__{
-      peers: opts.peers
+      peers: opts["Peers"]
     }
   end
 

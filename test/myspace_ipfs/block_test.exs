@@ -1,4 +1,4 @@
-defmodule BlockTest do
+defmodule MyspaceIPFS.BlockTest do
   @moduledoc """
   Test the MyspaceIPFS API
 
