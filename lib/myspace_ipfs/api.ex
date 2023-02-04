@@ -1,5 +1,7 @@
 defmodule MyspaceIPFS.Api do
-  @moduledoc false
+  @moduledoc """
+  A module that contains the functions that are used to interact with the IPFS API.
+  """
   use Tesla, docs: false
   alias MyspaceIPFS.ApiError
   require Logger
@@ -8,46 +10,38 @@ defmodule MyspaceIPFS.Api do
   @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0/")
 
   # Types
-  @typep path :: MyspaceIPFS.path()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep multipart :: Tesla.Multipart.t()
+  @typedoc """
+  A type that represents the possible responses from the API.
+  """
+  @type response :: binary | map | list | error
 
-  @typep api_response :: binary | map | list | api_error
-  @typep api_error ::
-           {:error, MyspaceIPFS.ApiError.t()} | {:error, Tesla.Env.t()} | {:error, atom}
+  @typedoc """
+  A an aggregate type that represents the possible errors that can be returned from the API.
+  """
+  @type error ::
+          {:error, MyspaceIPFS.ApiError.t()} | {:error, Tesla.Env.t()} | {:error, atom}
 
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @api_url)
   plug(Tesla.Middleware.JSON)
   plug(Tesla.Middleware.Logger)
 
-  @doc """
-  High level function allowing to perform POST requests to the node.
-  A `path` has to be provided, along with an optional list of `opts` that are
-  dependent on the endpoint that will get hit.
-  NB! This is not a GET request, but a POST request. IPFS uses POST requests.
-  """
-  @spec post_query(path, opts) :: api_response
+  @doc false
+  @spec post_query(MyspaceIPFS.path(), MyspaceIPFS.opts()) :: response
   def post_query(path, opts \\ []) do
     post(path, <<>>, opts)
     |> handle_response()
   end
 
-  @doc """
-  High level function allowing to send data to the node.
-  A `path` has to be specified along with the `data` to be sent. Also, a list
-  of `opts` can be optionally sent.
-
-  Data is sent first, so that it can easily be part of a pipe.
-  """
-  @spec post_multipart(multipart, binary, list) :: api_response
+  @doc false
+  @spec post_multipart(Tesla.Multipart.t(), binary, MyspaceIPFS.opts()) :: response
   def post_multipart(mp, path, opts \\ []) do
     post(path, mp, opts)
     |> handle_response()
   end
 
-  @spec handle_response({:ok, Tesla.Env.t()}) :: api_response
-  def handle_response(response) do
+  @doc false
+  defp handle_response(response) do
     # Handles the response from the node. It returns the body of the response
     # if the status code is 200, otherwise it returns an error tuple.
     # ## Status codes that are handled
