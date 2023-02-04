@@ -234,6 +234,7 @@ defmodule MyspaceIPFS do
   def ls(path, opts \\ []),
     do:
       post_query("/ls?arg=" <> path, query: opts)
+      |> MyspaceIPFS.Objects.new()
       |> okify()
 
   @doc """

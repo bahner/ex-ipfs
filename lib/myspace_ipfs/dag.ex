@@ -4,6 +4,8 @@ defmodule MyspaceIPFS.Dag do
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
+  alias MyspaceIPFS.DagImport
+  alias MyspaceIPFS.RootCid
   require Logger
 
   @typep cid :: MyspaceIPFS.cid()
@@ -51,14 +53,14 @@ defmodule MyspaceIPFS.Dag do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-dag-import
   """
-  @spec import(binary, opts) :: {:ok, MyspaceIPFS.DagImport.t()} | api_error()
+  @spec import(binary, opts) :: {:ok, DagImport.t()} | api_error()
   def import(data, opts \\ []) do
     Logger.debug("import: #{inspect(opts)}")
     opts = Keyword.put(opts, :stats, true)
 
     multipart_content(data)
     |> post_multipart("/dag/import", query: opts)
-    |> MyspaceIPFS.DagImport.new()
+    |> DagImport.new()
     |> okify()
   end
 
@@ -78,12 +80,12 @@ defmodule MyspaceIPFS.Dag do
   ]
   ```
   """
-  @spec put(binary, opts) :: {:ok, MyspaceIPFS.RootCid} | api_error()
+  @spec put(binary, opts) :: {:ok, RootCid.t()} | api_error()
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/dag/put", query: opts)
     |> Map.get("Cid", nil)
-    |> MyspaceIPFS.RootCid.new()
+    |> RootCid.new()
     |> okify()
   end
 end

@@ -38,7 +38,6 @@ defmodule MyspaceIPFS.Cid do
   def bases(opts \\ []),
     do:
       post_query("/cid/bases", query: opts)
-      |> Enum.map(&snake_atomize/1)
       |> Enum.map(&MultibaseEncoding.new/1)
       |> okify()
 

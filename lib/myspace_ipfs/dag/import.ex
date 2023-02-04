@@ -21,7 +21,7 @@ defmodule MyspaceIPFS.DagImport do
     {:error, data}
   end
 
-  @spec new(list) :: t
+  @spec new(list) :: t()
   def new(list) do
     [root | [stats]] = list
 

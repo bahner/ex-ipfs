@@ -6,7 +6,7 @@ defmodule MyspaceIPFS.MultibaseEncoding do
   defstruct [:name, :code]
 
   @type t :: %__MODULE__{
-          name: String.t(),
+          name: binary,
           code: non_neg_integer()
         }
 
@@ -19,11 +19,11 @@ defmodule MyspaceIPFS.MultibaseEncoding do
     {:error, data}
   end
 
+  @spec new(map) :: t()
   def new(opts) do
-    # code and name are required and must be present.
-    %MyspaceIPFS.MultibaseEncoding{
-      name: opts.name,
-      code: opts.code
+    %__MODULE__{
+      name: opts["Name"],
+      code: opts["Code"]
     }
   end
 end

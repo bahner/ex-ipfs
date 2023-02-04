@@ -25,6 +25,38 @@ defmodule MyspaceIPFS.RootCid do
   end
 end
 
+defmodule MyspaceIPFS.Hash do
+  @moduledoc """
+  This struct is very simple. Some results are listed as "Hash": hash. This is a
+  convenience struct to make it easier match on the result.
+  """
+  @enforce_keys [:hash, :name, :size, :type]
+  defstruct hash: nil, name: nil, size: nil, target: "", type: nil
+
+  @type t :: %__MODULE__{
+          hash: binary,
+          name: binary,
+          size: non_neg_integer,
+          target: binary,
+          type: non_neg_integer()
+        }
+
+  @spec new(map) :: MyspaceIPFS.Hash.t()
+  def new(opts) when is_map(opts) do
+    %__MODULE__{
+      hash: opts["Hash"],
+      name: opts["Name"],
+      size: opts["Size"],
+      target: opts["Target"],
+      type: opts["Type"]
+    }
+  end
+
+  # Pass on errors.
+  @spec new({:error, any}) :: {:error, any}
+  def new({:error, data}), do: {:error, data}
+end
+
 defmodule MyspaceIPFS.KeySize do
   @moduledoc """
   This struct is very simple. Some results are listed as "Size": size. This is a
@@ -46,6 +78,56 @@ defmodule MyspaceIPFS.KeySize do
       size: opts.size
     }
   end
+end
+
+defmodule MyspaceIPFS.Objects do
+  @moduledoc """
+  This struct is very simple. Some results are listed as "Hash": hash, "Links": links. This is a
+  convenience struct to make it easier match on the result.
+  """
+
+  defstruct objects: []
+
+  @type t :: %__MODULE__{objects: list}
+
+  @spec new(map) :: MyspaceIPFS.Objects.t()
+  def new(opts) when is_map(opts) do
+    objects =
+      opts["Objects"]
+      |> Enum.map(&MyspaceIPFS.HashLinks.new/1)
+
+    %__MODULE__{
+      objects: objects
+    }
+  end
+
+  # Pass on errors.
+  @spec new({:error, any}) :: {:error, any}
+  def new({:error, data}), do: {:error, data}
+end
+
+defmodule MyspaceIPFS.HashLinks do
+  @moduledoc """
+  This struct is very simple. Some results are listed as "Hash": hash, "Links": links. This is a
+  convenience struct to make it easier match on the result.
+  """
+
+  defstruct hash: nil, links: []
+
+  @type t :: %__MODULE__{hash: binary, links: list}
+
+  @spec new(map) :: MyspaceIPFS.HashLinks.t()
+  def new(opts) when is_map(opts) do
+    with links <- opts["Links"] |> Enum.map(&MyspaceIPFS.Hash.new/1),
+         do: %__MODULE__{
+           hash: opts["Hash"],
+           links: links
+         }
+  end
+
+  # Pass on errors.
+  @spec new({:error, any}) :: {:error, any}
+  def new({:error, data}), do: {:error, data}
 end
 
 defmodule MyspaceIPFS.KeyValue do

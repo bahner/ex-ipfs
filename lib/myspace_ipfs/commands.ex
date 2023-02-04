@@ -17,7 +17,6 @@ defmodule MyspaceIPFS.Commands do
   @spec commands() :: {:ok, any} | api_error
   def commands() do
     post_query("/commands")
-    |> snake_atomize()
     |> CommandsCommand.new()
     |> okify()
   end

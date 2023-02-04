@@ -24,22 +24,18 @@ defmodule MyspaceIPFS.CommandsCommand do
   @spec new(map) :: t
   def new(opts) do
     %__MODULE__{
-      name: opts.name,
-      options: opts.options,
-      subcommands: Enum.map(opts.subcommands, &gen_commands/1)
+      name: opts["Name"],
+      options: opts["Options"],
+      subcommands: Enum.map(opts["Subcommands"], &gen_commands/1)
     }
   end
 
-  @doc """
-  Generate command struct subcommands of a command object
-  """
-  @spec gen_commands(map) :: MyspaceIPFS.CommandsCommand.t() | list
-  def gen_commands(command) when is_map(command) do
+  defp gen_commands(command) when is_map(command) do
     if has_subcommands?(command) do
-      Logger.debug("Generating subcommands for #{command.name}")
-      %{command | subcommands: Enum.map(command.subcommands, &gen_commands/1)}
+      Logger.debug("Generating subcommands for #{command["Name"]}")
+      %{command | subcommands: Enum.map(command["Subcommands"], &gen_commands/1)}
     else
-      Logger.debug("Generating command #{command.name}")
+      Logger.debug("Generating command #{command["Name"]}")
       new(command)
     end
   end

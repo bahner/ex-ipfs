@@ -75,7 +75,6 @@ defmodule MyspaceIPFS.Multibase do
   def list(opts \\ []) do
     post_query("/multibase/list", query: opts)
     |> filter_empties()
-    |> snake_atomize()
     |> Enum.map(&MultibaseCodec.new/1)
     |> okify()
   end

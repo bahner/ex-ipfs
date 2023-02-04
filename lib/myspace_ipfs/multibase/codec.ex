@@ -21,12 +21,13 @@ defmodule MyspaceIPFS.MultibaseCodec do
     {:error, data}
   end
 
+  @spec new(map) :: t()
   def new(opts) do
     %__MODULE__{
-      name: opts.name,
-      code: opts.code,
-      prefix: Map.get(opts, :prefix, nil),
-      description: Map.get(opts, :description, nil)
+      name: opts["Name"],
+      code: opts["Code"],
+      prefix: Map.get(opts, "Prefix", nil),
+      description: Map.get(opts, "Description", nil)
     }
   end
 end
