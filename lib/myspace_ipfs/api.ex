@@ -18,9 +18,9 @@ defmodule MyspaceIPFS.Api do
   Based on https://github.com/tableturn/ipfs/blob/master/lib/ipfs.ex
   """
   use Tesla, docs: false
-  import MyspaceIPFS.Utils
   alias MyspaceIPFS.ApiError
   require Logger
+  import MyspaceIPFS.Utils, only: [unokify: 1, filter_empties: 1]
 
   # Types
   @typep path :: MyspaceIPFS.path()
@@ -108,6 +108,21 @@ defmodule MyspaceIPFS.Api do
 
       {:error, :timeout} ->
         {:error, :timeout}
+    end
+  end
+
+  defp extract_data_from_json_error(error) do
+    Logger.debug("Extract DATA from JSON Error: #{inspect(error)}")
+
+    try do
+      error
+      |> String.split("\n")
+      |> filter_empties()
+      # Please note that Jason.decode *must* have input as a string.
+      # Hence the interpolation.
+      |> Enum.map(fn line -> Jason.decode!("#{line}") end)
+    rescue
+      _ -> error
     end
   end
 end

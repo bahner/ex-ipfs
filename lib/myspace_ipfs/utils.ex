@@ -29,29 +29,6 @@ defmodule MyspaceIPFS.Utils do
     end
   end
 
-  @doc """
-  IPFS api sometimes return invalid json. Instead of one json object, it returns
-  multiple json objects separated by newlines. This function will convert the
-  string to a list of maps.
-
-  If it fails, it'll just return the original string.
-  """
-  @spec extract_data_from_json_error(any) :: list | binary
-  def extract_data_from_json_error(error) do
-    Logger.debug("Extract DATA from JSON Error: #{inspect(error)}")
-
-    try do
-      error
-      |> String.split("\n")
-      |> filter_empties()
-      # Please note that Jason.decode *must* have input as a string.
-      # Hence the interpolation.
-      |> Enum.map(fn line -> Jason.decode!("#{line}") end)
-    rescue
-      _ -> error
-    end
-  end
-
   @spec timestamp :: integer
   @doc """
   Returns the current timestamp in unix time.
