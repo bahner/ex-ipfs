@@ -20,7 +20,7 @@ defmodule MyspaceIPFS.BitswapTest do
     assert api_error.type === "error"
   end
 
-  test "wantlist shoud return wantlist" do
+  test "wantlist should return wantlist" do
     {:ok, wantlist} = Bitswap.wantlist()
     assert is_map(wantlist)
     assert %MyspaceIPFS.BitswapWantList{} = wantlist

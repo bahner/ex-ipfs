@@ -5,7 +5,7 @@ defmodule MyspaceIPFS.Dag do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
   alias MyspaceIPFS.DagImport
-  alias MyspaceIPFS.RootCid
+  alias MyspaceIPFS.SlashCID
   require Logger
 
   @typep cid :: MyspaceIPFS.cid()
@@ -80,12 +80,12 @@ defmodule MyspaceIPFS.Dag do
   ]
   ```
   """
-  @spec put(binary, opts) :: {:ok, RootCid.t()} | api_error()
+  @spec put(binary, opts) :: {:ok, SlashCID.t()} | api_error()
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/dag/put", query: opts)
     |> Map.get("Cid", nil)
-    |> RootCid.new()
+    |> SlashCID.new()
     |> okify()
   end
 end

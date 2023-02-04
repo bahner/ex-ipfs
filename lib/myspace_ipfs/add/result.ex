@@ -1,5 +1,7 @@
-defmodule MyspaceIPFS.Add do
-  @moduledoc false
+defmodule MyspaceIPFS.AddResult do
+  @moduledoc """
+  A struct that represents the result of an add operation.
+  """
 
   defstruct bytes: nil, hash: nil, size: nil, name: nil
 
@@ -10,6 +12,7 @@ defmodule MyspaceIPFS.Add do
           size: non_neg_integer
         }
 
+  @doc false
   @spec new(map) :: t()
   def new(opts) when is_map(opts) do
     %__MODULE__{
@@ -20,11 +23,13 @@ defmodule MyspaceIPFS.Add do
     }
   end
 
+  @doc false
   @spec new(list) :: list(t())
   def new(opts) when is_list(opts) do
     Enum.map(opts, &new/1)
   end
 
+  @doc false
   @spec new({:error, any}) :: {:error, any}
   def new({:error, data}), do: {:error, data}
 end

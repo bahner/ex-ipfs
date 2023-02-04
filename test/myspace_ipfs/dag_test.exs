@@ -13,7 +13,7 @@ defmodule MyspaceIPFS.DagTest do
   test "Should return ok RootCID" do
     {:ok, root} = Dag.put("{\"Key\":\"Value\"}")
     assert is_map(root)
-    assert %MyspaceIPFS.RootCid{} = root
+    assert %MyspaceIPFS.SlashCID{} = root
     assert is_bitstring(root./)
     assert root./ === "bafyreia353cr2t26iiuw5g2triyfelqehsu5peq4pn2u6t6q6oktrplzly"
   end

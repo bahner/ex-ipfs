@@ -17,16 +17,6 @@ defmodule MyspaceIPFS do
   @typep api_response :: MyspaceIPFS.Api.api_response()
 
   @typedoc """
-  This struct is very simple. Some results are listed as "Bytes": bytes, "Hash": hash, "Size": size, "Type": type. This is a
-  convenience struct to make it easier match on the result.
-
-  This is returned when you add a file or directory to IPFS.
-
-  I have never seen bytes returned, but it is listed in the docs.
-  """
-  @type add_result :: MyspaceIPFS.Add.t()
-
-  @typedoc """
   The name of the file or data to be sent to the node. Sometimes you cant't
   use paths, but have to use a cid. This is because prefixes like /ipfs/ or
   /ipns/ are not allowed.
@@ -155,12 +145,12 @@ defmodule MyspaceIPFS do
 
   """
   # FIXME return a struct
-  @spec add(fspath, opts) :: api_response
+  @spec add(fspath, opts) :: {:ok, MyspaceIPFS.AddResult.t()} | api_error
   def add(fspath, opts \\ []),
     do:
       multipart(fspath)
       |> post_multipart("/add", query: opts)
-      |> MyspaceIPFS.Add.new()
+      |> MyspaceIPFS.AddResult.new()
       |> okify()
 
   @doc """

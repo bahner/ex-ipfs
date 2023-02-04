@@ -39,7 +39,7 @@ defmodule MyspaceIPFS.DagImportRoot do
   defstruct cid: nil, pin_error_msg: nil
 
   @type t :: %__MODULE__{
-          cid: MyspaceIPFS.RootCid.t(),
+          cid: MyspaceIPFS.SlashCID.t(),
           pin_error_msg: binary
         }
 
@@ -55,7 +55,7 @@ defmodule MyspaceIPFS.DagImportRoot do
   @spec new(map) :: t
   def new(root) do
     %__MODULE__{
-      cid: MyspaceIPFS.RootCid.new(root["Cid"]),
+      cid: MyspaceIPFS.SlashCID.new(root["Cid"]),
       pin_error_msg: root["PinErrorMsg"]
     }
   end

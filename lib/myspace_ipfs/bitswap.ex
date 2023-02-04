@@ -12,14 +12,13 @@ defmodule MyspaceIPFS.Bitswap do
   @typep api_error :: MyspaceIPFS.Api.api_error()
   @typep api_response :: MyspaceIPFS.Api.api_response()
   @typep peer_id :: MyspaceIPFS.peer_id()
-  @type wantlist :: MyspaceIPFS.BitswapWantList.t()
-  @type stat :: MyspaceIPFS.BitswapStat.t()
-  @type ledger() :: MyspaceIPFS.BitswapLedger.t()
   @typep opts :: MyspaceIPFS.opts()
 
   @spec reprovide(timeout) :: :ok
   @doc """
   Reprovide blocks to the network.
+
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-reprovide
 
   NB! I am unsure what is supposed to happen here. Mostly I get no reply. I haven't been able to find any documentation on this endpoint.
   """
@@ -27,10 +26,11 @@ defmodule MyspaceIPFS.Bitswap do
     reprovide = Task.async(fn -> post_query("/bitswap/reprovide") end)
 
     case Task.yield(reprovide, timeout) || Task.shutdown(reprovide) do
-      {:ok, result} ->
-        result
+      # A bit strange, but the error is returned in an {:ok, error} tuple.
+      {:ok, {:error, result}} ->
+        {:error, result}
 
-      nil ->
+      _ ->
         Logger.warn("Bitswap.reprovide timed out after #{timeout}ms. That is probably OK.")
         :ok
     end
@@ -39,20 +39,25 @@ defmodule MyspaceIPFS.Bitswap do
   @doc """
   Get the current bitswap wantlist.
 
-  ## Parameters
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-wantlist
-
-  `peer` - The peer ID to get the wantlist for. Optional.
   """
-  @spec wantlist() :: {:ok, wantlist} | api_error()
+  @spec wantlist() :: {:ok, MyspaceIPFS.BitswapWantList.t()} | api_error()
   def wantlist() do
     post_query("/bitswap/wantlist")
     |> BitswapWantList.new()
     |> okify()
   end
 
-  @spec wantlist(peer_id) :: {:ok, wantlist} | api_error()
-  def wantlist(peer) do
+  @doc """
+  Get the current bitswap wantlist for a peer.
+
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-wantlist
+
+  ## Parameters
+  `peer` - The peer ID to get the wantlist for. Optional.
+  """
+  @spec wantlist(peer_id) :: {:ok, MyspaceIPFS.BitswapWantList.t()} | api_error()
+  def wantlist(peer) when is_binary(peer) do
     post_query("/bitswap/wantlist?peer=" <> peer)
     |> BitswapWantList.new()
     |> okify()
@@ -61,16 +66,9 @@ defmodule MyspaceIPFS.Bitswap do
   @doc """
   Show some diagnostic information on the bitswap agent.
 
-  ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-stat
-  ```
-  [
-    `verbose`: <bool>, # Print extra information.
-    `human`: <bool>, # Print sizes in human readable format (e.g., 1.2K 234M 2G).
-  ]
-  ```
   """
-  @spec stat(opts) :: {:ok, [stat]} | api_response
+  @spec stat(opts) :: {:ok, [MyspaceIPFS.BitswapWantStat.t()]} | api_response
   def stat(opts \\ []) do
     post_query("/bitswap/stat", query: opts)
     |> BitswapStat.new()
@@ -80,12 +78,12 @@ defmodule MyspaceIPFS.Bitswap do
   @doc """
   Get the current bitswap ledger for a given peer.
 
-  ## Parameters
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-ledger
 
+  ## Parameters
   `peer` - The peer ID to get the ledger for.
   """
-  @spec ledger(peer_id) :: {:ok, [ledger]} | api_error
+  @spec ledger(peer_id) :: {:ok, [MyspaceIPFS.BitswapLedger.t()]} | api_error
   def ledger(peer) do
     post_query("/bitswap/ledger?arg=" <> peer)
     |> BitswapLedger.new()

@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.RootCid do
+defmodule MyspaceIPFS.SlashCID do
   @moduledoc """
   This struct is very simple. Some results are listed as `%{"/": cid}`. This is a
   convenience struct to make it easier match on the result.
@@ -13,7 +13,7 @@ defmodule MyspaceIPFS.RootCid do
 
   @type t :: %__MODULE__{/: cid}
 
-  @spec new(any) :: MyspaceIPFS.RootCid.t()
+  @spec new(any) :: t()
   def new(cid) do
     case cid do
       %{"/" => something} ->

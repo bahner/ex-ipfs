@@ -1,43 +1,19 @@
 defmodule MyspaceIPFS.Api do
-  @moduledoc """
-  IPFS (the InterPlanetary File Syste
-  new hypermedia distribution protocol, addressed by
-  content and identities. IPFS enables the creation of
-  completely distributed applications. It aims to make the web
-  faster, safer, and more open.
-
-
-  IPFS is a distributed file system that seeks to connect
-  all computing devices with the same system of files. In some
-  ways, this is similar to the original aims of the Web, but IPFS
-  is actually more similar to a single bittorrent swarm exchanging
-  git objects.
-
-  Forked from https://github.com/tensor-programming/Elixir-Ipfs-Api
-
-  Based on https://github.com/tableturn/ipfs/blob/master/lib/ipfs.ex
-  """
+  @moduledoc false
   use Tesla, docs: false
   alias MyspaceIPFS.ApiError
   require Logger
   import MyspaceIPFS.Utils, only: [unokify: 1, filter_empties: 1]
+
+  @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0/")
 
   # Types
   @typep path :: MyspaceIPFS.path()
   @typep opts :: MyspaceIPFS.opts()
   @typep multipart :: Tesla.Multipart.t()
 
-  @typedoc """
-  The response from the API. It can be a binary, a map, a list or an error.
-  """
-  @type api_response :: binary | map | list | api_error
-
-  @typedoc """
-  The error response from the API after we have handle it.
-  """
-  @type api_error :: {:error, MyspaceIPFS.ApiError.t()} | {:error, Tesla.Env.t()} | {:error, atom}
-
-  @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0/")
+  @typep api_response :: binary | map | list | api_error
+  @typep api_error :: {:error, MyspaceIPFS.ApiError.t()} | {:error, Tesla.Env.t()} | {:error, atom}
 
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @api_url)

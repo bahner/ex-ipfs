@@ -15,10 +15,7 @@ defmodule MyspaceIPFS.BitswapLedger do
           value: float()
         }
 
-  @doc """
-  Generate a new BitswapLedger struct or passthrough an error message
-  from the IPFS API
-  """
+  @doc false
   @spec new({:error, map}) :: {:error, map}
   def new({:error, data}) do
     {:error, data}

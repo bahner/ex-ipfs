@@ -3,8 +3,6 @@ defmodule MyspaceIPFS.BitswapStat do
   A struct that represents the bitswap network statistics.
   """
 
-  import MyspaceIPFS.Utils
-
   defstruct blocks_received: nil,
             blocks_sent: nil,
             data_received: nil,
@@ -16,7 +14,7 @@ defmodule MyspaceIPFS.BitswapStat do
             provide_buf_len: nil,
             wantlist: []
 
-  @typep rootcid :: MyspaceIPFS.RootCid.t()
+  @typep slash_cid :: MyspaceIPFS.SlashCID.t()
   @typep peer_id :: MyspaceIPFS.peer_id()
 
   @type t :: %__MODULE__{
@@ -29,33 +27,28 @@ defmodule MyspaceIPFS.BitswapStat do
           messages_received: list,
           peers: list(peer_id),
           provide_buf_len: integer,
-          wantlist: list(rootcid)
+          wantlist: list(slash_cid)
         }
 
-  @doc """
-  Generate a new BitswapStat struct or passthrough an error message
-  from the IPFS API
-  """
+  @doc false
   @spec new({:error, map}) :: {:error, map}
   def new({:error, data}) do
     {:error, data}
   end
 
-  @spec new(map) :: MyspaceIPFS.BitswapStat.t()
+  @spec new(map) :: t()
   def new(opts) do
-    opts = snake_atomize(opts)
-
     %__MODULE__{
-      blocks_received: opts.blocks_received,
-      blocks_sent: opts.blocks_sent,
-      data_received: opts.data_received,
-      data_sent: opts.data_sent,
-      dup_blks_received: opts.dup_blks_received,
-      dup_data_received: opts.dup_data_received,
-      messages_received: opts.messages_received,
-      peers: opts.peers,
-      provide_buf_len: opts.provide_buf_len,
-      wantlist: opts.wantlist
+      blocks_received: opts["BlocksReceived"],
+      blocks_sent: opts["BlocksSent"],
+      data_received: opts["DataReceived"],
+      data_sent: opts["DataSent"],
+      dup_blks_received: opts["DupBlksReceived"],
+      dup_data_received: opts["DupDataReceived"],
+      messages_received: opts["MessagesReceived"],
+      peers: opts["Peers"],
+      provide_buf_len: opts["ProvideBufLen"],
+      wantlist: opts["Wantlist"]
     }
   end
 end
