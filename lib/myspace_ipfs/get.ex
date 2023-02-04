@@ -12,7 +12,7 @@ defmodule MyspaceIPFS.Get do
   @typep path :: MyspaceIPFS.path()
   @typep fspath :: MyspaceIPFS.fspath()
   @typep opts :: MyspaceIPFS.opts()
-  @typep api_error :: MyspaceIPFS.ApiError.t()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
 
   # @typep t :: %__MODULE__{
   #          path: path,

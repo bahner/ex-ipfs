@@ -7,13 +7,20 @@ defmodule MyspaceIPFS.Cid do
   alias MyspaceIPFS.MultiCodec
   alias MyspaceIPFS.MultiHash
   alias MyspaceIPFS.MultibaseEncoding
-  alias MyspaceIPFS.MultiCodec
-  alias MyspaceIPFS.CidCid
+  alias MyspaceIPFS.CidBase32CID
 
-  @typep opts :: MyspaceIPFS.opts()
-  @typep cid :: MyspaceIPFS.cid()
-  @typep api_error :: MyspaceIPFS.ApiError.t()
-  @type multibase_codec :: MyspaceIPFS.MultibaseCodec.t()
+  @typedoc """
+  A v1 CID. This is the new Base32 CID format, which is likely to last and is preferred.
+
+  ```
+  %MyspaceIPFS.CidBase32CID{
+    cid_str: binary(),
+    formatted: binary(),
+    error_msg: binary()
+  }
+  ```
+  """
+  @type base32cid :: MyspaceIPFS.CidBase32CID.t()
 
   @doc """
   Convert to base32 CID version 1.
@@ -23,18 +30,19 @@ defmodule MyspaceIPFS.Cid do
   `cid` - The CID to convert to base32.
   """
 
-  @spec base32(binary) :: {:ok, any} | api_error
+  @spec base32(MyspaceIPFS.cid()) :: {:ok, base32cid()} | MyspaceIPFS.Api.api_error()
   def base32(cid),
     do:
       post_query("/cid/base32?arg=" <> cid)
-      |> CidCid.new()
+      |> CidBase32CID.new()
       |> okify()
 
   @doc """
   List available multibase encodings.
 
   """
-  @spec bases(opts) :: {:ok, any} | api_error
+  @spec bases(MyspaceIPFS.opts()) ::
+          {:ok, list[MyspaceIPFS.MultibaseEncoding.t()]} | MyspaceIPFS.Api.api_error()
   def bases(opts \\ []),
     do:
       post_query("/cid/bases", query: opts)
@@ -50,11 +58,11 @@ defmodule MyspaceIPFS.Cid do
   `numeric` <bool> - Show codec numeric code.
   `supported` <bool> - Show only supported codecs.
   """
-  @spec codecs(opts) :: {:ok, [multibase_codec]} | api_error
+  @spec codecs(MyspaceIPFS.opts()) ::
+          {:ok, [MyspaceIPFS.MultiCodec.t()]} | MyspaceIPFS.Api.api_error()
   def codecs(opts \\ []),
     do:
       post_query("/cid/codecs", query: opts)
-      |> Enum.map(&snake_atomize/1)
       |> Enum.map(&MultiCodec.new/1)
       |> okify()
 
@@ -71,11 +79,11 @@ defmodule MyspaceIPFS.Cid do
   `b` <string> - Multibase to display CID in.
   `mc` <string> - Multicodec.
   """
-  @spec format(cid, opts) :: {:ok, any} | api_error
+  @spec format(MyspaceIPFS.cid(), MyspaceIPFS.opts()) :: {:ok, any} | MyspaceIPFS.Api.api_error()
   def format(cid, opts \\ []),
     do:
       post_query("/cid/format?arg=" <> cid, query: opts)
-      |> CidCid.new()
+      |> CidBase32CID.new()
       |> okify()
 
   @doc """
@@ -86,11 +94,11 @@ defmodule MyspaceIPFS.Cid do
 
   `supported` <bool> - Show only supported hashes.
   """
-  @spec hashes(opts) :: {:ok, any} | api_error
+  @spec hashes(MyspaceIPFS.opts()) ::
+          {:ok, MyspaceIPFS.MultiHash.t()} | MyspaceIPFS.Api.api_error()
   def hashes(opts \\ []),
     do:
       post_query("/cid/hashes", query: opts)
-      |> Enum.map(&snake_atomize/1)
       |> Enum.map(&MultiHash.new/1)
       |> okify()
 end

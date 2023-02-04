@@ -6,7 +6,7 @@ defmodule MyspaceIPFS.MultiCodec do
   defstruct [:name, :code]
 
   @type t :: %__MODULE__{
-          name: String.t(),
+          name: binary(),
           code: non_neg_integer()
         }
 
@@ -16,12 +16,13 @@ defmodule MyspaceIPFS.MultiCodec do
   """
   @spec new({:error, map}) :: {:error, map}
   def new({:error, data}), do: {:error, data}
+
   @spec new(map) :: MyspaceIPFS.MultiCodec.t()
-  def new(opts) do
+  def new(opts) when is_map(opts) do
     # code and name are required and must be present.
     %__MODULE__{
-      name: opts.name,
-      code: opts.code
+      name: opts["Name"],
+      code: opts["Code"]
     }
   end
 end

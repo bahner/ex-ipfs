@@ -6,7 +6,7 @@ defmodule MyspaceIPFS.Dht do
   import MyspaceIPFS.Utils
 
   @typep peer_id :: MyspaceIPFS.peer_id()
-  @typep api_error :: MyspaceIPFS.ApiError.t()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
 
   @doc """
   Find the closest peers to a given key.

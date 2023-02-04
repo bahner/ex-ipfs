@@ -1,5 +1,7 @@
 defmodule MyspaceIPFS.BlockErrorHash do
-  @moduledoc false
+  @moduledoc """
+  MyspaceIPFS.BlockErrorHash is a struct returned from the IPFS Block API.
+  """
 
   defstruct error: "", hash: nil
 

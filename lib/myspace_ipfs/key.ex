@@ -5,7 +5,7 @@ defmodule MyspaceIPFS.Key do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIPFS.ApiError.t()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
   @typep opts :: MyspaceIPFS.opts()
   @typep name :: MyspaceIPFS.name()
   @typep fspath :: MyspaceIPFS.fspath()

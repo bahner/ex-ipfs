@@ -7,8 +7,33 @@ defmodule MyspaceIPFS.Multibase do
   import MyspaceIPFS.Utils
   alias MyspaceIPFS.MultibaseCodec
 
-  @typep api_error :: MyspaceIPFS.ApiError.t()
-  @typep opts :: MyspaceIPFS.opts()
+  @typedoc """
+  A multibase codec.
+
+  ```
+  %MyspaceIPFS.MultibaseCodec{
+    name: binary(),
+    code: non_neg_integer(),
+    prefix: binary(),
+    description: binary()
+
+
+  }
+  ```
+  """
+  @type codec :: MyspaceIPFS.MultibaseCodec.t()
+
+  @typedoc """
+  A multibase encoding.
+
+  ```
+  %MyspaceIPFS.MultibaseEncoding{
+    name: binary(),
+    code: non_neg_integer()
+  }
+  ```
+  """
+  @type encoding :: MyspaceIPFS.MultibaseEncoding.t()
 
   @doc """
   Decode a multibase encoded string.
@@ -16,7 +41,7 @@ defmodule MyspaceIPFS.Multibase do
   ## Parameters
     `data` - Data to decode.
   """
-  @spec decode(binary) :: {:ok, any} | api_error()
+  @spec decode(binary) :: {:ok, any} | MyspaceIPFS.Api.api_error()
   def decode(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
@@ -29,7 +54,7 @@ defmodule MyspaceIPFS.Multibase do
   ## Parameters
     `data` - Data to decode.
   """
-  @spec decode!(binary) :: any | api_error()
+  @spec decode!(binary) :: any | MyspaceIPFS.Api.api_error()
   def decode!(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
@@ -41,7 +66,7 @@ defmodule MyspaceIPFS.Multibase do
   ## Parameters
     `data` - File to decode.
   """
-  @spec decode_file(Path.t()) :: {:ok, any} | api_error()
+  @spec decode_file(MyspaceIPFS.fspath()) :: {:ok, any} | MyspaceIPFS.Api.api_error()
   def decode_file(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
@@ -57,7 +82,7 @@ defmodule MyspaceIPFS.Multibase do
   ## Options
     `b` - Multibase encoding to use.
   """
-  @spec encode(binary, opts) :: {:ok, any} | api_error()
+  @spec encode(binary, MyspaceIPFS.opts()) :: {:ok, any} | MyspaceIPFS.Api.api_error()
   def encode(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/multibase/encode", query: opts)
@@ -71,7 +96,8 @@ defmodule MyspaceIPFS.Multibase do
     prefix - Only list encodings with the given prefix.
     numeric - Only list encodings with the given numeric code.
   """
-  @spec list(opts) :: {:ok, any} | api_error()
+  @spec list(MyspaceIPFS.opts()) ::
+          {:ok, [codec()]} | MyspaceIPFS.Api.api_error()
   def list(opts \\ []) do
     post_query("/multibase/list", query: opts)
     |> filter_empties()
@@ -88,10 +114,11 @@ defmodule MyspaceIPFS.Multibase do
   ## Options
     `b` - Multibase encoding to use
   """
-  @spec transcode(binary, opts) :: {:ok, any} | api_error()
+  @spec transcode(binary, MyspaceIPFS.opts()) :: {:ok, any} | MyspaceIPFS.Api.api_error()
   def transcode(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/multibase/transcode", query: opts)
+    #FIXME: type goes here. Check it out.
     |> okify()
   end
 end

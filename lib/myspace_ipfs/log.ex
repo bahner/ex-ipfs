@@ -5,7 +5,7 @@ defmodule MyspaceIPFS.Log do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIPFS.ApiError.t()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
   @typep name :: MyspaceIPFS.name()
 
   @doc """

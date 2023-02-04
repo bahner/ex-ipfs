@@ -1,5 +1,7 @@
 defmodule MyspaceIPFS.BitswapWantList do
-  @moduledoc false
+  @moduledoc """
+  MyspaceIPFS.BitswapWantList is a struct returned from the IPFS Bitswap API.
+  """
 
   # API actually returns null, not an empty list.
   defstruct keys: nil

@@ -1,5 +1,7 @@
 defmodule MyspaceIPFS.BlockKeySize do
-  @moduledoc false
+  @moduledoc """
+  MyspaceIPFS.BlockKeySize is a struct returned from the IPFS Block API.
+  """
 
   defstruct key: nil, size: nil
 

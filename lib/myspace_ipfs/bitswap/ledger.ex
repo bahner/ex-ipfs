@@ -1,6 +1,7 @@
 defmodule MyspaceIPFS.BitswapLedger do
-  @moduledoc false
-  import MyspaceIPFS.Utils
+  @moduledoc """
+  MyspaceIPFS.BitswapLedger is a struct returned from the IPFS Bitswap API.
+  """
 
   defstruct [:exchanged, :peer, :recv, :sent, :value]
 
@@ -13,22 +14,20 @@ defmodule MyspaceIPFS.BitswapLedger do
           value: float()
         }
 
-  @doc false
   @spec new({:error, map}) :: {:error, map}
   def new({:error, data}) do
     {:error, data}
   end
 
-  @spec new(map) :: MyspaceIPFS.BitswapLedger.t()
+  @spec new(map) :: t()
   def new(opts) do
-    opts = snake_atomize(opts)
 
     %__MODULE__{
-      exchanged: opts.exchanged,
-      peer: opts.peer,
-      recv: opts.recv,
-      sent: opts.sent,
-      value: opts.value
+      exchanged: opts["Exchanged"],
+      peer: opts["Peer"],
+      recv: opts["Recv"],
+      sent: opts["Sent"],
+      value: opts["Value"]
     }
   end
 end

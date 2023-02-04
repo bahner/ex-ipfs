@@ -22,7 +22,7 @@ defmodule MyspaceIPFS.Refs do
           Err: String.t()
         }
 
-  @typep api_error :: MyspaceIPFS.ApiError.t()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
   @typep opts :: MyspaceIPFS.opts()
   @typep path :: MyspaceIPFS.path()
 

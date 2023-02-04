@@ -13,7 +13,7 @@ defmodule MyspaceIPFS do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIPFS.ApiError.t()
+  @typep api_error :: MyspaceIPFS.Api.api_error()
 
   @typedoc """
   The name of the file or data to be sent to the node. Sometimes you cant't

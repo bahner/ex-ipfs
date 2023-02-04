@@ -1,5 +1,7 @@
 defmodule MyspaceIPFS.BitswapStat do
-  @moduledoc false
+  @moduledoc """
+  MyspaceIPFS.BitswapStat is a struct returned from the IPFS Bitswap API.
+  """
   defstruct blocks_received: nil,
             blocks_sent: nil,
             data_received: nil,
@@ -27,7 +29,6 @@ defmodule MyspaceIPFS.BitswapStat do
           wantlist: list(slash_cid)
         }
 
-  @doc false
   @spec new({:error, map}) :: {:error, map}
   def new({:error, data}) do
     {:error, data}
