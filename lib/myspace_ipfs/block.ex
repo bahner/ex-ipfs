@@ -12,13 +12,13 @@ defmodule MyspaceIPFS.Block do
   @typedoc """
   A structure from the API that is a key and its size.
   ```
-  %MyspaceIPFS.KeySize{
+  %MyspaceIPFS.BlockKeySize{
     key: binary,
     size: non_neg_integer
   }
   ```
   """
-  @type key_size :: MyspaceIPFS.KeySize.t()
+  @type key_size :: MyspaceIPFS.BlockKeySize.t()
 
   @typedoc """
   A structure from the API that is an error and its hash.
