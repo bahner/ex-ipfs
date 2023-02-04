@@ -31,6 +31,7 @@ defmodule MyspaceIPFS.Api do
   The response from the API. It can be a binary, a map, a list or an error.
   """
   @type api_response :: binary | map | list | api_error
+
   @typedoc """
   The error response from the API after we have handle it.
   """

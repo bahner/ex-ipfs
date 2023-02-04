@@ -1,12 +1,5 @@
 defmodule MyspaceIPFS.Add do
-  @moduledoc """
-  This struct is very simple. Some results are listed as "Bytes": bytes, "Hash": hash, "Size": size, "Type": type. This is a
-  convenience struct to make it easier match on the result.
-
-  This is returned when you add a file or directory to IPFS.
-
-  I have never seen bytes returned, but it is listed in the docs.
-  """
+  @moduledoc false
 
   defstruct bytes: nil, hash: nil, size: nil, name: nil
 
