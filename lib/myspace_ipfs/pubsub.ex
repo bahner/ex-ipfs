@@ -5,16 +5,18 @@ defmodule MyspaceIPFS.PubSub do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
   alias MyspaceIPFS.Multibase
+  require Logger
 
   @doc """
   List the topics you are currently subscribed to.
 
   https://docs.ipfs.io/reference/http/api/#api-v0-pubsub-ls
   """
-  @spec ls :: {:ok, any} | MyspaceIPFS.Api.error_response()
+  @spec ls :: {:ok, MyspaceIPFS.strings()} | MyspaceIPFS.Api.error_response()
   def ls do
     post_query("/pubsub/ls")
-    |> decode_string_list()
+    |> decode_strings()
+    |> MyspaceIPFS.Strings.new()
     |> okify()
   end
 
@@ -90,12 +92,16 @@ defmodule MyspaceIPFS.PubSub do
     end
   end
 
-  # Pull out the string list from the response and decode it.
-  # The recreate the map with the decoded list.
-  defp decode_string_list(map) when is_map(map) do
-    with strings <- map["Strings"] do
-      Enum.map(strings, &Multibase.decode!/1)
-      |> (fn x -> %{"Strings" => x} end).()
-    end
+  @spec decode_strings({:error, any}) :: {:error, any}
+  defp decode_strings({:error, data}), do: {:error, data}
+
+  @spec decode_strings(map) :: map
+  defp decode_strings(strings) when is_map(strings) do
+    strings = Map.get(strings, "Strings", [])
+    decoded_strings = Enum.map(strings, &Multibase.decode!/1)
+    %{"Strings" => decoded_strings}
   end
+
+  @spec decode_strings(list) :: list
+  defp decode_strings(list), do: Enum.map(list, &decode_strings/1)
 end

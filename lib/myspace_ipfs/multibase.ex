@@ -31,10 +31,18 @@ defmodule MyspaceIPFS.Multibase do
     `data` - Data to decode.
   """
   @spec decode!(binary) :: any | MyspaceIPFS.Api.error_response()
-  def decode!(data) do
+  def decode!(data) when is_binary(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
   end
+
+  @spec decode!(list) :: any | MyspaceIPFS.Api.error_response()
+  def decode!(data) when is_list(data) do
+    Enum.map(data, &decode!/1)
+  end
+
+  @spec decode!(tuple) :: any | MyspaceIPFS.Api.error_response()
+  def decode!({key, nil}), do: {key, nil}
 
   @doc """
   Decode a multibase encoded string.
@@ -43,10 +51,19 @@ defmodule MyspaceIPFS.Multibase do
     `data` - Data to decode.
   """
   @spec decode(binary) :: {:ok, binary()} | MyspaceIPFS.Api.error_response()
-  def decode(data) do
+  def decode(data) when is_binary(data) do
     decode!(data)
     |> okify()
   end
+
+  @spec decode(list) :: {:ok, list} | MyspaceIPFS.Api.error_response()
+  def decode(data) when is_list(data) do
+    Enum.map(data, &decode!/1)
+    |> okify()
+  end
+
+  @spec decode(tuple) :: any | MyspaceIPFS.Api.error_response()
+  def decode({key, nil}), do: {key, nil}
 
   @doc """
   Decode a multibase encoded file.

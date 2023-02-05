@@ -17,7 +17,9 @@ defmodule MyspaceIPFS.PubsubTest do
   end
 
   test "ls" do
-    {:ok, %{"Strings" => topics}} = PubSub.ls()
+    PubSub.sub(self(), "myspace")
+    {:ok, %MyspaceIPFS.Strings{strings: topics}} = PubSub.ls()
+    assert is_list(topics)
     assert Enum.member?(topics, "myspace")
   end
 
