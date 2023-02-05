@@ -55,6 +55,7 @@ jobs:
           #mix compile --warnings-as-errors
           mix compile
       - name: Run dialyzer integrity checks
+        timeout-minutes: 10
         run: |
           mix dialyzer
       - name: Run test suite
