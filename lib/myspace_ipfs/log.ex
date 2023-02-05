@@ -4,6 +4,7 @@ defmodule MyspaceIPFS.Log do
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
+  alias MyspaceIPFS.Structs.Strings
 
   @doc """
   Change the logging level.
@@ -25,15 +26,17 @@ defmodule MyspaceIPFS.Log do
   @spec ls() :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def ls do
     post_query("/log/ls")
+    |> Strings.new()
     |> okify()
   end
 
   @doc """
-  Read the event log.
+  Read the event log. Currently broken. See https://github.com/ipfs/kubo/issues/9245
   """
-  @spec tail() :: {:ok, any} | MyspaceIPFS.Api.error_response()
-  def tail do
-    post_query("/log/tail")
-    |> okify()
+  @spec tail(pid) :: {:ok, pid} | :ok | MyspaceIPFS.Api.error_response()
+  def tail(_pid) do
+    IO.puts("Currently broken. See https://github.com/ipfs/kubo/issues/9245")
+    # MyspaceIPFS.LogTail.start_link(pid)
+    :ok
   end
 end

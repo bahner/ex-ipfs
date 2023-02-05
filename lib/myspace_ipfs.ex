@@ -82,6 +82,11 @@ defmodule MyspaceIPFS do
         }
 
   @typedoc """
+  A struct when IPFS API returns a list of strings.
+  """
+  @type strings :: %MyspaceIPFS.Structs.Strings{strings: list(binary())}
+
+  @typedoc """
   This struct is very simple. Some results are listed as `%{"/": cid}`. This is a
   convenience struct to make it easier match on the result.
 
