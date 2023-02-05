@@ -5,7 +5,6 @@ defmodule MyspaceIPFS.Stats do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-
   @doc """
   Show some diagnostic information on the bitswap agent.
 

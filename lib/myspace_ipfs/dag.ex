@@ -30,7 +30,7 @@ defmodule MyspaceIPFS.Dag do
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-dag-get
   """
   # FIXME return a struct
-  @spec get(MyspaceIPFS.path(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec get(Path.t(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def get(path, opts \\ []) do
     with data <- post_query("/dag/get?arg=" <> path, query: opts) do
       data

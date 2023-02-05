@@ -15,7 +15,7 @@ defmodule MyspaceIPFS.Bootstrap do
   @doc """
   List peers in bootstrap list.
   """
-  @spec bootstrap() :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
+  @spec bootstrap() :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.ApiError.t()
   def bootstrap do
     post_query("/bootstrap")
     |> Peers.new()
@@ -31,7 +31,7 @@ defmodule MyspaceIPFS.Bootstrap do
   `peer` - The peer ID to add to the bootstrap list. The format is a multiaddr
   in the form of `<multiaddr>/<peerID>` OR a list of peers.
   """
-  @spec add(Path.t()) :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
+  @spec add(Path.t()) :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.ApiError.t()
   def add(peer) when is_binary(peer) do
     post_query("/bootstrap/add?arg=" <> peer)
     |> Peers.new()
@@ -54,7 +54,8 @@ defmodule MyspaceIPFS.Bootstrap do
 
   in the form of `<multiaddr>/<peerID>` OR a list of peers.
   """
-  @spec add_default(Path.t()) :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
+  @spec add_default(Path.t()) ::
+          {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.ApiError.t()
   def add_default(peer) when is_binary(peer) do
     post_query("/bootstrap/add?arg=" <> peer)
     |> Peers.new()
@@ -75,7 +76,7 @@ defmodule MyspaceIPFS.Bootstrap do
   NB! /bootstrap/list is the same as /bootstrap, but that doesn't work
   well with Elixir because of the same name as the module.
   """
-  @spec list() :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
+  @spec list() :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.ApiError.t()
   def list do
     post_query("/bootstrap/list")
     |> Peers.new()
@@ -92,7 +93,7 @@ defmodule MyspaceIPFS.Bootstrap do
   in the form of `<multiaddr>/<peerID>`
 
   """
-  @spec rm(Path.t()) :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
+  @spec rm(Path.t()) :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.ApiError.t()
   def rm(peer) do
     post_query("/bootstrap/rm?arg=" <> peer)
     |> Peers.new()
@@ -104,7 +105,7 @@ defmodule MyspaceIPFS.Bootstrap do
 
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bootstrap-rm-all
   """
-  @spec rm_all() :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
+  @spec rm_all() :: {:ok, MyspaceIPFS.Peers.t()} | MyspaceIPFS.ApiError.t()
   def rm_all do
     post_query("/bootstrap/rm/all")
     |> okify()

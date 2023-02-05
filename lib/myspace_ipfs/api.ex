@@ -11,7 +11,6 @@ defmodule MyspaceIPFS.Api do
 
   # Types
 
-
   @typedoc """
   A type that represents the possible responses from the API.
   """
@@ -29,7 +28,7 @@ defmodule MyspaceIPFS.Api do
   plug(Tesla.Middleware.Logger)
 
   @doc false
-  @spec post_query(MyspaceIPFS.path(), list()) :: response
+  @spec post_query(Path.t(), list()) :: response
   def post_query(path, opts \\ []) do
     post(path, <<>>, opts)
     |> handle_response()

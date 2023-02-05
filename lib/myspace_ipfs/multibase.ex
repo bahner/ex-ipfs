@@ -41,7 +41,7 @@ defmodule MyspaceIPFS.Multibase do
   ## Parameters
     `data` - Data to decode.
   """
-  @spec decode(binary) :: {:ok, any} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
+  @spec decode(binary) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def decode(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
@@ -54,7 +54,7 @@ defmodule MyspaceIPFS.Multibase do
   ## Parameters
     `data` - Data to decode.
   """
-  @spec decode!(binary) :: any | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
+  @spec decode!(binary) :: any | MyspaceIPFS.ApiError.t()
   def decode!(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
@@ -66,7 +66,7 @@ defmodule MyspaceIPFS.Multibase do
   ## Parameters
     `data` - File to decode.
   """
-  @spec decode_file(Path.t()) :: {:ok, any} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
+  @spec decode_file(Path.t()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def decode_file(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
@@ -82,7 +82,7 @@ defmodule MyspaceIPFS.Multibase do
   ## Options
     `b` - Multibase encoding to use.
   """
-  @spec encode(binary, list()) :: {:ok, any} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
+  @spec encode(binary, list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def encode(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/multibase/encode", query: opts)
@@ -97,7 +97,7 @@ defmodule MyspaceIPFS.Multibase do
     numeric - Only list encodings with the given numeric code.
   """
   @spec list(list()) ::
-          {:ok, [codec()]} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
+          {:ok, [codec()]} | MyspaceIPFS.ApiError.t()
   def list(opts \\ []) do
     post_query("/multibase/list", query: opts)
     |> filter_empties()
@@ -114,11 +114,11 @@ defmodule MyspaceIPFS.Multibase do
   ## Options
     `b` - Multibase encoding to use
   """
-  @spec transcode(binary, list()) :: {:ok, any} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
+  @spec transcode(binary, list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def transcode(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/multibase/transcode", query: opts)
-    #FIXME: type goes here. Check it out.
+    # FIXME: type goes here. Check it out.
     |> okify()
   end
 end

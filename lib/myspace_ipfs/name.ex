@@ -25,7 +25,7 @@ defmodule MyspaceIPFS.Name do
   ]
   ```
   """
-  @spec publish(MyspaceIPFS.path(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec publish(Path.t(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def publish(path, opts \\ []),
     do:
       post_query("/name/publish?arg=" <> path, query: opts)

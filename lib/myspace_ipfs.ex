@@ -232,7 +232,10 @@ defmodule MyspaceIPFS do
   ```
   """
   # FIXME verify return type
-  @spec(ping(pid, MyspaceIPFS.peer_id(), atom | integer, list) :: :ignore | {:ok, pid}, {:error, reason})
+  @spec(
+    ping(pid, MyspaceIPFS.peer_id(), atom | integer, list) :: :ignore | {:ok, pid},
+    {:error, reason}
+  )
   def ping(pid, peer, timeout \\ 10, opts \\ []),
     do: MyspaceIPFS.Ping.start_link(pid, peer, timeout, opts)
 

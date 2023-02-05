@@ -20,7 +20,6 @@ defmodule MyspaceIPFS.BitswapLedger do
 
   @spec new(map) :: t()
   def new(opts) do
-
     %__MODULE__{
       exchanged: opts["Exchanged"],
       peer: opts["Peer"],

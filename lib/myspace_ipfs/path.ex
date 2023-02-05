@@ -5,7 +5,7 @@ defmodule MyspaceIPFS.Path do
   defstruct path: nil
 
   @type t :: %__MODULE__{
-          path: MyspaceIPFS.path() | nil
+          path: Path.t() | nil
         }
 
   @spec new(map) :: MyspaceIPFS.Path.t()

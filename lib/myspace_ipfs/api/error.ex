@@ -7,6 +7,7 @@ defmodule MyspaceIPFS.ApiError do
   require Logger
 
   defstruct code: nil, message: nil, type: nil
+
   @typedoc """
   A structured error returned from the upstream IPFS API.
 
