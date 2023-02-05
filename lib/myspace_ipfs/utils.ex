@@ -1,7 +1,5 @@
 defmodule MyspaceIPFS.Utils do
-  @moduledoc """
-  Some common functions that are used throughout the library.
-  """
+  @moduledoc false
 
   require Logger
   alias Tesla.Multipart
