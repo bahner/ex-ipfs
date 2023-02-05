@@ -1,8 +1,5 @@
 defmodule MyspaceIPFS.Objects do
-  @moduledoc """
-  This struct is very simple. Some results are listed as "Hash": hash, "Links": links. This is a
-  convenience struct to make it easier match on the result.
-  """
+  @moduledoc false
 
   defstruct objects: []
 
