@@ -1,24 +1,5 @@
 defmodule MyspaceIPFS.PubSubChannel do
-  @moduledoc """
-  MyspaceIPFS.PubSubChannel is a GenServer that subscribes to a topic and
-  forwards messages to a target process.
-
-  The topic *must* be a base64 encoded string, but we will encode it for you.
-
-  ## Options
-    raw: true | false
-      If true, the message will be sent to the target process as a
-      MyspaceIPFS.PubSubChannelMessage struct containing the message data and the topic.
-      If false, only the message
-      data will be sent to the target process.
-
-  ## Example
-      iex> {:ok, pid} = MyspaceIPFS.PubSubChannel.start_link(self(), "mytopic")
-      iex> MyspaceIPFS.PubSub.pub("mytopic", "Hello, world!")
-      iex> flush()
-      "Hello, world!"
-      :ok
-  """
+  @moduledoc false
   use GenServer
   require Logger
   import MyspaceIPFS.Utils
@@ -28,24 +9,13 @@ defmodule MyspaceIPFS.PubSubChannel do
   @enforce_keys [:topic, :target]
   defstruct base64url_topic: nil, client: nil, raw: false, target: nil, topic: nil
 
-  @type t :: %__MODULE__{
-          base64url_topic: binary | nil,
-          client: reference | nil,
-          raw: boolean | nil,
-          target: pid,
-          topic: binary
-        }
-
-  @typedoc """
-  MyspaceIPFS.PubSubChannel.message is a struct that represents a message as it
-  is received from the IPFS pubsub API.
-  """
-  @type message :: %MyspaceIPFS.PubSubChannelMessage{
-    from: binary,
-    data: binary,
-    seqno: binary,
-    topic_ids: list
-  }
+  @typep t :: %MyspaceIPFS.PubSubChannel{
+           base64url_topic: binary | nil,
+           client: reference | nil,
+           raw: boolean | nil,
+           target: pid,
+           topic: binary
+         }
 
   @doc """
   Generate a PubSubChannel struct from a map or passthrough an error message
