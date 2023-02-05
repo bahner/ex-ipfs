@@ -75,6 +75,13 @@ defmodule MyspaceIPFS do
   @type peer_id() :: <<_::48, _::_*8>>
 
   @typedoc """
+  A struct for list of peers in the network.
+  """
+  @type peers :: %MyspaceIPFS.Peers{
+          peers: list | nil
+        }
+
+  @typedoc """
   This struct is very simple. Some results are listed as `%{"/": cid}`. This is a
   convenience struct to make it easier match on the result.
 

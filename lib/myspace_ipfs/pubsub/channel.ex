@@ -20,12 +20,10 @@ defmodule MyspaceIPFS.PubSubChannel do
       :ok
   """
   use GenServer
-
   require Logger
-
   import MyspaceIPFS.Utils
-
   alias MyspaceIPFS.Multibase
+  alias MyspaceIPFS.PubSubChannelMessage, as: Message
 
   @enforce_keys [:topic, :target]
   defstruct base64url_topic: nil, client: nil, raw: false, target: nil, topic: nil
@@ -37,6 +35,17 @@ defmodule MyspaceIPFS.PubSubChannel do
           target: pid,
           topic: binary
         }
+
+  @typedoc """
+  MyspaceIPFS.PubSubChannel.message is a struct that represents a message as it
+  is received from the IPFS pubsub API.
+  """
+  @type message :: %MyspaceIPFS.PubSubChannelMessage{
+    from: binary,
+    data: binary,
+    seqno: binary,
+    topic_ids: list
+  }
 
   @doc """
   Generate a PubSubChannel struct from a map or passthrough an error message
@@ -127,23 +136,7 @@ defmodule MyspaceIPFS.PubSubChannel do
 
   # This is probably where we want to decrypt the message
   defp parse_pubsub_message(data) do
-    message = struct(ChannelMessage, unokify(Jason.decode(data, keys: :atoms)))
+    message = Message.new(data)
     {:ipfs_pubsub_channel, Multibase.decode(message.data)}
   end
-end
-
-defmodule MyspaceIPFS.PubSubChannelMessage do
-  @moduledoc """
-  MyspaceIPFS.PubSubChannelMessage is a struct that represents a message as it
-  is received from the IPFS pubsub API.
-  """
-  @enforce_keys [:from, :data, :seqno, :topic_ids]
-  defstruct from: nil, data: nil, seqno: nil, topic_ids: nil
-
-  @type t :: %__MODULE__{
-          from: binary,
-          data: binary,
-          seqno: binary,
-          topic_ids: list
-        }
 end
