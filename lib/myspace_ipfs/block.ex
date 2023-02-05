@@ -9,28 +9,6 @@ defmodule MyspaceIPFS.Block do
   alias MyspaceIPFS.BlockErrorHash
   alias MyspaceIPFS.BlockKeySize
 
-  @typedoc """
-  A structure from the API that is a key and its size.
-  ```
-  %MyspaceIPFS.BlockKeySize{
-    key: binary,
-    size: non_neg_integer
-  }
-  ```
-  """
-  @type key_size :: MyspaceIPFS.BlockKeySize.t()
-
-  @typedoc """
-  A structure from the API that is an error and its hash.
-  ```
-  %MyspaceIPFS.BlockErrorHash{
-    error: binary,
-    hash: binary
-  }
-  ```
-  """
-  @type error_hash :: MyspaceIPFS.BlockErrorHash.t()
-
   @doc """
   Get a raw IPFS block.
 
@@ -64,7 +42,7 @@ defmodule MyspaceIPFS.Block do
   ]
   ```
   """
-  @spec put(any, list) :: {:ok, key_size()} | MyspaceIPFS.Api.error_response()
+  @spec put(any, list) :: {:ok, BlockKeySize.t()} | MyspaceIPFS.Api.error_response()
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/block/put", query: opts)
@@ -92,7 +70,7 @@ defmodule MyspaceIPFS.Block do
   ```
   """
   @spec put_file(Path.t(), list) ::
-          {:ok, key_size()} | MyspaceIPFS.Api.error_response()
+          {:ok, BlockKeySize.t()} | MyspaceIPFS.Api.error_response()
   def put_file(file, opts \\ []) do
     multipart(file)
     |> post_multipart("/block/put", query: opts)
@@ -117,7 +95,7 @@ defmodule MyspaceIPFS.Block do
   ```
   """
   @spec rm(binary()) ::
-          {:ok, error_hash()} | MyspaceIPFS.Api.error_response()
+          {:ok, BlockErrorHash.t()} | MyspaceIPFS.Api.error_response()
   def rm(cid) do
     post_query("/block/rm?arg=" <> cid)
     |> BlockErrorHash.new()
@@ -133,7 +111,7 @@ defmodule MyspaceIPFS.Block do
   `cid` - The CID of the block to stat.
   """
   @spec stat(binary()) ::
-          {:ok, key_size()} | MyspaceIPFS.Api.error_response()
+          {:ok, BlockKeySize.t()} | MyspaceIPFS.Api.error_response()
   def stat(cid) do
     post_query("/block/stat?arg=" <> cid)
     |> BlockKeySize.new()
