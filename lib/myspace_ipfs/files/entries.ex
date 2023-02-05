@@ -8,7 +8,7 @@ defmodule MyspaceIPFS.FilesEntries do
     {:error, data}
   end
 
-  @spec new(map) :: MySpaceIPFS.Files.entries()
+  @spec new(map) :: MyspaceIPFS.Files.entries()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       entries: gen_entries(opts)

@@ -6,15 +6,17 @@ defmodule MyspaceIPFS.Files do
   import MyspaceIPFS.Utils
 
   @typedoc """
-  List of entries in a directory. Each entry is a Hash.
+  List of entries in a directory. Each entry is a FileEntry hash.
   """
-  @type entries :: [MyspaceIPFS.FilesEntry.t()]
+  @type entries :: %MyspaceIPFS.FilesEntries{
+          entries: [entry()]
+        }
 
   @typedoc """
   A FileEntry struct.
   """
   @type entry :: %MyspaceIPFS.FilesEntry{
-          hash: MyspaceIPFS.hash(),
+          hash: binary(),
           name: binary(),
           size: non_neg_integer(),
           type: binary()
@@ -75,26 +77,6 @@ defmodule MyspaceIPFS.Files do
   end
 
   @doc """
-  Get the filepaths of all files in a directory.
-
-  This is a convenience function, if you just want the filenames from the ls command.
-  Use it in a pipeline like this:
-
-  ```
-  MyspaceIPFS.Files.ls("/some/path")
-  |> MyspaceIPFS.Files.extract_entries_names()
-  ```
-  """
-  @spec extract_entries_names(%{:entries => any}) :: [binary()]
-  def extract_entries_names(entries) when is_map(entries) do
-    Enum.map(entries.entries, fn entry ->
-      entry.name
-    end)
-  end
-
-  def extract_entries_names({:error, data}), do: {:error, data}
-
-  @doc """
   Flush a given path's data to disk.
 
   ## Parameters
@@ -129,10 +111,18 @@ defmodule MyspaceIPFS.Files do
   ]
   ```
   """
-  @spec ls!(Path.t(), list) :: entries() | MyspaceIPFS.Api.error_response()
+  @spec ls!(Path.t(), list) :: entries() | [binary()] | MyspaceIPFS.Api.error_response()
   def ls!(path, opts \\ []) do
-    post_query("/files/ls?arg=" <> path, query: opts)
-    |> MyspaceIPFS.FilesEntries.new()
+    with long <- Keyword.get(opts, :l, false) do
+      entries =
+        post_query("/files/ls?arg=" <> path, query: opts)
+        |> MyspaceIPFS.FilesEntries.new()
+
+      case long do
+        true -> entries
+        false -> extract_entries_names(entries)
+      end
+    end
   end
 
   @doc """
@@ -289,22 +279,24 @@ defmodule MyspaceIPFS.Files do
   ]
   ```
   """
-  @spec write!(Path.t(), Path.t(), list) :: :ok | MyspaceIPFS.Api.error_response()
-  def write!(data, path, opts \\ []) do
-    mp = multipart_content(data)
-
-    post_multipart(mp, "/files/write?arg=" <> path, query: opts)
+  @spec write(binary(), Path.t(), list) :: :ok | MyspaceIPFS.Api.error_response()
+  def write(data, path, opts \\ []) do
+    multipart_content(data)
+    |> post_multipart("/files/write?arg=" <> path, query: opts)
     |> handle_files_response()
   end
 
-  @spec write(Path.t(), Path.t(), list) :: {:ok, any} | MyspaceIPFS.Api.error_response()
-  def write(data, path, opts \\ []) do
-    write!(data, path, opts)
-    |> okify()
+  defp extract_entries_names(entries) when is_map(entries) do
+    Enum.map(entries.entries, fn entry ->
+      entry.name
+    end)
   end
+
+  defp extract_entries_names({:error, data}), do: {:error, data}
 
   # Files API sometimes just sends an empty string as a response.
   # That means OK.
+  @spec handle_files_response(any) :: :ok | any
   defp handle_files_response(response) do
     case response do
       "" -> :ok
