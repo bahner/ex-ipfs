@@ -3,13 +3,11 @@
 VERSION ?= $(shell cat mix.exs | grep version | sed -e 's/.*version: "\(.*\)",/\1/')
 
 all: deps format compile
-	mix format
-	mix compile
 
 commited:
 	./.check.uncommited
 
-compile: deps format
+compile: deps
 	mix compile
 
 deps:
@@ -22,7 +20,7 @@ docker:
 	mkdir -p .docker/ipfs_staging .docker_data/ipfs_data
 	docker-compose up -d
 
-docs: compile
+docs:
 	mix docs
 	xdg-open doc/index.html
 
@@ -34,7 +32,7 @@ mix: all
 
 proper: distclean compile test
 
-push: format commited all
+push: all commited test
 	git pull
 	git push
 
