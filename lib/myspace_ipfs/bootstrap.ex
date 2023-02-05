@@ -10,7 +10,7 @@ defmodule MyspaceIPFS.Bootstrap do
 
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
-  alias MyspaceIPFS.Peers
+  alias MyspaceIPFS.Structs.Peers
 
   @doc """
   List peers in bootstrap list.

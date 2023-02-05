@@ -1,16 +1,16 @@
-defmodule MyspaceIPFS.MultiHash do
+defmodule MyspaceIPFS.Structs.MultiCodec do
   @moduledoc false
+
   @enforce_keys [:name, :code]
   defstruct [:name, :code]
 
-  @doc false
   @spec new({:error, map}) :: {:error, map}
   def new({:error, data}), do: {:error, data}
 
-  @spec new(map) :: MyspaceIPFS.multi_hash()
+  @spec new(map) :: MyspaceIPFS.multi_codec()
   def new(opts) when is_map(opts) do
     # code and name are required and must be present.
-    %MyspaceIPFS.MultiHash{
+    %__MODULE__{
       name: opts["Name"],
       code: opts["Code"]
     }

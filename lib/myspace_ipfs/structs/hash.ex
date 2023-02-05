@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Hash do
+defmodule MyspaceIPFS.Structs.Hash do
   @moduledoc false
   @enforce_keys [:hash, :name, :size, :type]
   defstruct hash: nil, name: nil, size: nil, target: "", type: nil

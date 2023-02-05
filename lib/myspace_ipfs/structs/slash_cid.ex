@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.SlashCID do
+defmodule MyspaceIPFS.Structs.SlashCID do
   @moduledoc false
   defstruct /: nil
 

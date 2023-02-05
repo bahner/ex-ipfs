@@ -1,11 +1,13 @@
-defmodule MyspaceIPFS.Peers do
+defmodule MyspaceIPFS.Structs.KeyValue do
   @moduledoc false
-  defstruct peers: []
 
-  @spec new(map) :: MyspaceIPFS.peers()
+  defstruct key: nil, value: nil
+
+  @spec new(map) :: MyspaceIPFS.key_value()
   def new(opts) when is_map(opts) do
     %__MODULE__{
-      peers: opts["Peers"]
+      key: opts.key,
+      value: opts.value
     }
   end
 

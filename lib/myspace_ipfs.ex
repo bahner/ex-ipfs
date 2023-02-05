@@ -26,7 +26,7 @@ defmodule MyspaceIPFS do
   @typedoc """
   A struct for a hash in the hash links list in Objects.
   """
-  @type hash :: %MyspaceIPFS.Hash{
+  @type hash :: %MyspaceIPFS.Structs.Hash{
           hash: binary(),
           name: binary(),
           size: non_neg_integer(),
@@ -37,7 +37,7 @@ defmodule MyspaceIPFS do
   @typedoc """
   A struct for the links of hash in Objects.
   """
-  @type hash_links :: %MyspaceIPFS.HashLinks{
+  @type hash_links :: %MyspaceIPFS.Structs.HashLinks{
           hash: binary(),
           links: list(hash())
         }
@@ -46,12 +46,12 @@ defmodule MyspaceIPFS do
   This struct is very simple. Some results are listed as "Value": size. This is a
   convenience struct to make it easier match on the result.
   """
-  @type key_value :: %MyspaceIPFS.KeyValue{key: binary(), value: binary()}
+  @type key_value :: %MyspaceIPFS.Structs.KeyValue{key: binary(), value: binary()}
 
   @typedoc """
   MyspaceIPFS.MultibaseCodec is a struct representing a hash. Seems much like a codec structure to me, but hey. Things may differ.
   """
-  @type multi_codec :: %MyspaceIPFS.MultiCodec{
+  @type multi_codec :: %MyspaceIPFS.Structs.MultiCodec{
           name: binary(),
           code: non_neg_integer()
         }
@@ -59,7 +59,7 @@ defmodule MyspaceIPFS do
   @typedoc """
   A multihash.
   """
-  @type multi_hash :: %MyspaceIPFS.MultiHash{
+  @type multi_hash :: %MyspaceIPFS.Structs.MultiHash{
           name: binary(),
           code: non_neg_integer()
         }
@@ -67,7 +67,7 @@ defmodule MyspaceIPFS do
   @typedoc """
   A struct that represents the objects in IPFS.
   """
-  @type objects :: %MyspaceIPFS.Objects{objects: list(hash_links())}
+  @type objects :: %MyspaceIPFS.Structs.Objects{objects: list(hash_links())}
 
   @typedoc """
   B58 encoded peer ID.
@@ -77,7 +77,7 @@ defmodule MyspaceIPFS do
   @typedoc """
   A struct for list of peers in the network.
   """
-  @type peers :: %MyspaceIPFS.Peers{
+  @type peers :: %MyspaceIPFS.Structs.Peers{
           peers: list | nil
         }
 
@@ -88,7 +88,7 @@ defmodule MyspaceIPFS do
   The name is odd, but it signifies that it is a CID of in the API notation, with the
   leading slash. It is used for the root of a tree.
   """
-  @type slash_cid :: %MyspaceIPFS.SlashCID{/: binary}
+  @type slash_cid :: %MyspaceIPFS.Structs.SlashCID{/: binary}
 
   @doc """
   Start the IPFS daemon.
@@ -268,7 +268,7 @@ defmodule MyspaceIPFS do
   def ls(path, opts \\ []),
     do:
       post_query("/ls?arg=" <> path, query: opts)
-      |> MyspaceIPFS.Objects.new()
+      |> MyspaceIPFS.Structs.Objects.new()
       |> okify()
 
   @doc """

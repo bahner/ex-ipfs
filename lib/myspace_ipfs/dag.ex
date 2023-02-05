@@ -5,7 +5,7 @@ defmodule MyspaceIPFS.Dag do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
   alias MyspaceIPFS.DagImport
-  alias MyspaceIPFS.SlashCID
+  alias MyspaceIPFS.Structs.SlashCID
   require Logger
 
   @typedoc """

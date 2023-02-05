@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Objects do
+defmodule MyspaceIPFS.Structs.Objects do
   @moduledoc false
 
   defstruct objects: []
@@ -7,7 +7,7 @@ defmodule MyspaceIPFS.Objects do
   def new(opts) when is_map(opts) do
     objects =
       opts["Objects"]
-      |> Enum.map(&MyspaceIPFS.HashLinks.new/1)
+      |> Enum.map(&MyspaceIPFS.Structs.HashLinks.new/1)
 
     %__MODULE__{
       objects: objects

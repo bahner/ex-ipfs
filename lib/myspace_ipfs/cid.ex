@@ -4,10 +4,10 @@ defmodule MyspaceIPFS.Cid do
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
-  alias MyspaceIPFS.MultiCodec
-  alias MyspaceIPFS.MultiHash
-  alias MyspaceIPFS.MultibaseEncoding
   alias MyspaceIPFS.CidBase32CID
+  alias MyspaceIPFS.MultibaseEncoding
+  alias MyspaceIPFS.Structs.MultiCodec
+  alias MyspaceIPFS.Structs.MultiHash
 
   @typedoc """
   A v1 CID. This is the new Base32 CID format, which is likely to last and is preferred.
