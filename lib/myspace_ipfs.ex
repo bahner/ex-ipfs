@@ -14,18 +14,23 @@ defmodule MyspaceIPFS do
   import MyspaceIPFS.Utils
 
   @typedoc """
-  B58 encoded peer ID.
+  A struct that represents the result of adding a file to IPFS.
   """
-  @type peer_id() :: <<_::48, _::_*8>>
+  @type add_result :: %MyspaceIPFS.AddResult{
+    bytes: non_neg_integer(),
+    hash: binary(),
+    name: binary(),
+    size: non_neg_integer()
+  }
 
   @typedoc """
   A struct for a hash in the hash links list in Objects.
   """
   @type hash :: %MyspaceIPFS.Hash{
-          hash: binary,
-          name: binary,
-          size: non_neg_integer,
-          target: binary,
+          hash: binary(),
+          name: binary(),
+          size: non_neg_integer(),
+          target: binary(),
           type: non_neg_integer()
         }
 
@@ -33,24 +38,44 @@ defmodule MyspaceIPFS do
   A struct for the links of hash in Objects.
   """
   @type hash_links :: %MyspaceIPFS.HashLinks{
-          hash: binary,
+          hash: binary(),
           links: list(hash())
         }
 
   @typedoc """
-  A struct that represents the result of adding a file to IPFS.
+  MyspaceIPFS.MultibaseCodec is a struct representing a hash. Seems much like a codec structure to me, but hey. Things may differ.
   """
-  @type add_result :: %MyspaceIPFS.AddResult{
-          bytes: non_neg_integer,
-          hash: binary,
-          name: binary,
-          size: non_neg_integer
-        }
+  @type multi_codec :: %MyspaceIPFS.MultiCodec{
+    name: binary(),
+    code: non_neg_integer()
+  }
+
+  @typedoc """
+  A multihash.
+  """
+  @type multi_hash :: %MyspaceIPFS.MultiHash{
+    name: binary(),
+    code: non_neg_integer()
+  }
 
   @typedoc """
   A struct that represents the objects in IPFS.
   """
   @type objects :: %MyspaceIPFS.Objects{objects: list(hash_links())}
+
+  @typedoc """
+  B58 encoded peer ID.
+  """
+  @type peer_id() :: <<_::48, _::_*8>>
+
+  @typedoc """
+  This struct is very simple. Some results are listed as `%{"/": cid}`. This is a
+  convenience struct to make it easier match on the result.
+
+  The name is odd, but it signifies that it is a CID of in the API notation, with the
+  leading slash. It is used for the root of a tree.
+  """
+  @type slash_cid :: %MyspaceIPFS.SlashCID{/: binary}
 
   @doc """
   Start the IPFS daemon.
