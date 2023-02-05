@@ -1,17 +1,9 @@
 defmodule MyspaceIPFS.VersionDeps do
-  @moduledoc """
-  MyspaceIPFS.VersionDeps is a struct to show deps of the IPFS daemon.
-  """
+  @moduledoc false
 
   defstruct path: nil, replaced_by: nil, sum: nil, version: nil
 
-  @type t :: %__MODULE__{
-          path: binary,
-          replaced_by: binary,
-          sum: binary,
-          version: binary
-        }
-
+  @spec new(map) :: MyspaceIPFS.version_deps()
   def new(data) do
     %__MODULE__{
       path: data["Path"],

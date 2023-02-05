@@ -11,19 +11,18 @@ defmodule MyspaceIPFS.Multibase do
   A multibase codec.
   """
   @type codec :: %MyspaceIPFS.MultibaseCodec{
-    name: binary(),
-    code: non_neg_integer(),
-    prefix: binary(),
-    description: binary()
-  }
+          name: binary(),
+          code: non_neg_integer(),
+          prefix: binary(),
+          description: binary()
+        }
   @typedoc """
   A multibase encoding.
   """
   @type encoding :: %MyspaceIPFS.MultibaseEncoding{
-    name: binary,
-    code: non_neg_integer()
-  }
-
+          name: binary,
+          code: non_neg_integer()
+        }
 
   @doc """
   Decode a multibase encoded string.

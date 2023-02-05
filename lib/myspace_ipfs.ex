@@ -17,11 +17,11 @@ defmodule MyspaceIPFS do
   A struct that represents the result of adding a file to IPFS.
   """
   @type add_result :: %MyspaceIPFS.AddResult{
-    bytes: non_neg_integer(),
-    hash: binary(),
-    name: binary(),
-    size: non_neg_integer()
-  }
+          bytes: non_neg_integer(),
+          hash: binary(),
+          name: binary(),
+          size: non_neg_integer()
+        }
 
   @typedoc """
   A struct for a hash in the hash links list in Objects.
@@ -43,20 +43,26 @@ defmodule MyspaceIPFS do
         }
 
   @typedoc """
+  This struct is very simple. Some results are listed as "Value": size. This is a
+  convenience struct to make it easier match on the result.
+  """
+  @type key_value :: %MyspaceIPFS.KeyValue{key: binary(), value: binary()}
+
+  @typedoc """
   MyspaceIPFS.MultibaseCodec is a struct representing a hash. Seems much like a codec structure to me, but hey. Things may differ.
   """
   @type multi_codec :: %MyspaceIPFS.MultiCodec{
-    name: binary(),
-    code: non_neg_integer()
-  }
+          name: binary(),
+          code: non_neg_integer()
+        }
 
   @typedoc """
   A multihash.
   """
   @type multi_hash :: %MyspaceIPFS.MultiHash{
-    name: binary(),
-    code: non_neg_integer()
-  }
+          name: binary(),
+          code: non_neg_integer()
+        }
 
   @typedoc """
   A struct that represents the objects in IPFS.

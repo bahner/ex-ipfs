@@ -1,14 +1,9 @@
 defmodule MyspaceIPFS.KeyValue do
-  @moduledoc """
-  This struct is very simple. Some results are listed as "Value": size. This is a
-  convenience struct to make it easier match on the result.
-  """
+  @moduledoc false
 
   defstruct key: nil, value: nil
 
-  @type t :: %__MODULE__{key: binary, value: binary}
-
-  @spec new(map) :: MyspaceIPFS.KeyValue.t()
+  @spec new(map) :: MyspaceIPFS.key_value()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       key: opts.key,
