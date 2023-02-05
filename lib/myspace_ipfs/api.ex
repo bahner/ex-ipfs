@@ -12,6 +12,16 @@ defmodule MyspaceIPFS.Api do
   # Types
 
   @typedoc """
+  A structured error returned from the upstream IPFS API.
+
+  """
+  @type api_error :: %MyspaceIPFS.ApiError{
+          code: integer,
+          message: binary,
+          type: binary
+        }
+
+  @typedoc """
   A type that represents the possible responses from the API.
   """
   @type response :: binary | map | list | error_response

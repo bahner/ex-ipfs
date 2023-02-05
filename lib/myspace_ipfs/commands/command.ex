@@ -1,27 +1,15 @@
 defmodule MyspaceIPFS.CommandsCommand do
-  @moduledoc """
-  MyspaceIPFS.Commands is where the commands commands of the IPFS API reside.
-  """
-
+  @moduledoc false
   defstruct name: nil, options: [], subcommands: []
-
-  @type t :: %__MODULE__{
-          name: binary,
-          options: list,
-          subcommands: list
-        }
 
   require Logger
 
-  @doc """
-  Generate command struct for a command object
-  """
   @spec new({:error, map}) :: {:error, map}
   def new({:error, data}) do
     {:error, data}
   end
 
-  @spec new(map) :: t
+  @spec new(map) :: MyspaceIPFS.Commands.command()
   def new(opts) do
     %__MODULE__{
       name: opts["Name"],

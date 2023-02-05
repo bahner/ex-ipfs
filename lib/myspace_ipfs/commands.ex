@@ -7,6 +7,15 @@ defmodule MyspaceIPFS.Commands do
   import MyspaceIPFS.Utils
   alias MyspaceIPFS.CommandsCommand
 
+  @typedoc """
+  A struct that represents a command object.
+  """
+  @type command :: %MyspaceIPFS.CommandsCommand{
+          name: binary,
+          options: list,
+          subcommands: list
+        }
+
   @doc """
   List all available commands.
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-commands

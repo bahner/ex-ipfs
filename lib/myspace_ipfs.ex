@@ -18,6 +18,40 @@ defmodule MyspaceIPFS do
   """
   @type peer_id() :: <<_::48, _::_*8>>
 
+  @typedoc """
+  A struct for a hash in the hash links list in Objects.
+  """
+  @type hash :: %MyspaceIPFS.Hash{
+          hash: binary,
+          name: binary,
+          size: non_neg_integer,
+          target: binary,
+          type: non_neg_integer()
+        }
+
+  @typedoc """
+  A struct for the links of hash in Objects.
+  """
+  @type hash_links :: %MyspaceIPFS.HashLinks{
+          hash: binary,
+          links: list(hash())
+        }
+
+  @typedoc """
+  A struct that represents the result of adding a file to IPFS.
+  """
+  @type add_result :: %MyspaceIPFS.AddResult{
+          bytes: non_neg_integer,
+          hash: binary,
+          name: binary,
+          size: non_neg_integer
+        }
+
+  @typedoc """
+  A struct that represents the objects in IPFS.
+  """
+  @type objects :: %MyspaceIPFS.Objects{objects: list(hash_links())}
+
   @doc """
   Start the IPFS daemon.
 
@@ -106,7 +140,7 @@ defmodule MyspaceIPFS do
 
   """
   # FIXME return a struct
-  @spec add(Path.t(), list) :: {:ok, MyspaceIPFS.AddResult.t()} | MyspaceIPFS.Api.error_response()
+  @spec add(Path.t(), list) :: {:ok, add_result()} | MyspaceIPFS.Api.error_response()
   def add(fspath, opts \\ []),
     do:
       multipart(fspath)
@@ -192,7 +226,7 @@ defmodule MyspaceIPFS do
   ```
   """
   # FIXME: return a struct
-  @spec ls(Path.t(), list) :: {:ok, MyspaceIPFS.Objects.t()} | MyspaceIPFS.Api.error_response()
+  @spec ls(Path.t(), list) :: {:ok, objects()} | MyspaceIPFS.Api.error_response()
   def ls(path, opts \\ []),
     do:
       post_query("/ls?arg=" <> path, query: opts)

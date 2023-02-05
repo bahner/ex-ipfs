@@ -1,19 +1,9 @@
 defmodule MyspaceIPFS.AddResult do
-  @moduledoc """
-  A struct that represents the result of an add operation.
-  """
+  @moduledoc false
 
   defstruct bytes: nil, hash: nil, size: nil, name: nil
 
-  @type t :: %__MODULE__{
-          bytes: non_neg_integer,
-          hash: binary,
-          name: binary,
-          size: non_neg_integer
-        }
-
-  @doc false
-  @spec new(map) :: t()
+  @spec new(map) :: MyspaceIPFS.add_result()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       bytes: opts["Bytes"],
@@ -23,13 +13,11 @@ defmodule MyspaceIPFS.AddResult do
     }
   end
 
-  @doc false
-  @spec new(list) :: list(t())
+  @spec new(list) :: list(MyspaceIPFS.add_result())
   def new(opts) when is_list(opts) do
     Enum.map(opts, &new/1)
   end
 
-  @doc false
   @spec new({:error, any}) :: {:error, any}
   def new({:error, data}), do: {:error, data}
 end

@@ -13,47 +13,38 @@ defmodule MyspaceIPFS.Bitswap do
 
   @typedoc """
   A struct that represents the stats for the bitswap network.
-
-  ```
-  %MyspaceIPFS.BitswapStat{
-    blocks_received: non_neg_integer(),
-    blocks_sent: non_neg_integer(),
-    data_received: non_neg_integer(),
-    data_sent: non_neg_integer(),
-    dup_blks_received: non_neg_integer(),
-    dup_data_received: non_neg_integer(),
-    provide_buf_len: non_neg_integer(),
-    wantlist: list(),
-    peers: list()
-  }
-  ```
   """
-  @type stat :: MyspaceIPFS.BitswapStat.t()
+  @type stat :: %MyspaceIPFS.BitswapStat{
+          blocks_received: non_neg_integer,
+          blocks_sent: non_neg_integer,
+          data_received: non_neg_integer,
+          data_sent: non_neg_integer,
+          dup_blks_received: non_neg_integer,
+          dup_data_received: non_neg_integer,
+          messages_received: list,
+          peers: list(MyspaceIPFS.peer_id()),
+          provide_buf_len: integer,
+          wantlist: list(MyspaceIPFS.SlashCID.t())
+        }
 
   @typedoc """
   A struct that represents the wantlist for a peer in the bitswap network.
 
-  ```
-  %MyspaceIPFS.BitswapWantList{
-    keys: list()
-  }
-  ```
   """
-  @type wantlist :: MyspaceIPFS.BitswapWantList.t()
+  @type wantlist :: %MyspaceIPFS.BitswapWantList{
+          keys: list | nil
+        }
 
   @typedoc """
   A struct that represents the ledger for a peer in the bitswap network.
-  ```
-  %MyspaceIPFS.BitswapLedger{{
-    exchanged: pos_integer(),
-    peer: peer_id,
-    recv: pos_integer(),
-    sent: pos_integer(),
-    value: float()
-  }
-  ```
   """
-  @type ledger :: MyspaceIPFS.BitswapLedger.t()
+  @type ledger :: %MyspaceIPFS.BitswapLedger{
+          exchanged: pos_integer(),
+          peer: MyspaceIPFS.peer_id(),
+          recv: pos_integer(),
+          sent: pos_integer(),
+          value: float()
+        }
 
   @doc """
   Reprovide blocks to the network.
@@ -111,7 +102,7 @@ defmodule MyspaceIPFS.Bitswap do
   # @spec stat(list()) ::
   #         {:ok, [MyspaceIPFS.BitswapStat.t()]}
   #         | MyspaceIPFS.Api.error_response()
-  @spec stat(list()) :: {:ok, [stat]} | MyspaceIPFS.Api.error_response()
+  @spec stat(list()) :: {:ok, [stat()]} | MyspaceIPFS.Api.error_response()
 
   def stat(opts \\ []) do
     post_query("/bitswap/stat", query: opts)

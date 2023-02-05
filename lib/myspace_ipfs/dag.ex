@@ -8,6 +8,43 @@ defmodule MyspaceIPFS.Dag do
   alias MyspaceIPFS.SlashCID
   require Logger
 
+  @typedoc """
+  A struct that represents the import of a DAG.
+
+  ```
+  %MyspaceIPFS.DagImport{
+    root: %MyspaceIPFS.DagImportRoot{
+      cid: MyspaceIPFS.SlashCID.t(),
+      pin_error_msg: binary
+    },
+    stats: %MyspaceIPFS.DagImportStats{
+      block_bytes_count: non_neg_integer(),
+      block_count: non_neg_integer()
+    }
+  }
+  ```
+  """
+  @type import :: %MyspaceIPFS.DagImport{
+          root: import_root(),
+          stats: import_stats()
+        }
+
+  @typedoc """
+  A struct that represents the root of an import of a DAG.
+  """
+  @type import_root :: %MyspaceIPFS.DagImportRoot{
+          cid: MyspaceIPFS.SlashCID.t(),
+          pin_error_msg: binary
+        }
+
+  @typedoc """
+  A struct that represents the stats of an import of a DAG.
+  """
+  @type import_stats :: %MyspaceIPFS.DagImportStats{
+          block_bytes_count: integer | nil,
+          block_count: integer | nil
+        }
+
   @doc """
   Streams the selected DAG as a .car stream on stdout.
 
@@ -48,7 +85,7 @@ defmodule MyspaceIPFS.Dag do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-dag-import
   """
-  @spec import(binary, list()) :: {:ok, DagImport.t()} | MyspaceIPFS.Api.error_response()
+  @spec import(binary, list()) :: {:ok, import()} | MyspaceIPFS.Api.error_response()
   def import(data, opts \\ []) do
     Logger.debug("import: #{inspect(opts)}")
     opts = Keyword.put(opts, :stats, true)

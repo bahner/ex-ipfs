@@ -11,7 +11,6 @@ defmodule MyspaceIPFS.Config do
   ## Parameters
   key: The key to get the value of.
   """
-  # FIXME: clean up this mess
   @spec get(binary()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def get(key) do
     post_query("/config?arg=" <> key)

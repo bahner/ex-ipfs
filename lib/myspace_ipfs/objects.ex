@@ -6,9 +6,7 @@ defmodule MyspaceIPFS.Objects do
 
   defstruct objects: []
 
-  @type t :: %__MODULE__{objects: list}
-
-  @spec new(map) :: MyspaceIPFS.Objects.t()
+  @spec new(map) :: MyspaceIPFS.objects()
   def new(opts) when is_map(opts) do
     objects =
       opts["Objects"]

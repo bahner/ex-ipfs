@@ -11,16 +11,12 @@ defmodule MyspaceIPFS.Cid do
 
   @typedoc """
   A v1 CID. This is the new Base32 CID format, which is likely to last and is preferred.
-
-  ```
-  %MyspaceIPFS.CidBase32CID{
-    cid_str: binary(),
-    formatted: binary(),
-    error_msg: binary()
-  }
-  ```
   """
-  @type base32cid :: MyspaceIPFS.CidBase32CID.t()
+  @type base32cid :: %MyspaceIPFS.CidBase32CID{
+          cid_str: binary,
+          formatted: binary,
+          error_msg: binary
+        }
 
   @doc """
   Convert to base32 CID version 1.
