@@ -39,7 +39,7 @@ defmodule MyspaceIPFS.Block do
   ## Parameters
   `cid` - The CID of the block to get.
   """
-  @spec get(binary) :: {:ok, bitstring()} | MyspaceIPFS.ApiError.t()
+  @spec get(binary) :: {:ok, bitstring()} | MyspaceIPFS.Api.error_response()
   def get(cid) do
     post_query("/block/get?arg=" <> cid)
     |> okify()
@@ -64,7 +64,7 @@ defmodule MyspaceIPFS.Block do
   ]
   ```
   """
-  @spec put(any, list) :: {:ok, key_size()} | MyspaceIPFS.ApiError.t()
+  @spec put(any, list) :: {:ok, key_size()} | MyspaceIPFS.Api.error_response()
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/block/put", query: opts)
@@ -92,7 +92,7 @@ defmodule MyspaceIPFS.Block do
   ```
   """
   @spec put_file(Path.t(), list) ::
-          {:ok, key_size()} | MyspaceIPFS.ApiError.t()
+          {:ok, key_size()} | MyspaceIPFS.Api.error_response()
   def put_file(file, opts \\ []) do
     multipart(file)
     |> post_multipart("/block/put", query: opts)
@@ -117,7 +117,7 @@ defmodule MyspaceIPFS.Block do
   ```
   """
   @spec rm(binary()) ::
-          {:ok, error_hash()} | MyspaceIPFS.ApiError.t()
+          {:ok, error_hash()} | MyspaceIPFS.Api.error_response()
   def rm(cid) do
     post_query("/block/rm?arg=" <> cid)
     |> BlockErrorHash.new()
@@ -133,7 +133,7 @@ defmodule MyspaceIPFS.Block do
   `cid` - The CID of the block to stat.
   """
   @spec stat(binary()) ::
-          {:ok, key_size()} | MyspaceIPFS.ApiError.t()
+          {:ok, key_size()} | MyspaceIPFS.Api.error_response()
   def stat(cid) do
     post_query("/block/stat?arg=" <> cid)
     |> BlockKeySize.new()

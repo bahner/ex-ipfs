@@ -27,7 +27,7 @@ defmodule MyspaceIPFS.Refs do
 
   Response is a list of Refs.t().
   """
-  @spec local :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec local :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def local,
     do:
       post_query("/refs/local")
@@ -39,7 +39,7 @@ defmodule MyspaceIPFS.Refs do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-refs
   """
-  @spec refs(Path.t(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec refs(Path.t(), list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def refs(path, opts \\ []),
     do:
       post_query("/refs?arg=" <> path, query: opts)

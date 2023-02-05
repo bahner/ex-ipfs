@@ -10,7 +10,7 @@ defmodule MyspaceIPFS.PubSub do
   List the topics you are currently subscribed to.
   """
   # FIXME: The stringlist should probably be a struct, which can handle the decoding.
-  @spec ls :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec ls :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def ls do
     post_query("/pubsub/ls")
     |> decode_string_list()
@@ -33,7 +33,7 @@ defmodule MyspaceIPFS.PubSub do
   https://docs.ipfs.io/reference/http/api/#api-v0-pubsub-peers
     `topic` - The topic to list peers for.
   """
-  @spec peers(binary) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec peers(binary) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def peers(topic) do
     base64topic = Multibase.encode(topic)
 
@@ -58,7 +58,7 @@ defmodule MyspaceIPFS.PubSub do
 
   """
 
-  @spec pub(binary, binary) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec pub(binary, binary) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def pub(data, topic) do
     with {:ok, base64topic} <- Multibase.encode(topic) do
       multipart_content(data, "data")
@@ -78,7 +78,7 @@ defmodule MyspaceIPFS.PubSub do
     `pid`   - The process to send the messages to.
   """
   # FIXME: what does genserver return?
-  @spec sub(pid, binary) :: any | MyspaceIPFS.ApiError.t()
+  @spec sub(pid, binary) :: any | MyspaceIPFS.Api.error_response()
   def sub(pid, topic) do
     MyspaceIPFS.PubSubChannel.start_link(pid, topic)
   end

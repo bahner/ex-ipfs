@@ -19,7 +19,7 @@ defmodule MyspaceIPFS.Pin do
   ]
   ```
   """
-  @spec add(Path.t()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec add(Path.t()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def add(path), do: post_query("/pin/add?arg=" <> path)
 
   @doc """
@@ -38,7 +38,7 @@ defmodule MyspaceIPFS.Pin do
   ]
   ```
   """
-  @spec ls(Path.t()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec ls(Path.t()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def ls(path) do
     post_query("/pin/ls?arg=" <> path)
     |> okify()
@@ -57,7 +57,7 @@ defmodule MyspaceIPFS.Pin do
   ]
   ```
   """
-  @spec ls() :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec ls() :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def ls() do
     post_query("/pin/ls")
     |> okify()
@@ -74,7 +74,7 @@ defmodule MyspaceIPFS.Pin do
   ]
   ```
   """
-  @spec rm(Path.t()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec rm(Path.t()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def rm(path) do
     post_query("/pin/rm?arg=" <> path)
     |> okify()
@@ -96,7 +96,7 @@ defmodule MyspaceIPFS.Pin do
   ```
   """
   @spec update(Path.t(), Path.t(), list()) ::
-          {:ok, any} | MyspaceIPFS.ApiError.t()
+          {:ok, any} | MyspaceIPFS.Api.error_response()
   def update(old, new, opts \\ []) do
     post_query("/pin/update?arg=" <> old <> "&arg=" <> new, query: opts)
     |> okify()
@@ -113,7 +113,7 @@ defmodule MyspaceIPFS.Pin do
   ]
   ```
   """
-  @spec verify(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec verify(list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def verify(opts \\ []) do
     post_query("/pin/verify", query: opts)
     |> okify()
@@ -137,7 +137,7 @@ defmodule MyspaceIPFS.Pin do
   ]
   ```
   """
-  @spec remote_add(Path.t(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec remote_add(Path.t(), list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def remote_add(path, opts \\ []) do
     post_query("/pin/remote/add?arg=" <> path, query: opts)
     |> okify()
@@ -159,7 +159,7 @@ defmodule MyspaceIPFS.Pin do
   ]
   ```
   """
-  @spec remote_ls(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec remote_ls(list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def remote_ls(opts \\ []) do
     post_query("/pin/remote/ls", query: opts)
     |> okify()
@@ -182,7 +182,7 @@ defmodule MyspaceIPFS.Pin do
   ]
   ```
   """
-  @spec remote_rm(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec remote_rm(list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def remote_rm(opts \\ []) do
     post_query("/pin/remote/rm", query: opts)
     |> okify()
@@ -206,7 +206,7 @@ defmodule MyspaceIPFS.Pin do
   ```
   """
   @spec remote_service_add(binary, Tesla.Env.url(), binary) ::
-          {:ok, any} | MyspaceIPFS.ApiError.t()
+          {:ok, any} | MyspaceIPFS.Api.error_response()
   def remote_service_add(service, endpoint, key) do
     post_query("/pin/remote/service/add?arg=" <> service <> "&arg=" <> endpoint <> "&arg=" <> key)
     |> okify()
@@ -223,7 +223,7 @@ defmodule MyspaceIPFS.Pin do
   ]
   ```
   """
-  @spec remote_service_ls(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec remote_service_ls(list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def remote_service_ls(opts \\ []) do
     post_query("/pin/remote/service/ls", query: opts)
     |> okify()
@@ -241,7 +241,7 @@ defmodule MyspaceIPFS.Pin do
   ]
   ```
   """
-  @spec remote_service_rm(binary()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec remote_service_rm(binary()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def remote_service_rm(service) do
     post_query("/pin/remote/service/rm?arg=" <> service)
     |> okify()

@@ -20,7 +20,7 @@ defmodule MyspaceIPFS.Api do
   A an aggregate type that represents the possible errors that can be returned from the API.
   """
   @type error_response ::
-          {:error, MyspaceIPFS.ApiError.t()} | {:error, Tesla.Env.t()} | {:error, atom}
+          {:error, MyspaceIPFS.Api.error_response()} | {:error, Tesla.Env.t()} | {:error, atom}
 
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @api_url)

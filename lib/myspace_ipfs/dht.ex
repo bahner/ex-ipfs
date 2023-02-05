@@ -20,7 +20,8 @@ defmodule MyspaceIPFS.Dht do
   ```
   """
   # FIXME: return a proper struct
-  @spec query(MyspaceIPFS.peer_id()) :: {:ok, MyspaceIPFS.peer_id()} | MyspaceIPFS.ApiError.t()
+  @spec query(MyspaceIPFS.peer_id()) ::
+          {:ok, MyspaceIPFS.peer_id()} | MyspaceIPFS.Api.error_response()
   def query(peer_id) do
     post_query("/dht/query?arg=" <> peer_id)
     |> okify()

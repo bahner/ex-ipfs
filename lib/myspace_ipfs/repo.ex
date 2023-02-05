@@ -14,7 +14,7 @@ defmodule MyspaceIPFS.Repo do
     quiet <bool>, # Write minimal output.
     silent <bool>, # Write no output.
   """
-  @spec gc(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec gc(list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def gc(opts \\ []) do
     post_query("/repo/gc", query: opts)
     |> okify()
@@ -23,7 +23,7 @@ defmodule MyspaceIPFS.Repo do
   @doc """
   List all local repo blocks.
   """
-  @spec ls :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec ls :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def ls() do
     post_query("/repo/ls")
     |> okify()
@@ -36,7 +36,7 @@ defmodule MyspaceIPFS.Repo do
   https://docs.ipfs.io/reference/http/api/#api-v0-repo-migrate
     allow-downgrade - <bool>, # Allow downgrading repo version.
   """
-  @spec migrate(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec migrate(list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def migrate(opts \\ []) do
     post_query("/repo/migrate", query: opts)
     |> okify()
@@ -50,7 +50,7 @@ defmodule MyspaceIPFS.Repo do
     human - <bool>, # Output human-readable numbers.
     size-only - <bool>, # Only output the RepoSize.
   """
-  @spec stat(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec stat(list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def stat(opts \\ []) do
     post_query("/repo/stat", query: opts)
     |> okify()
@@ -59,7 +59,7 @@ defmodule MyspaceIPFS.Repo do
   @doc """
   Verify all blocks in repo are not corrupted.
   """
-  @spec verify :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec verify :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def verify do
     post_query("/repo/verify")
     |> okify()
@@ -72,7 +72,7 @@ defmodule MyspaceIPFS.Repo do
   https://docs.ipfs.io/reference/http/api/#api-v0-repo-version
     quiet - <bool>, # Write minimal output.
   """
-  @spec version(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec version(list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def version(opts \\ []) do
     post_query("/repo/version", query: opts)
     |> okify()

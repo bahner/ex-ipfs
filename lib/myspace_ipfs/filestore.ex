@@ -8,7 +8,7 @@ defmodule MyspaceIPFS.Filestore do
   @doc """
   List blocks that are both in the filestore and standard block storage.
   """
-  @spec dups() :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec dups() :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def dups do
     post_query("/filestore/dups")
     |> okify()
@@ -26,7 +26,7 @@ defmodule MyspaceIPFS.Filestore do
   ]
   ```
   """
-  @spec ls(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec ls(list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def ls(opts \\ []) do
     post_query("/filestore/ls", query: opts)
     |> okify()
@@ -44,7 +44,7 @@ defmodule MyspaceIPFS.Filestore do
   ]
   ```
   """
-  @spec verify(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
+  @spec verify(list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def verify(opts \\ []) do
     post_query("/filestore/verify", query: opts)
     |> okify()
