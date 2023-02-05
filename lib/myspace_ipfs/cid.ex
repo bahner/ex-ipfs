@@ -54,7 +54,7 @@ defmodule MyspaceIPFS.Cid do
   `supported` <bool> - Show only supported codecs.
   """
   @spec codecs(list()) ::
-          {:ok, [MyspaceIPFS.MultiCodec.t()]} | MyspaceIPFS.Api.error_response()
+          {:ok, [MyspaceIPFS.multi_codec()]} | MyspaceIPFS.Api.error_response()
   def codecs(opts \\ []),
     do:
       post_query("/cid/codecs", query: opts)
@@ -90,7 +90,7 @@ defmodule MyspaceIPFS.Cid do
   `supported` <bool> - Show only supported hashes.
   """
   @spec hashes(list()) ::
-          {:ok, MyspaceIPFS.MultiHash.t()} | MyspaceIPFS.Api.error_response()
+          {:ok, MyspaceIPFS.multi_hash()} | MyspaceIPFS.Api.error_response()
   def hashes(opts \\ []),
     do:
       post_query("/cid/hashes", query: opts)

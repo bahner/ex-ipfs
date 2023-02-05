@@ -3,7 +3,7 @@ defmodule MyspaceIPFS.VersionDeps do
 
   defstruct path: nil, replaced_by: nil, sum: nil, version: nil
 
-  @spec new(map) :: MyspaceIPFS.version_deps()
+  @spec new(map) :: MyspaceIPFS.Version.deps()
   def new(data) do
     %__MODULE__{
       path: data["Path"],

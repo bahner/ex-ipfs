@@ -33,7 +33,7 @@ defmodule MyspaceIPFS.Dag do
   A struct that represents the root of an import of a DAG.
   """
   @type import_root :: %MyspaceIPFS.DagImportRoot{
-          cid: MyspaceIPFS.SlashCID.t(),
+          cid: MyspaceIPFS.slash_cid(),
           pin_error_msg: binary
         }
 
@@ -112,7 +112,7 @@ defmodule MyspaceIPFS.Dag do
   ]
   ```
   """
-  @spec put(binary, list()) :: {:ok, SlashCID.t()} | MyspaceIPFS.Api.error_response()
+  @spec put(binary, list()) :: {:ok, MyspaceIPFS.slash_cid()} | MyspaceIPFS.Api.error_response()
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/dag/put", query: opts)
