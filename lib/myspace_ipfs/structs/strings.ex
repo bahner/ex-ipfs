@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Structs.Strings do
+defmodule MyspaceIPFS.Strings do
   @moduledoc false
   @enforce_keys [:strings]
   defstruct strings: []

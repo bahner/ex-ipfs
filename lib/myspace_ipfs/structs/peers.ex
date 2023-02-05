@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Structs.Peers do
+defmodule MyspaceIPFS.Peers do
   @moduledoc false
   defstruct peers: []
 

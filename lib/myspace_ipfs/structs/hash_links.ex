@@ -1,11 +1,11 @@
-defmodule MyspaceIPFS.Structs.HashLinks do
+defmodule MyspaceIPFS.HashLinks do
   @moduledoc false
 
   defstruct hash: nil, links: []
 
   @spec new(map) :: MyspaceIPFS.hash_links()
   def new(opts) when is_map(opts) do
-    with links <- opts["Links"] |> Enum.map(&MyspaceIPFS.Structs.Hash.new/1),
+    with links <- opts["Links"] |> Enum.map(&MyspaceIPFS.Hash.new/1),
          do: %__MODULE__{
            hash: opts["Hash"],
            links: links

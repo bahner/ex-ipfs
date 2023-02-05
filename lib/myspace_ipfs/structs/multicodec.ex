@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Structs.MultiCodec do
+defmodule MyspaceIPFS.MultiCodec do
   @moduledoc false
 
   @enforce_keys [:name, :code]

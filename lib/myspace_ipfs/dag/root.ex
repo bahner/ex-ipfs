@@ -1,7 +1,7 @@
 defmodule MyspaceIPFS.DagImportRoot do
   @moduledoc false
 
-  alias MyspaceIPFS.Structs.SlashCID
+  alias MyspaceIPFS.SlashCID
   require Logger
   defstruct cid: nil, pin_error_msg: nil
 

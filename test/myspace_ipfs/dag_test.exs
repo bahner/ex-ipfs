@@ -9,7 +9,7 @@ defmodule MyspaceIPFS.DagTest do
   """
   use ExUnit.Case, async: true
   alias MyspaceIPFS.Dag, as: Dag
-  alias MyspaceIPFS.Structs.SlashCID
+  alias MyspaceIPFS.SlashCID
   alias MyspaceIPFS.DagImport
   alias MyspaceIPFS.DagImportRoot
   alias MyspaceIPFS.DagImportStats

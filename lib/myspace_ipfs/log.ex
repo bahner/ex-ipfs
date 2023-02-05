@@ -4,7 +4,7 @@ defmodule MyspaceIPFS.Log do
   """
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
-  alias MyspaceIPFS.Structs.Strings
+  alias MyspaceIPFS.Strings
 
   @doc """
   Change the logging level.

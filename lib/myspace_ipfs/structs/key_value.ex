@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Structs.KeyValue do
+defmodule MyspaceIPFS.KeyValue do
   @moduledoc false
 
   defstruct key: nil, value: nil
