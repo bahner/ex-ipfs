@@ -5,13 +5,35 @@ defmodule MyspaceIPFS.Diag do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
+  @typedoc """
+  A commands element from the Diag Cmds command.
+  """
+  @type cmd :: %MyspaceIPFS.DiagCmd{
+          active: boolean(),
+          args: list(),
+          command: binary(),
+          end_time: binary(),
+          id: integer(),
+          options: map(),
+          start_time: binary()
+        }
+
+  @type profile :: %MyspaceIPFS.DiagProfile{
+          output: Path.t(),
+          timeout: binary,
+          writer: pid,
+          ref: reference,
+          query_options: list
+        }
+
   @doc """
-  List commands run by the daemon.
+  List commands run by the daemon. A history.
   """
   # FIXME: return a proper struct
-  @spec cmds() :: {:ok, any} | MyspaceIPFS.Api.error_response()
+  @spec cmds() :: {:ok, list} | MyspaceIPFS.Api.error_response()
   def cmds() do
     post_query("/diag/cmds")
+    |> MyspaceIPFS.DiagCmd.new()
     |> okify()
   end
 
@@ -32,7 +54,7 @@ defmodule MyspaceIPFS.Diag do
   time: The time to set the retention time to.
   """
   # FIXME: return a proper struct
-  @spec set_time(String.t()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
+  @spec set_time(binary()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def set_time(time) do
     post_query("/diag/cmds/set-time?arg=" <> time)
     |> okify()
@@ -42,7 +64,7 @@ defmodule MyspaceIPFS.Diag do
   Print system diagnostic information.
   """
   # FIXME: verify return type
-  @spec sys() :: {:ok, any} | MyspaceIPFS.Api.error_response()
+  @spec sys() :: {:ok, map} | MyspaceIPFS.Api.error_response()
   def sys do
     post_query("/diag/sys")
     |> okify()
@@ -74,7 +96,6 @@ defmodule MyspaceIPFS.Diag do
   # FIXME: verify return value
   @spec profile(list) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def profile(options \\ []) do
-    MyspaceIPFS.Diag.Profile.start_link(options)
-    |> okify()
+    MyspaceIPFS.DiagProfile.start_link(options)
   end
 end

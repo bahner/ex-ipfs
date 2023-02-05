@@ -1,4 +1,4 @@
-defmodule MyspaceIPFS.Diag.Profile do
+defmodule MyspaceIPFS.DiagProfile do
   @moduledoc false
   use GenServer
 
@@ -18,9 +18,7 @@ defmodule MyspaceIPFS.Diag.Profile do
           ref: reference,
           query_options: list
         }
-  @doc """
-  Generate command struct for a command object
-  """
+
   @spec new({:error, map}) :: {:error, map}
   def new({:error, data}) do
     {:error, data}
@@ -42,7 +40,7 @@ defmodule MyspaceIPFS.Diag.Profile do
   def start_link(query_options) do
     GenServer.start_link(
       __MODULE__,
-      %MyspaceIPFS.Diag.Profile{query_options: query_options}
+      %__MODULE__{query_options: query_options}
     )
   end
 
