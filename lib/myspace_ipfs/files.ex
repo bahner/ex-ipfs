@@ -5,6 +5,31 @@ defmodule MyspaceIPFS.Files do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
+  @typedoc """
+  List of entries in a directory. Each entry is a Hash.
+  """
+  @type entries :: [MyspaceIPFS.FilesEntry.t()]
+
+  @typedoc """
+  A FileEntry struct.
+  """
+  @type entry :: %MyspaceIPFS.FilesEntry{
+          hash: MyspaceIPFS.hash(),
+          name: binary(),
+          size: non_neg_integer(),
+          type: binary()
+        }
+
+  @typedoc """
+  A FileStat struct.
+  """
+  @type stat :: %MyspaceIPFS.FilesStat{
+          blocks: non_neg_integer(),
+          cumulative_size: non_neg_integer(),
+          hash: MyspaceIPFS.hash(),
+          size: non_neg_integer(),
+          type: binary()
+        }
   @doc """
   Copy files into mfs.
 
@@ -21,17 +46,17 @@ defmodule MyspaceIPFS.Files do
   ```
   """
   # FIXME: verify return type
-  @spec cp(Path.t(), Path.t(), list) :: {:ok, any} | MyspaceIPFS.Api.error_response()
+  @spec cp(Path.t(), Path.t(), list) :: :ok | MyspaceIPFS.Api.error_response()
   def cp(source, dest, opts \\ []) do
     post_query("/files/cp?arg=" <> source <> "&arg=" <> dest, query: opts)
-    |> okify()
+    |> handle_files_response()
   end
 
   @doc """
   Change the CID version or hash function of a path's root node.
 
   ## Parameters
-  path: The path to change the CID for, if doubt use "/"
+  path: The path to change the CID for, if in doubt use "/"
 
   ## Options
   https://docs.ipfs.io/reference/http/api/#api-v0-files-chcid
@@ -48,6 +73,26 @@ defmodule MyspaceIPFS.Files do
     post_query("/files/chcid?arg=" <> path, query: opts)
     |> okify()
   end
+
+  @doc """
+  Get the filepaths of all files in a directory.
+
+  This is a convenience function, if you just want the filenames from the ls command.
+  Use it in a pipeline like this:
+
+  ```
+  MyspaceIPFS.Files.ls("/some/path")
+  |> MyspaceIPFS.Files.extract_entries_names()
+  ```
+  """
+  @spec extract_entries_names(%{:entries => any}) :: [binary()]
+  def extract_entries_names(entries) when is_map(entries) do
+    Enum.map(entries.entries, fn entry ->
+      entry.name
+    end)
+  end
+
+  def extract_entries_names({:error, data}), do: {:error, data}
 
   @doc """
   Flush a given path's data to disk.
@@ -73,7 +118,7 @@ defmodule MyspaceIPFS.Files do
   List directories in the local mutable namespace.
 
   ## Parameters
-  `path` - The path to list. If in doubt, use "/".
+  `path`| - The path to list. If in doubt, use "/".
 
   ## Options
   https://docs.ipfs.io/reference/http/api/#api-v0-files-ls
@@ -84,9 +129,32 @@ defmodule MyspaceIPFS.Files do
   ]
   ```
   """
-  @spec ls(Path.t(), list) :: {:ok, any} | MyspaceIPFS.Api.error_response()
-  def ls(path, opts \\ []) do
+  @spec ls!(Path.t(), list) :: entries() | MyspaceIPFS.Api.error_response()
+  def ls!(path, opts \\ []) do
     post_query("/files/ls?arg=" <> path, query: opts)
+    |> MyspaceIPFS.FilesEntries.new()
+  end
+
+  @doc """
+  List directories in the local mutable namespace.
+  https://docs.ipfs.io/reference/http/api/#api-v0-files-ls
+
+  This command only returns the filepaths of the files in the directory.
+
+  ## Parameters
+  `path`| - The path to list. If in doubt, use "/".
+
+  ## Options
+  ```
+  [
+    l: <bool>, # Use long listing format.
+    U: <bool>, # Do not sort; list entries in directory order.
+  ]
+  ```
+  """
+  @spec ls(Path.t(), list) :: {:ok, list} | MyspaceIPFS.Api.error_response()
+  def ls(path, opts \\ []) do
+    ls!(path, opts)
     |> okify()
   end
 
@@ -106,10 +174,11 @@ defmodule MyspaceIPFS.Files do
   ]
   ```
   """
-  @spec mkdir(Path.t(), list) :: {:ok, any} | MyspaceIPFS.Api.error_response()
+
+  @spec mkdir(Path.t(), list) :: :ok | MyspaceIPFS.Api.error_response()
   def mkdir(path, opts \\ []) do
     post_query("/files/mkdir?arg=" <> path, query: opts)
-    |> okify()
+    |> handle_files_response()
   end
 
   @doc """
@@ -119,10 +188,10 @@ defmodule MyspaceIPFS.Files do
   `source` - The source file to move.
   `dest` - The destination path for the file to be moved to.
   """
-  @spec mv(Path.t(), Path.t()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
+  @spec mv(Path.t(), Path.t()) :: :ok | MyspaceIPFS.Api.error_response()
   def mv(source, dest) do
     post_query("/files/mv?arg=" <> source <> "&arg=" <> dest)
-    |> okify()
+    |> handle_files_response()
   end
 
   @doc """
@@ -140,9 +209,14 @@ defmodule MyspaceIPFS.Files do
   ]
   ```
   """
+  @spec read!(Path.t(), list) :: any | MyspaceIPFS.Api.error_response()
+  def read!(path, opts \\ []) do
+    post_query("/files/read?arg=" <> path, query: opts)
+  end
+
   @spec read(Path.t(), list) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def read(path, opts \\ []) do
-    post_query("/files/read?arg=" <> path, query: opts)
+    read!(path, opts)
     |> okify()
   end
 
@@ -156,15 +230,15 @@ defmodule MyspaceIPFS.Files do
   https://docs.ipfs.io/reference/http/api/#api-v0-files-rm
   ```
   [
-    recursive: <bool>, # Recursively remove directories.
+    r|recursive: <bool>, # Recursively remove directories.
     force: <bool>, # Forcibly remove target at path; implies recursive for directories.
   ]
   ```
   """
-  @spec rm(Path.t(), list) :: {:ok, any} | MyspaceIPFS.Api.error_response()
+  @spec rm(Path.t(), list) :: :ok | {:error, binary}
   def rm(path, opts \\ []) do
     post_query("/files/rm?arg=" <> path, query: opts)
-    |> okify()
+    |> handle_files_response()
   end
 
   @doc """
@@ -189,6 +263,7 @@ defmodule MyspaceIPFS.Files do
   @spec stat(Path.t(), list) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def stat(path, opts \\ []) do
     post_query("/files/stat?arg=" <> path, query: opts)
+    |> MyspaceIPFS.FilesStat.new()
     |> okify()
   end
 
@@ -214,10 +289,26 @@ defmodule MyspaceIPFS.Files do
   ]
   ```
   """
+  @spec write!(Path.t(), Path.t(), list) :: :ok | MyspaceIPFS.Api.error_response()
+  def write!(data, path, opts \\ []) do
+    mp = multipart_content(data)
+
+    post_multipart(mp, "/files/write?arg=" <> path, query: opts)
+    |> handle_files_response()
+  end
+
   @spec write(Path.t(), Path.t(), list) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def write(data, path, opts \\ []) do
-    multipart_content(data)
-    |> post_multipart("/files/write?arg=" <> path, query: opts)
+    write!(data, path, opts)
     |> okify()
+  end
+
+  # Files API sometimes just sends an empty string as a response.
+  # That means OK.
+  defp handle_files_response(response) do
+    case response do
+      "" -> :ok
+      _ -> response
+    end
   end
 end
