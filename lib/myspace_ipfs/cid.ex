@@ -30,7 +30,7 @@ defmodule MyspaceIPFS.Cid do
   `cid` - The CID to convert to base32.
   """
 
-  @spec base32(MyspaceIPFS.cid()) :: {:ok, base32cid()} | MyspaceIPFS.Api.api_error()
+  @spec base32(binary()) :: {:ok, base32cid()} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
   def base32(cid),
     do:
       post_query("/cid/base32?arg=" <> cid)
@@ -41,8 +41,8 @@ defmodule MyspaceIPFS.Cid do
   List available multibase encodings.
 
   """
-  @spec bases(MyspaceIPFS.opts()) ::
-          {:ok, list[MyspaceIPFS.MultibaseEncoding.t()]} | MyspaceIPFS.Api.api_error()
+  @spec bases(list()) ::
+          {:ok, list[MyspaceIPFS.MultibaseEncoding.t()]} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
   def bases(opts \\ []),
     do:
       post_query("/cid/bases", query: opts)
@@ -58,8 +58,8 @@ defmodule MyspaceIPFS.Cid do
   `numeric` <bool> - Show codec numeric code.
   `supported` <bool> - Show only supported codecs.
   """
-  @spec codecs(MyspaceIPFS.opts()) ::
-          {:ok, [MyspaceIPFS.MultiCodec.t()]} | MyspaceIPFS.Api.api_error()
+  @spec codecs(list()) ::
+          {:ok, [MyspaceIPFS.MultiCodec.t()]} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
   def codecs(opts \\ []),
     do:
       post_query("/cid/codecs", query: opts)
@@ -79,7 +79,7 @@ defmodule MyspaceIPFS.Cid do
   `b` <string> - Multibase to display CID in.
   `mc` <string> - Multicodec.
   """
-  @spec format(MyspaceIPFS.cid(), MyspaceIPFS.opts()) :: {:ok, any} | MyspaceIPFS.Api.api_error()
+  @spec format(binary(), list()) :: {:ok, any} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
   def format(cid, opts \\ []),
     do:
       post_query("/cid/format?arg=" <> cid, query: opts)
@@ -94,8 +94,8 @@ defmodule MyspaceIPFS.Cid do
 
   `supported` <bool> - Show only supported hashes.
   """
-  @spec hashes(MyspaceIPFS.opts()) ::
-          {:ok, MyspaceIPFS.MultiHash.t()} | MyspaceIPFS.Api.api_error()
+  @spec hashes(list()) ::
+          {:ok, MyspaceIPFS.MultiHash.t()} | MyspaceIPFS.Api.MyspaceIPFS.ApiError.t()
   def hashes(opts \\ []),
     do:
       post_query("/cid/hashes", query: opts)

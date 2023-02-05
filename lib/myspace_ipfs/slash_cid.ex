@@ -7,11 +7,9 @@ defmodule MyspaceIPFS.SlashCID do
   leading slash.
   """
 
-  @typep cid :: MyspaceIPFS.cid()
-  # The CID of the root object.
   defstruct /: nil
 
-  @type t :: %__MODULE__{/: cid}
+  @type t :: %__MODULE__{/: binary}
 
   @spec new(any) :: t()
   def new(cid) do

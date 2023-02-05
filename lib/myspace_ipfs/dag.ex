@@ -8,11 +8,6 @@ defmodule MyspaceIPFS.Dag do
   alias MyspaceIPFS.SlashCID
   require Logger
 
-  @typep cid :: MyspaceIPFS.cid()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep path :: MyspaceIPFS.path()
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-
   @doc """
   Streams the selected DAG as a .car stream on stdout.
 
@@ -22,7 +17,7 @@ defmodule MyspaceIPFS.Dag do
   No options are relevant for this command.
   """
   # FIXME return a struct
-  @spec export(cid) :: {:ok, any} | api_error()
+  @spec export(binary()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def export(cid) do
     post_query("/dag/export?arg=" <> cid)
     |> okify()
@@ -35,7 +30,7 @@ defmodule MyspaceIPFS.Dag do
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-dag-get
   """
   # FIXME return a struct
-  @spec get(path, opts) :: {:ok, any} | api_error()
+  @spec get(MyspaceIPFS.path(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def get(path, opts \\ []) do
     with data <- post_query("/dag/get?arg=" <> path, query: opts) do
       data
@@ -53,7 +48,7 @@ defmodule MyspaceIPFS.Dag do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-dag-import
   """
-  @spec import(binary, opts) :: {:ok, DagImport.t()} | api_error()
+  @spec import(binary, list()) :: {:ok, DagImport.t()} | MyspaceIPFS.ApiError.t()
   def import(data, opts \\ []) do
     Logger.debug("import: #{inspect(opts)}")
     opts = Keyword.put(opts, :stats, true)
@@ -80,7 +75,7 @@ defmodule MyspaceIPFS.Dag do
   ]
   ```
   """
-  @spec put(binary, opts) :: {:ok, SlashCID.t()} | api_error()
+  @spec put(binary, list()) :: {:ok, SlashCID.t()} | MyspaceIPFS.ApiError.t()
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/dag/put", query: opts)

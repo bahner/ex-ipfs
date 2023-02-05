@@ -5,10 +5,9 @@ defmodule MyspaceIPFS.BitswapLedger do
 
   defstruct [:exchanged, :peer, :recv, :sent, :value]
 
-  @typep peer_id :: MyspaceIPFS.peer_id()
   @type t :: %__MODULE__{
           exchanged: pos_integer(),
-          peer: peer_id,
+          peer: MyspaceIPFS.peer_id(),
           recv: pos_integer(),
           sent: pos_integer(),
           value: float()

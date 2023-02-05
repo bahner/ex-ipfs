@@ -5,9 +5,6 @@ defmodule MyspaceIPFS.Dht do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep peer_id :: MyspaceIPFS.peer_id()
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-
   @doc """
   Find the closest peers to a given key.
 
@@ -23,7 +20,7 @@ defmodule MyspaceIPFS.Dht do
   ```
   """
   # FIXME: return a proper struct
-  @spec query(peer_id) :: {:ok, peer_id()} | api_error()
+  @spec query(MyspaceIPFS.peer_id()) :: {:ok, MyspaceIPFS.peer_id()} | MyspaceIPFS.ApiError.t()
   def query(peer_id) do
     post_query("/dht/query?arg=" <> peer_id)
     |> okify()

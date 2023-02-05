@@ -12,13 +12,13 @@ defmodule MyspaceIPFS.Ping do
           time: non_neg_integer,
           text: binary
         }
-  @typep peer_id :: MyspaceIPFS.peer_id()
+
 
   # @api_url Application.get_env(:myspace_ipfs, :api_url)
   # @default_topic Application.get_env(:myspace_ipfs, :default_topic)
   @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0")
 
-  @spec start_link(pid, peer_id, atom | integer, list) :: :ignore | {:error, any} | {:ok, pid}
+  @spec start_link(pid, MyspaceIPFS.peer_id(), atom | integer, list) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(pid, peer_id, timeout, query_options) do
     GenServer.start_link(
       __MODULE__,

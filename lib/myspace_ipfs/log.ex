@@ -5,9 +5,6 @@ defmodule MyspaceIPFS.Log do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-  @typep name :: MyspaceIPFS.name()
-
   @doc """
   Change the logging level.
 
@@ -16,7 +13,7 @@ defmodule MyspaceIPFS.Log do
     `subsys` - Subsystem logging identifier.
     `level` - Logging level.
   """
-  @spec level(name, name) :: {:ok, any} | api_error()
+  @spec level(binary(), binary()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def level(subsys \\ "all", level) do
     post_query("/log/level?arg=" <> subsys <> "&arg=" <> level)
     |> okify()
@@ -25,7 +22,7 @@ defmodule MyspaceIPFS.Log do
   @doc """
   List the logging subsystems.
   """
-  @spec ls() :: {:ok, any} | api_error()
+  @spec ls() :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def ls do
     post_query("/log/ls")
     |> okify()
@@ -34,7 +31,7 @@ defmodule MyspaceIPFS.Log do
   @doc """
   Read the event log.
   """
-  @spec tail() :: {:ok, any} | api_error()
+  @spec tail() :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def tail do
     post_query("/log/tail")
     |> okify()

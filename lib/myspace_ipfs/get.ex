@@ -9,21 +9,8 @@ defmodule MyspaceIPFS.Get do
   @enforce_keys [:path, :fspath, :content]
   defstruct [:path, :fspath, :name, :content, archive: false]
 
-  @typep path :: MyspaceIPFS.path()
-  @typep fspath :: MyspaceIPFS.fspath()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-
-  # @typep t :: %__MODULE__{
-  #          path: path,
-  #          fspath: fspath,
-  #          name: binary,
-  #          content: binary,
-  #          archive: boolean
-  #        }
-
   @doc false
-  @spec get(path, opts) :: {:ok, fspath} | api_error
+  @spec get(Path.t(), list) :: {:ok, Path.t()} | MyspaceIPFS.ApiError.t()
   def get(path, opts \\ []) do
     content = get_get_data(path, opts)
 
@@ -37,7 +24,7 @@ defmodule MyspaceIPFS.Get do
     end
   end
 
-  # @spec get_get_data(path, opts) :: {:ok, fspath} | api_error
+  # @spec get_get_data(path, opts) :: {:ok, fspath} | MyspaceIPFS.ApiError.t()
   defp get_get_data(path, opts) do
     options = create_query_opts(opts)
 

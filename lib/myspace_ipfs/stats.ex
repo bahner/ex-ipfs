@@ -5,9 +5,6 @@ defmodule MyspaceIPFS.Stats do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep name :: MyspaceIPFS.name()
 
   @doc """
   Show some diagnostic information on the bitswap agent.
@@ -17,7 +14,7 @@ defmodule MyspaceIPFS.Stats do
     human - <bool>, # Output human-readable numbers.
     verbose - <bool>, # Print extra information.
   """
-  @spec bitswap(opts) :: {:ok, any} | api_error()
+  @spec bitswap(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def bitswap(opts \\ []) do
     post_query("/stats/bitswap", query: opts)
   end
@@ -32,7 +29,7 @@ defmodule MyspaceIPFS.Stats do
     poll - <bool>, # Poll for stats.
     interval - <string>, # Time interval to poll. Default: 1s.
   """
-  @spec bw(opts) :: {:ok, any} | api_error()
+  @spec bw(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def bw(opts \\ []) do
     post_query("/stats/bw", query: opts)
   end
@@ -44,7 +41,7 @@ defmodule MyspaceIPFS.Stats do
     dht - <string>, # The name of the DHT to query.
                     # "wanserver", "lanserver", "lan" or "wan".
   """
-  @spec dht(name) :: {:ok, any} | api_error
+  @spec dht(binary()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def dht(name) do
     post_query("/stats/dht?arg=#{name}")
     |> okify()
@@ -53,7 +50,7 @@ defmodule MyspaceIPFS.Stats do
   @doc """
   Returns statistics about the node's (re)provider system.
   """
-  @spec provide() :: {:ok, any} | api_error()
+  @spec provide() :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def provide do
     post_query("/stats/provide")
     |> okify()
@@ -67,7 +64,7 @@ defmodule MyspaceIPFS.Stats do
     human - <bool>, # Output human-readable numbers.
     size-only - <bool>, # Only report the RepoSize.
   """
-  @spec repo(opts) :: {:ok, any} | api_error()
+  @spec repo(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def repo(opts \\ []) do
     post_query("/stats/repo", query: opts)
     |> okify()

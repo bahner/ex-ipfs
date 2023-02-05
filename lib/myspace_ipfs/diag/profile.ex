@@ -11,10 +11,8 @@ defmodule MyspaceIPFS.Diag.Profile do
             writer: nil,
             timeout: "30s"
 
-  @typep fspath :: MyspaceIPFS.fspath()
-
   @type t :: %__MODULE__{
-          output: fspath,
+          output: Path.t(),
           timeout: binary,
           writer: pid,
           ref: reference,

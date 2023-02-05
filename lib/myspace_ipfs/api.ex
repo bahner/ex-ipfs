@@ -11,18 +11,6 @@ defmodule MyspaceIPFS.Api do
 
   # Types
 
-  @typedoc """
-  A structured error returned from the upstream IPFS API.
-
-  ```
-  %MyspaceIPFS.ApiError{
-    code: 0,
-    message: "some message",
-    type: "error type"
-  }
-  ```
-  """
-  @type api_error() :: MyspaceIPFS.ApiError.t()
 
   @typedoc """
   A type that represents the possible responses from the API.
@@ -33,7 +21,7 @@ defmodule MyspaceIPFS.Api do
   A an aggregate type that represents the possible errors that can be returned from the API.
   """
   @type error_response ::
-          {:error, api_error()} | {:error, Tesla.Env.t()} | {:error, atom}
+          {:error, MyspaceIPFS.ApiError.t()} | {:error, Tesla.Env.t()} | {:error, atom}
 
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @api_url)
@@ -41,14 +29,14 @@ defmodule MyspaceIPFS.Api do
   plug(Tesla.Middleware.Logger)
 
   @doc false
-  @spec post_query(MyspaceIPFS.path(), MyspaceIPFS.opts()) :: response
+  @spec post_query(MyspaceIPFS.path(), list()) :: response
   def post_query(path, opts \\ []) do
     post(path, <<>>, opts)
     |> handle_response()
   end
 
   @doc false
-  @spec post_multipart(Tesla.Multipart.t(), binary, MyspaceIPFS.opts()) :: response
+  @spec post_multipart(Tesla.Multipart.t(), binary, list()) :: response
   def post_multipart(mp, path, opts \\ []) do
     post(path, mp, opts)
     |> handle_response()

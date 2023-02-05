@@ -108,10 +108,10 @@ defmodule MyspaceIPFS.Bitswap do
 
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-bitswap-stat
   """
-  # @spec stat(MyspaceIPFS.opts()) ::
+  # @spec stat(list()) ::
   #         {:ok, [MyspaceIPFS.BitswapStat.t()]}
   #         | MyspaceIPFS.Api.error_response()
-  @spec stat(MyspaceIPFS.opts()) :: {:ok, [stat]} | MyspaceIPFS.Api.error_response()
+  @spec stat(list()) :: {:ok, [stat]} | MyspaceIPFS.Api.error_response()
 
   def stat(opts \\ []) do
     post_query("/bitswap/stat", query: opts)

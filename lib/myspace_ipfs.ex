@@ -13,48 +13,10 @@ defmodule MyspaceIPFS do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-
-  @typedoc """
-  The name of the file or data to be sent to the node. Sometimes you cant't
-  use paths, but have to use a cid. This is because prefixes like /ipfs/ or
-  /ipns/ are not allowed.
-
-  Not sure how to verify this type.
-  """
-  @type name :: binary
-
-  @typedoc """
-  The name of the file or data to be sent to the node. Sometimes you cant't
-  use paths, but have to use a cid. This is because prefixes like /ipfs/ or
-  /ipns/ are not allowed.
-  """
-  @type cid :: binary
-
   @typedoc """
   B58 encoded peer ID.
   """
   @type peer_id() :: <<_::48, _::_*8>>
-
-  @typedoc """
-  The file system path to the file to be sent to the node.
-  Because <cid>, /ipfs/<cid> or /ipns/<cid> are all allowed it looks like a path.
-  """
-  @type fspath :: Path.t()
-
-  @typedoc """
-  The query options to be sent to the node.
-
-  This means your can't send tesla: timeout or things like that.
-  """
-  @type opts :: list
-
-  @typedoc """
-  The path to the endpoint to be hit. For example, `/add` or `/cat`.
-  It's called path because sometimes the MultiHash is not enough to
-  identify the resource, and a path is needed, eg. /ipns/myspace.bahner.com
-  """
-  @type path :: Path.t()
 
   @doc """
   Start the IPFS daemon.
@@ -87,7 +49,7 @@ defmodule MyspaceIPFS do
   ]
   ```
   """
-  @spec daemon(boolean, atom, opts) :: pid
+  @spec daemon(boolean, atom, list) :: pid
   def daemon(start? \\ true, signal \\ :normal, opts \\ []) do
     {:ok, pid} = Task.start(fn -> System.cmd("ipfs", ["daemon"] ++ opts) end)
 
@@ -126,7 +88,7 @@ defmodule MyspaceIPFS do
   ```
   """
   # FIXME: Path need sto be compile for testing
-  @spec resolve(path, opts) :: {:ok, MyspaceIPFS.Path.t()} | api_error
+  @spec resolve(Path.t(), list) :: {:ok, Path.t()} | MyspaceIPFS.ApiError.t()
   def resolve(path, opts \\ []),
     do:
       post_query("/resolve?arg=" <> path, query: opts)
@@ -144,7 +106,7 @@ defmodule MyspaceIPFS do
 
   """
   # FIXME return a struct
-  @spec add(fspath, opts) :: {:ok, MyspaceIPFS.AddResult.t()} | api_error
+  @spec add(Path.t(), list) :: {:ok, MyspaceIPFS.AddResult.t()} | MyspaceIPFS.ApiError.t()
   def add(fspath, opts \\ []),
     do:
       multipart(fspath)
@@ -171,7 +133,7 @@ defmodule MyspaceIPFS do
   If you feel that you need more timeouts, you can use the `:timeout` option in the `opts` list.
   But the default should be enough for most cases. More likely your content isn't available....
   """
-  @spec get(path, opts) :: {:ok, fspath} | api_error
+  @spec get(Path.t(), list) :: {:ok, Path.t()} | MyspaceIPFS.ApiError.t()
   defdelegate get(path, opts \\ []), to: MyspaceIPFS.Get
 
   @doc """
@@ -189,7 +151,7 @@ defmodule MyspaceIPFS do
   ```
   """
   # FIXME: return a struct
-  @spec cat(path, opts) :: {:ok, any} | api_error
+  @spec cat(Path.t(), list) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def cat(path, opts \\ []),
     do: post_query("/cat?arg=" <> path, query: opts)
 
@@ -230,7 +192,7 @@ defmodule MyspaceIPFS do
   ```
   """
   # FIXME: return a struct
-  @spec ls(path, opts) :: {:ok, MyspaceIPFS.Objects.t()} | api_error
+  @spec ls(Path.t(), list) :: {:ok, MyspaceIPFS.Objects.t()} | MyspaceIPFS.ApiError.t()
   def ls(path, opts \\ []),
     do:
       post_query("/ls?arg=" <> path, query: opts)
@@ -250,7 +212,7 @@ defmodule MyspaceIPFS do
     - Protocols: the protocols of the node.
   """
   # FIXME: return a struct
-  @spec id :: {:ok, map} | api_error
+  @spec id :: {:ok, map} | MyspaceIPFS.ApiError.t()
   def id,
     do:
       post_query("/id")
@@ -270,7 +232,7 @@ defmodule MyspaceIPFS do
   ```
   """
   # FIXME verify return type
-  @spec(ping(pid, peer_id, atom | integer, opts) :: :ignore | {:ok, pid}, {:error, reason})
+  @spec(ping(pid, MyspaceIPFS.peer_id(), atom | integer, list) :: :ignore | {:ok, pid}, {:error, reason})
   def ping(pid, peer, timeout \\ 10, opts \\ []),
     do: MyspaceIPFS.Ping.start_link(pid, peer, timeout, opts)
 
@@ -287,7 +249,7 @@ defmodule MyspaceIPFS do
   ```
   """
   # FIXME veridy return type
-  @spec mount(opts) :: {:ok, any} | api_error
+  @spec mount(list) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def mount(opts \\ []),
     do:
       post_query("/mount", query: opts)

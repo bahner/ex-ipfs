@@ -22,16 +22,12 @@ defmodule MyspaceIPFS.Refs do
           Err: String.t()
         }
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep path :: MyspaceIPFS.path()
-
   @doc """
   Get a list of all local references.
 
   Response is a list of Refs.t().
   """
-  @spec local :: {:ok, any} | api_error
+  @spec local :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def local,
     do:
       post_query("/refs/local")
@@ -43,7 +39,7 @@ defmodule MyspaceIPFS.Refs do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-refs
   """
-  @spec refs(path, opts) :: {:ok, any} | api_error
+  @spec refs(MyspaceIPFS.path(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def refs(path, opts \\ []),
     do:
       post_query("/refs?arg=" <> path, query: opts)

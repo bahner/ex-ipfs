@@ -6,11 +6,6 @@ defmodule MyspaceIPFS.Routing do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-  @typep peer_id :: MyspaceIPFS.peer_id()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep name :: MyspaceIPFS.name()
-
   @doc """
   Find the multiaddresses associated with a peer ID.
 
@@ -18,7 +13,7 @@ defmodule MyspaceIPFS.Routing do
   https://docs.ipfs.io/reference/http/api/#api-v0-routing-findpeer
     verbose - <bool>, # Write extra information.
   """
-  @spec findpeer(peer_id, opts) :: {:ok, any} | api_error()
+  @spec findpeer(MyspaceIPFS.peer_id(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def findpeer(peer_id, opts \\ []) do
     post_query("/routing/findpeer?arg=#{peer_id}", query: opts)
     |> okify()
@@ -32,7 +27,7 @@ defmodule MyspaceIPFS.Routing do
     verbose - <bool>, # Write extra information.
     num-providers - <int>, # The number of providers to find.
   """
-  @spec findprovs(peer_id, opts) :: {:ok, any} | api_error()
+  @spec findprovs(MyspaceIPFS.peer_id(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def findprovs(cid, opts \\ []) do
     post_query("/routing/findprovs?arg=#{cid}", query: opts)
     |> okify()
@@ -46,7 +41,7 @@ defmodule MyspaceIPFS.Routing do
     recursive - <bool>, # Recursively provide entire graph.
     verbose - <bool>, # Write extra information.
   """
-  @spec provide(name, opts) :: {:ok, any} | api_error()
+  @spec provide(binary(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def provide(name, opts \\ []) do
     post_query("/routing/provide?arg=#{name}", query: opts)
     |> okify()
@@ -62,7 +57,7 @@ defmodule MyspaceIPFS.Routing do
   https://docs.ipfs.io/reference/http/api/#api-v0-routing-put
     verbose - <bool>, # Write extra information.
   """
-  @spec put(name, binary, opts) :: {:ok, any} | api_error()
+  @spec put(binary(), binary, list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def put(key, value, opts \\ []) do
     multipart_content(value)
     |> post_multipart("/routing/put?arg=" <> key, query: opts)

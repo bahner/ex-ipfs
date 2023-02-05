@@ -5,11 +5,6 @@ defmodule MyspaceIPFS.Config do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep name :: MyspaceIPFS.name()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep fspath :: MyspaceIPFS.fspath()
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-
   @doc """
   Get the value of a config key.
 
@@ -17,7 +12,7 @@ defmodule MyspaceIPFS.Config do
   key: The key to get the value of.
   """
   # FIXME: clean up this mess
-  @spec get(name) :: {:ok, any} | api_error
+  @spec get(binary()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def get(key) do
     post_query("/config?arg=" <> key)
     |> okify()
@@ -26,7 +21,7 @@ defmodule MyspaceIPFS.Config do
   @doc """
   Get the entire config.
   """
-  @spec get() :: {:ok, any} | api_error
+  @spec get() :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def get() do
     post_query("/config")
     |> okify()
@@ -37,13 +32,13 @@ defmodule MyspaceIPFS.Config do
 
   JSON objects must be passed as a string.
   """
-  @spec set(binary, binary) :: {:ok, any} | api_error
+  @spec set(binary, binary) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def set(key, value) when is_binary(key) and is_binary(value) do
     post_query("/config?arg=" <> key <> "&arg=" <> value, query: [json: true, bool: false])
     |> okify()
   end
 
-  @spec set(binary, boolean) :: {:ok, any} | api_error
+  @spec set(binary, boolean) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def set(key, value) when is_bitstring(key) and is_boolean(value) do
     post_query("/config?arg=" <> key <> "&arg=#{value}", query: [json: false, bool: true])
     |> okify()
@@ -63,7 +58,7 @@ defmodule MyspaceIPFS.Config do
   ]
   ```
   """
-  @spec profile_apply(name, opts) :: {:ok, any} | api_error
+  @spec profile_apply(binary(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def profile_apply(profile, opts \\ []) when is_bitstring(profile) do
     post_query("/config/profile/apply?arg=" <> profile, query: opts)
     |> okify()
@@ -75,7 +70,7 @@ defmodule MyspaceIPFS.Config do
   ## Parameters
   fspath: The path to the config file to use.
   """
-  @spec replace(fspath) :: {:ok, any} | api_error
+  @spec replace(Path.t()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def replace(fspath) do
     multipart(fspath)
     |> post_multipart("/config/replace")
@@ -85,7 +80,7 @@ defmodule MyspaceIPFS.Config do
   @doc """
   Show the current config.
   """
-  @spec show() :: {:ok, any} | api_error
+  @spec show() :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def show() do
     post_query("/config/show")
     |> okify()

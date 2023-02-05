@@ -5,11 +5,6 @@ defmodule MyspaceIPFS.Files do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep path :: MyspaceIPFS.path()
-  @typep fspath :: MyspaceIPFS.fspath()
-
   @doc """
   Copy files into mfs.
 
@@ -26,7 +21,7 @@ defmodule MyspaceIPFS.Files do
   ```
   """
   # FIXME: verify return type
-  @spec cp(fspath, fspath, opts) :: {:ok, any} | api_error()
+  @spec cp(Path.t(), Path.t(), list) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def cp(source, dest, opts \\ []) do
     post_query("/files/cp?arg=" <> source <> "&arg=" <> dest, query: opts)
     |> okify()
@@ -48,7 +43,7 @@ defmodule MyspaceIPFS.Files do
   ```
   """
   # FIXME: verify return type
-  @spec chcid(path, opts) :: {:ok, any} | api_error()
+  @spec chcid(Path.t(), list) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def chcid(path, opts \\ []) do
     post_query("/files/chcid?arg=" <> path, query: opts)
     |> okify()
@@ -62,13 +57,13 @@ defmodule MyspaceIPFS.Files do
   `path` - The path to flush. If not specified, the entire repo will be flushed.
   """
   # FIXME: verify return type
-  @spec flush() :: {:ok, any} | api_error()
+  @spec flush() :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def flush() do
     post_query("/files/flush")
     |> okify()
   end
 
-  @spec flush(path) :: {:ok, any} | api_error()
+  @spec flush(Path.t()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def flush(path) do
     post_query("/files/flush?arg=" <> path)
     |> okify()
@@ -89,7 +84,7 @@ defmodule MyspaceIPFS.Files do
   ]
   ```
   """
-  @spec ls(path, opts) :: {:ok, any} | api_error()
+  @spec ls(Path.t(), list) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def ls(path, opts \\ []) do
     post_query("/files/ls?arg=" <> path, query: opts)
     |> okify()
@@ -111,7 +106,7 @@ defmodule MyspaceIPFS.Files do
   ]
   ```
   """
-  @spec mkdir(path, opts) :: {:ok, any} | api_error()
+  @spec mkdir(Path.t(), list) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def mkdir(path, opts \\ []) do
     post_query("/files/mkdir?arg=" <> path, query: opts)
     |> okify()
@@ -124,7 +119,7 @@ defmodule MyspaceIPFS.Files do
   `source` - The source file to move.
   `dest` - The destination path for the file to be moved to.
   """
-  @spec mv(path, path) :: {:ok, any} | api_error()
+  @spec mv(Path.t(), Path.t()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def mv(source, dest) do
     post_query("/files/mv?arg=" <> source <> "&arg=" <> dest)
     |> okify()
@@ -145,7 +140,7 @@ defmodule MyspaceIPFS.Files do
   ]
   ```
   """
-  @spec read(path, opts) :: {:ok, any} | api_error()
+  @spec read(Path.t(), list) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def read(path, opts \\ []) do
     post_query("/files/read?arg=" <> path, query: opts)
     |> okify()
@@ -166,7 +161,7 @@ defmodule MyspaceIPFS.Files do
   ]
   ```
   """
-  @spec rm(path, opts) :: {:ok, any} | api_error()
+  @spec rm(Path.t(), list) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def rm(path, opts \\ []) do
     post_query("/files/rm?arg=" <> path, query: opts)
     |> okify()
@@ -191,7 +186,7 @@ defmodule MyspaceIPFS.Files do
   ]
   ```
   """
-  @spec stat(path, opts) :: {:ok, any} | api_error()
+  @spec stat(Path.t(), list) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def stat(path, opts \\ []) do
     post_query("/files/stat?arg=" <> path, query: opts)
     |> okify()
@@ -219,7 +214,7 @@ defmodule MyspaceIPFS.Files do
   ]
   ```
   """
-  @spec write(fspath, path, opts) :: {:ok, any} | api_error()
+  @spec write(Path.t(), Path.t(), list) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def write(data, path, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/files/write?arg=" <> path, query: opts)

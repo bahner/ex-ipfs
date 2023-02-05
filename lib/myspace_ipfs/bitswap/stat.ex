@@ -13,9 +13,6 @@ defmodule MyspaceIPFS.BitswapStat do
             provide_buf_len: nil,
             wantlist: []
 
-  @typep slash_cid :: MyspaceIPFS.SlashCID.t()
-  @typep peer_id :: MyspaceIPFS.peer_id()
-
   @type t :: %__MODULE__{
           blocks_received: non_neg_integer,
           blocks_sent: non_neg_integer,
@@ -24,9 +21,9 @@ defmodule MyspaceIPFS.BitswapStat do
           dup_blks_received: non_neg_integer,
           dup_data_received: non_neg_integer,
           messages_received: list,
-          peers: list(peer_id),
+          peers: list(MyspaceIPFS.peer_id()),
           provide_buf_len: integer,
-          wantlist: list(slash_cid)
+          wantlist: list(MyspaceIPFS.SlashCID.t())
         }
 
   @spec new({:error, map}) :: {:error, map}

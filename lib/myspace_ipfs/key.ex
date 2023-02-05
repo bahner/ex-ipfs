@@ -5,11 +5,6 @@ defmodule MyspaceIPFS.Key do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @typep api_error :: MyspaceIPFS.Api.api_error()
-  @typep opts :: MyspaceIPFS.opts()
-  @typep name :: MyspaceIPFS.name()
-  @typep fspath :: MyspaceIPFS.fspath()
-
   @doc """
   Export a keypair.
 
@@ -26,7 +21,7 @@ defmodule MyspaceIPFS.Key do
   ]
   ```
   """
-  @spec export(name, fspath | atom, opts) :: {:ok, any} | api_error()
+  @spec export(binary(), Path.t() | atom, list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def export(key, output \\ :memory, opts \\ []) do
     key = post_query("/key/export?arg=" <> key, query: opts)
 
@@ -52,7 +47,7 @@ defmodule MyspaceIPFS.Key do
   ]
   ```
   """
-  @spec gen(name, opts) :: {:ok, any} | api_error()
+  @spec gen(binary(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def gen(key, opts \\ []) do
     post_query("/key/gen?arg=" <> key, query: opts)
     |> okify()
@@ -74,7 +69,7 @@ defmodule MyspaceIPFS.Key do
   ]
   ```
   """
-  @spec import(name, binary, opts) :: {:ok, any} | api_error()
+  @spec import(binary(), binary, list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def import(name, key, opts \\ []) do
     multipart_content(key)
     |> post_multipart("/key/import?arg=" <> name, query: opts)
@@ -92,7 +87,7 @@ defmodule MyspaceIPFS.Key do
   ]
   ```
   """
-  @spec list(opts) :: {:ok, any} | api_error()
+  @spec list(list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def list(opts \\ []) do
     post_query("/key/list", query: opts)
     |> okify()
@@ -114,7 +109,7 @@ defmodule MyspaceIPFS.Key do
   ]
   ```
   """
-  @spec rename(name, name, opts) :: {:ok, any} | api_error()
+  @spec rename(binary(), binary(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def rename(old, new, opts \\ []) do
     post_query("/key/rename?arg=" <> old <> "&arg=" <> new, query: opts)
     |> okify()
@@ -135,7 +130,7 @@ defmodule MyspaceIPFS.Key do
   ]
   ```
   """
-  @spec rm(name, opts) :: {:ok, any} | api_error()
+  @spec rm(binary(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def rm(key, opts \\ []) do
     post_query("/key/rm?arg=" <> key, query: opts)
     |> okify()
@@ -156,7 +151,7 @@ defmodule MyspaceIPFS.Key do
   ]
   ```
   """
-  @spec rotate(name, opts) :: {:ok, any} | api_error()
+  @spec rotate(binary(), list()) :: {:ok, any} | MyspaceIPFS.ApiError.t()
   def rotate(oldkey, opts \\ []) do
     post_query("/key/rotate?arg=" <> oldkey, query: opts)
     |> okify()

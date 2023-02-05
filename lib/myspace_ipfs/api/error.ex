@@ -7,7 +7,17 @@ defmodule MyspaceIPFS.ApiError do
   require Logger
 
   defstruct code: nil, message: nil, type: nil
+  @typedoc """
+  A structured error returned from the upstream IPFS API.
 
+  ```
+  %MyspaceIPFS.ApiError{
+    code: 0,
+    message: "some message",
+    type: "error type"
+  }
+  ```
+  """
   @type t :: %__MODULE__{
           code: integer,
           message: binary,
@@ -19,7 +29,7 @@ defmodule MyspaceIPFS.ApiError do
     {:error, data}
   end
 
-  @spec new(map) :: MyspaceIPFS.Api.api_error()
+  @spec new(map) :: t()
   def new(map) do
     %MyspaceIPFS.ApiError{
       code: map["Code"],
@@ -29,7 +39,7 @@ defmodule MyspaceIPFS.ApiError do
   end
 
   @doc false
-  @spec handle_api_error(map) :: {:error, MyspaceIPFS.Api.api_error()}
+  @spec handle_api_error(map) :: {:error, t()}
   def handle_api_error(body) do
     Logger.debug("IPFS error: #{inspect(body)}")
 

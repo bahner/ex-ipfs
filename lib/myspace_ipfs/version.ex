@@ -7,8 +7,6 @@ defmodule MyspaceIPFS.Version do
   alias MyspaceIPFS.VersionVersion
   alias MyspaceIPFS.VersionDeps
 
-  @typep version_deps :: VersionDeps.t()
-
   @doc """
   Get the version of the IPFS daemon.
 
@@ -29,7 +27,7 @@ defmodule MyspaceIPFS.Version do
   @doc """
   Get the depdency versions of the IPFS daemon.
   """
-  @spec deps() :: {:ok, [version_deps]}
+  @spec deps() :: {:ok, [VersionDeps.t()]}
   def deps() do
     post_query("/version/deps")
     |> Enum.map(&VersionDeps.new/1)

@@ -6,8 +6,6 @@ defmodule MyspaceIPFS.Utils do
   require Logger
   alias Tesla.Multipart
 
-  @type fspath :: MyspaceIPFS.fspath()
-
   @doc """
   Converts a string to a boolean or integer or vise versa
   """
@@ -76,7 +74,7 @@ defmodule MyspaceIPFS.Utils do
 
   Path defaults to "/tmp" if not given.
   """
-  @spec write_temp_file(binary, fspath) :: {:ok, fspath}
+  @spec write_temp_file(binary, Path.t()) :: {:ok, Path.t()}
   def write_temp_file(data, dir \\ "/tmp") do
     with dir <- mktempdir(dir),
          name <- Nanoid.generate(),
@@ -91,7 +89,7 @@ defmodule MyspaceIPFS.Utils do
   The directory name will be prefixed with "myspace-". This way you can easily remove
   all the temporary directories created by this function.
   """
-  @spec mktempdir(fspath) :: binary
+  @spec mktempdir(Path.t()) :: binary
   def mktempdir(parent_dir) do
     dir_path = "#{parent_dir}/myspace-#{Nanoid.generate()}"
     File.mkdir_p(dir_path)
@@ -176,7 +174,7 @@ defmodule MyspaceIPFS.Utils do
   This pattern is used in the IPFS API. The file path is relative to the
   base directory. This is to avoid leaking irrelevant paths to the server.
   """
-  @spec multipart_add_file(Multipart.t(), fspath, fspath) :: Multipart.t()
+  @spec multipart_add_file(Multipart.t(), Path.t(), Path.t()) :: Multipart.t()
   def multipart_add_file(mp, fspath, basedir) do
     relative_filename = String.replace(fspath, basedir <> "/", "")
 
@@ -191,7 +189,7 @@ defmodule MyspaceIPFS.Utils do
   Creates a multipart request from a file path. This takes care of adding all the files
   in the directory recursively.
   """
-  @spec multipart(fspath) :: Multipart.t()
+  @spec multipart(Path.t()) :: Multipart.t()
   def multipart(fspath) do
     Multipart.new()
     |> multipart_add_files(fspath)
@@ -221,7 +219,7 @@ defmodule MyspaceIPFS.Utils do
     - fspath: The path to the directory to add to the multipart request.
   """
 
-  @spec multipart_add_files(Multipart.t(), fspath) :: Multipart.t()
+  @spec multipart_add_files(Multipart.t(), Path.t()) :: Multipart.t()
   def multipart_add_files(multipart, fspath) do
     with basedir <- Path.dirname(fspath) do
       ls_r(fspath)
