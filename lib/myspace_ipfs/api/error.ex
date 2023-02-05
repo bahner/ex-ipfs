@@ -11,7 +11,7 @@ defmodule MyspaceIPFS.ApiError do
     {:error, data}
   end
 
-  @spec new(map) :: MyspaceIPFS.Api.api_error()
+  @spec new(map) :: MyspaceIPFS.Api.error()
   def new(map) do
     %MyspaceIPFS.ApiError{
       code: map["Code"],
@@ -20,7 +20,7 @@ defmodule MyspaceIPFS.ApiError do
     }
   end
 
-  @spec handle_api_error(map) :: {:error, MyspaceIPFS.Api.api_error()}
+  @spec handle_api_error(map) :: {:error, MyspaceIPFS.Api.error()}
   def handle_api_error(body) do
     Logger.debug("IPFS error: #{inspect(body)}")
 

@@ -15,7 +15,7 @@ defmodule MyspaceIPFS.Api do
   A structured error returned from the upstream IPFS API.
 
   """
-  @type api_error :: %MyspaceIPFS.ApiError{
+  @type error :: %MyspaceIPFS.ApiError{
           code: integer,
           message: binary,
           type: binary
@@ -30,7 +30,7 @@ defmodule MyspaceIPFS.Api do
   A an aggregate type that represents the possible errors that can be returned from the API.
   """
   @type error_response ::
-          {:error, MyspaceIPFS.Api.error_response()} | {:error, Tesla.Env.t()} | {:error, atom}
+          {:error, MyspaceIPFS.Api.error()} | {:error, Tesla.Env.t()} | {:error, atom}
 
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @api_url)
