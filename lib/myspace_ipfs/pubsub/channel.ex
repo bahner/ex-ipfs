@@ -29,7 +29,7 @@ defmodule MyspaceIPFS.PubSubChannel do
   @spec new(pid, binary, boolean) :: t()
   def new(target, topic, raw) do
     %__MODULE__{
-      base64url_topic: unokify(Multibase.encode(topic)),
+      base64url_topic: Multibase.encode!(topic),
       client: nil,
       raw: raw,
       target: target,
@@ -107,6 +107,6 @@ defmodule MyspaceIPFS.PubSubChannel do
   # This is probably where we want to decrypt the message
   defp parse_pubsub_message(data) do
     message = Message.new(data)
-    {:ipfs_pubsub_channel, Multibase.decode(message.data)}
+    {:myspace_ipfs_pubsub_channel_message, Multibase.decode!(message.data)}
   end
 end

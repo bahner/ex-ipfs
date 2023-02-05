@@ -30,11 +30,10 @@ defmodule MyspaceIPFS.Multibase do
   ## Parameters
     `data` - Data to decode.
   """
-  @spec decode(binary) :: {:ok, any} | MyspaceIPFS.Api.error_response()
-  def decode(data) do
+  @spec decode!(binary) :: any | MyspaceIPFS.Api.error_response()
+  def decode!(data) do
     multipart_content(data)
     |> post_multipart("/multibase/decode")
-    |> okify()
   end
 
   @doc """
@@ -43,10 +42,10 @@ defmodule MyspaceIPFS.Multibase do
   ## Parameters
     `data` - Data to decode.
   """
-  @spec decode!(binary) :: any | MyspaceIPFS.Api.error_response()
-  def decode!(data) do
-    multipart_content(data)
-    |> post_multipart("/multibase/decode")
+  @spec decode(binary) :: {:ok, binary()} | MyspaceIPFS.Api.error_response()
+  def decode(data) do
+    decode!(data)
+    |> okify()
   end
 
   @doc """
@@ -71,10 +70,15 @@ defmodule MyspaceIPFS.Multibase do
   ## Options
     `b` - Multibase encoding to use.
   """
-  @spec encode(binary, list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
-  def encode(data, opts \\ []) do
+  @spec encode!(binary, list()) :: any | MyspaceIPFS.Api.error_response()
+  def encode!(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/multibase/encode", query: opts)
+  end
+
+  @spec encode(binary, list) :: {:ok, binary()} | MyspaceIPFS.Api.error_response()
+  def encode(data, opts \\ []) do
+    encode!(data, opts)
     |> okify()
   end
 
