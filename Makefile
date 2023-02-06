@@ -1,6 +1,7 @@
 #!/usr/bin/make -ef
 
 VERSION ?= $(shell cat mix.exs | grep version | sed -e 's/.*version: "\(.*\)",/\1/')
+KUBO_VERSION ?= v0.17.0
 
 all: deps format compile
 
@@ -23,6 +24,9 @@ docker:
 docs:
 	mix docs
 	xdg-open doc/index.html
+
+image:
+	docker build -t bahner/kubo:$(KUBO_VERSION) .
 
 format:
 	mix format

@@ -24,11 +24,9 @@ jobs:
         elixir: ["1.13.4", "1.14.3"]
     services:
       ipfs:
-        image: ipfs/kubo:v0.17.0
+        image: bahner/kubo:v0.17.0
         ports:
           - 5001:5001
-        # Seems like setting the entrypoint is the only way to pass cmd parameters
-        options: --entrypoint "/sbin/tini -- /usr/local/bin/start_ipfs daemon --migrate=true --agent-version-suffix=docker --enable-pubsub-experiment"
     steps:
       - uses: actions/checkout@v3
       - name: Set up Elixir
