@@ -70,3 +70,6 @@ KUBO_VERSION=v0.19.0rc2 DOCKER_USER=yourdockeraccount make publish-image # The s
 # or
 KUBO_VERSION=0.17.0 DOCKER_IMAGE=http://my.local.registry:5000/testing-buils/ipfs:testlabl make publish-image
 ```
+
+## Coverage
+[![Coverage Status](https://coveralls.io/repos/github/bahner/myspace-ipfs/badge.svg?branch=develop)](https://coveralls.io/github/bahner/myspace-ipfs?branch=develop)
