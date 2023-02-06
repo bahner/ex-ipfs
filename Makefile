@@ -1,11 +1,14 @@
 #!/usr/bin/make -ef
 
 VERSION ?= $(shell cat mix.exs | grep version | sed -e 's/.*version: "\(.*\)",/\1/')
-KUBO_VERSION ?= v0.17.0
+
+# Exporting the config values allows us to generate Dockerfile and github config using envsubst.
+export KUBO_VERSION ?= v0.17.0
+export DOCKER_IMAGE ?= bahner/kubo:$(KUBO_VERSION)
 
 all: deps format compile
 
-commited:
+commited: templates
 	./.check.uncommited
 
 compile: deps
@@ -26,7 +29,7 @@ docs:
 	xdg-open doc/index.html
 
 image:
-	docker build -t bahner/kubo:$(KUBO_VERSION) .
+	docker build -t bahner/kubo:$(KUBO_VERSION) --no-cache .
 
 format:
 	mix format
@@ -47,6 +50,10 @@ release: tag
 tag:
 	git tag $(VERSION)
 
+templates:
+	envsubst < templates/Dockerfile > Dockerfile
+	envsubst < templates/testsuite.yaml > .github/workflows/testsuite.yaml
+
 test: dialyzer
 	mix test
 
@@ -56,4 +63,4 @@ distclean: clean
 clean:
 	rm -f Qm*
 
-.PHONY: compile docs docker test
+.PHONY: compile docs docker test templates
