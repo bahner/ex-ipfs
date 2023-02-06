@@ -55,4 +55,18 @@ Some commands, like channel and tail that streams data needs a pid to send messa
 
 The basic commands are in the MyspaceIPFS module. The grouped ipfs commands each have their separate module, eg. MyspaceIPFS.Refs, MyspaceIPFS.Blocks etc.
 
+## Development
 
+If you want to update the IPFS version and create your own docker image to be used for testing, then export the following environment variables.
+```
+export KUBO_VERSION=0.17.0
+export DOCKER_USER=bahner
+export DOCKER_IMAGE=${DOCKER_USER}/kubo:${KUBO_VERSION}
+make publish-image
+```
+so a shorthand would be:
+```
+KUBO_VERSION=v0.19.0rc2 DOCKER_USER=yourdockeraccount make publish-image # The simplest.
+# or
+KUBO_VERSION=0.17.0 DOCKER_IMAGE=http://my.local.registry:5000/testing-buils/ipfs:testlabl make publish-image
+```

@@ -4,7 +4,8 @@ VERSION ?= $(shell cat mix.exs | grep version | sed -e 's/.*version: "\(.*\)",/\
 
 # Exporting the config values allows us to generate Dockerfile and github config using envsubst.
 export KUBO_VERSION ?= v0.17.0
-export DOCKER_IMAGE ?= bahner/kubo:$(KUBO_VERSION)
+export DOCKER_USER ?= bahner
+export DOCKER_IMAGE ?= $(DOCKER_USER)/kubo:$(KUBO_VERSION)
 
 all: deps format compile
 
@@ -28,8 +29,8 @@ docs:
 	mix docs
 	xdg-open doc/index.html
 
-image:
-	docker build -t bahner/kubo:$(KUBO_VERSION) --no-cache .
+image: templates
+	docker build -t $(DOCKER_IMAGE) --no-cache .
 
 format:
 	mix format
@@ -42,6 +43,9 @@ proper: distclean compile test
 push: all commited test
 	git pull
 	git push
+
+publish-image: image
+	docker push $(DOCKER_IMAGE)
 
 release: tag
 	mix hex.publish
