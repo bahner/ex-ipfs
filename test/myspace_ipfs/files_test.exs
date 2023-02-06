@@ -11,29 +11,28 @@ defmodule MyspaceIPFS.FilesTest do
   alias MyspaceIPFS.Files
   require Logger
 
-  test "Cleanup up silently" do
+  test "Test file operations syncronously" do
+    # Clean up any previous test runs
     assert :ok = Files.rm("/test", recursive: true, force: true)
-    Logger.info("Sleeping for 5 seconds to allow the files to be removed.")
-    :timer.sleep(5_000)
-  end
-
-  test "Make sure test folder is gone" do
     {:error, api_error} = Files.ls("/test")
     assert api_error.message == "file does not exist"
-  end
 
-  test "Fail to create an unparented folder" do
+    # Test mkdir
     {:error, api_error} = Files.mkdir("/test/illegal")
     assert api_error.message == "file does not exist"
-  end
+    assert :ok = Files.mkdir("/test/illegal/bar/baz", parents: true)
 
-  test "Create a parented folder" do
-    assert :ok = Files.mkdir("/test/illegal", parents: true)
-  end
-
-  test "ls root" do
-    {:ok, %MyspaceIPFS.FilesEntries{entries: files}} = Files.ls("/")
+    # Test ls
+    {:ok, files} = Files.ls("/")
     assert is_list(files)
     assert Enum.member?(files, "test")
-  end
+    # Long listing
+    {:ok, %MyspaceIPFS.FilesEntries{}} = Files.ls("/", l: true)
+
+    # Test file operations
+    assert :ok = Files.write("👍", "/test/👍.txt", create: true)
+    assert :ok = Files.cp("/test/👍.txt", "/test/spaced 👍.txt")
+    assert :ok = Files.mv("/test/spaced 👍.txt", "/test/👍.txt")
+    assert :ok = Files.rm("/test/👍.txt")
+    end
 end
