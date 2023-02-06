@@ -50,7 +50,7 @@ defmodule MyspaceIPFS.Files do
   # FIXME: verify return type
   @spec cp(Path.t(), Path.t(), list) :: :ok | MyspaceIPFS.Api.error_response()
   def cp(source, dest, opts \\ []) do
-    post_query("/files/cp?arg=" <> source <> "&arg=" <> dest, query: opts)
+    post_query("/files/cp?arg=" <> URI.encode(source) <> "&arg=" <> URI.encode(dest), query: opts)
     |> handle_files_response()
   end
 
@@ -58,7 +58,7 @@ defmodule MyspaceIPFS.Files do
   Change the CID version or hash function of a path's root node.
 
   ## Parameters
-  path: The path to change the CID for, if in doubt use "/"
+  path: The path to change the CID for,dest if in doubt use "/"
 
   ## Options
   https://docs.ipfs.io/reference/http/api/#api-v0-files-chcid
@@ -72,7 +72,7 @@ defmodule MyspaceIPFS.Files do
   # FIXME: verify return type
   @spec chcid(Path.t(), list) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def chcid(path, opts \\ []) do
-    post_query("/files/chcid?arg=" <> path, query: opts)
+    post_query("/files/chcid?arg=" <> URI.encode(path), query: opts)
     |> okify()
   end
 
@@ -92,7 +92,7 @@ defmodule MyspaceIPFS.Files do
 
   @spec flush(Path.t()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def flush(path) do
-    post_query("/files/flush?arg=" <> path)
+    post_query("/files/flush?arg=" <> URI.encode(path))
     |> okify()
   end
 
@@ -115,7 +115,7 @@ defmodule MyspaceIPFS.Files do
   def ls!(path, opts \\ []) do
     with long <- Keyword.get(opts, :l, false) do
       entries =
-        post_query("/files/ls?arg=" <> path, query: opts)
+        post_query("/files/ls?arg=" <> URI.encode(path), query: opts)
         |> MyspaceIPFS.FilesEntries.new()
 
       case long do
@@ -167,7 +167,7 @@ defmodule MyspaceIPFS.Files do
 
   @spec mkdir(Path.t(), list) :: :ok | MyspaceIPFS.Api.error_response()
   def mkdir(path, opts \\ []) do
-    post_query("/files/mkdir?arg=" <> path, query: opts)
+    post_query("/files/mkdir?arg=" <> URI.encode(path), query: opts)
     |> handle_files_response()
   end
 
@@ -180,7 +180,7 @@ defmodule MyspaceIPFS.Files do
   """
   @spec mv(Path.t(), Path.t()) :: :ok | MyspaceIPFS.Api.error_response()
   def mv(source, dest) do
-    post_query("/files/mv?arg=" <> source <> "&arg=" <> dest)
+    post_query("/files/mv?arg=" <> URI.encode(source) <> "&arg=" <> URI.encode(dest))
     |> handle_files_response()
   end
 
@@ -201,7 +201,7 @@ defmodule MyspaceIPFS.Files do
   """
   @spec read!(Path.t(), list) :: any | MyspaceIPFS.Api.error_response()
   def read!(path, opts \\ []) do
-    post_query("/files/read?arg=" <> path, query: opts)
+    post_query("/files/read?arg=" <> URI.encode(path), query: opts)
   end
 
   @spec read(Path.t(), list) :: {:ok, any} | MyspaceIPFS.Api.error_response()
@@ -227,7 +227,7 @@ defmodule MyspaceIPFS.Files do
   """
   @spec rm(Path.t(), list) :: :ok | {:error, binary}
   def rm(path, opts \\ []) do
-    post_query("/files/rm?arg=" <> path, query: opts)
+    post_query("/files/rm?arg=" <> URI.encode(path), query: opts)
     |> handle_files_response()
   end
 
@@ -252,7 +252,7 @@ defmodule MyspaceIPFS.Files do
   """
   @spec stat(Path.t(), list) :: {:ok, any} | MyspaceIPFS.Api.error_response()
   def stat(path, opts \\ []) do
-    post_query("/files/stat?arg=" <> path, query: opts)
+    post_query("/files/stat?arg=" <> URI.encode(path), query: opts)
     |> MyspaceIPFS.FilesStat.new()
     |> okify()
   end
@@ -282,7 +282,7 @@ defmodule MyspaceIPFS.Files do
   @spec write(binary(), Path.t(), list) :: :ok | MyspaceIPFS.Api.error_response()
   def write(data, path, opts \\ []) do
     multipart_content(data)
-    |> post_multipart("/files/write?arg=" <> path, query: opts)
+    |> post_multipart("/files/write?arg=" <> URI.encode(path), query: opts)
     |> handle_files_response()
   end
 

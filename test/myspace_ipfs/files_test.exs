@@ -34,5 +34,5 @@ defmodule MyspaceIPFS.FilesTest do
     assert :ok = Files.cp("/test/👍.txt", "/test/spaced 👍.txt")
     assert :ok = Files.mv("/test/spaced 👍.txt", "/test/👍.txt")
     assert :ok = Files.rm("/test/👍.txt")
-    end
+  end
 end
