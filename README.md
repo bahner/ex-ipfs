@@ -1,6 +1,8 @@
 # IPFS RPC API client for Elixir
 
 ![](https://ipfs.io/ipfs/QmQJ68PFMDdAsgCZvA1UVzzn18asVcf7HVvCDgpjiSCAse)
+
+[![CI - Test suite](https://github.com/bahner/myspace-ipfs/actions/workflows/testsuite.yaml/badge.svg)](https://github.com/bahner/myspace-ipfs/actions/workflows/testsuite.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/bahner/myspace-ipfs/badge.svg?branch=develop)](https://coveralls.io/github/bahner/myspace-ipfs?branch=develop)
 
 ## This library is still a work in progress
