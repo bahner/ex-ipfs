@@ -1,5 +1,4 @@
 defmodule MyspaceIPFS.AddResultTest do
-
   use ExUnit.Case
 
   alias MyspaceIPFS.AddResult
@@ -17,5 +16,4 @@ defmodule MyspaceIPFS.AddResultTest do
       assert {:error, "error"} = AddResult.new({:error, "error"})
     end
   end
-
 end
