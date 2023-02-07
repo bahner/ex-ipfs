@@ -15,24 +15,20 @@ defmodule MyspaceIPFS.PubsubTest do
     {:ok, pid} = PubSub.sub(self(), "myspace")
     assert is_pid(pid)
     assert Process.alive?(pid)
-  end
 
-  test "ls" do
+    # ls
     PubSub.sub(self(), "myspace")
     {:ok, %MyspaceIPFS.Strings{strings: topics}} = PubSub.ls()
     assert is_list(topics)
     assert Enum.member?(topics, "myspace")
-  end
 
-  test "publish and receive a message" do
+    # Publish and receive a message
     PubSub.sub(self(), "myspace")
     PubSub.pub("hello", "myspace")
     assert_receive {:myspace_ipfs_pubsub_channel_message, "hello"}
-  end
 
-  test "peers" do
+    # Get peers
     {:ok, %{"Strings" => peers}} = PubSub.peers("myspace")
-
     # The peer list is probably empty, but we can at least check that it is a list.
     assert is_list(peers)
   end
