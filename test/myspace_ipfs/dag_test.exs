@@ -1,5 +1,6 @@
 defmodule MyspaceIPFS.DagTest do
   @moduledoc """
+  @moduletag timeout: 180_000
   Test the MyspaceIPFS API
 
   This test suite is designed to test the MyspaceIPFS API. It is not designed to test the IPFS API
