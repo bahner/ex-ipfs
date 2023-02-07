@@ -7,7 +7,7 @@ defmodule MyspaceIPFS.Bitswap.WantListTest do
 
   describe "new/1" do
     test "fails on no data a new wantlist" do
-    catch_error %Wantlist{} = Wantlist.new()
+      catch_error(%Wantlist{} = Wantlist.new())
     end
 
     test "create new BitswapWantList" do

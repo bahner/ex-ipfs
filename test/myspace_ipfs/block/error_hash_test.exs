@@ -12,8 +12,8 @@ defmodule MyspaceIPFS.BlockErrorHashTest do
 
     test "returns a new error hash with data" do
       data = %{
-       "Hash" => "QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N",
-       "Error" => "this is an error"
+        "Hash" => "QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N",
+        "Error" => "this is an error"
       }
 
       assert %ErrorHash{} = ErrorHash.new(data)

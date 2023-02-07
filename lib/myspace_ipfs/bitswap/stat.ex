@@ -1,5 +1,17 @@
 defmodule MyspaceIPFS.BitswapStat do
   @moduledoc false
+  @enforce_keys [
+    :blocks_received,
+    :blocks_sent,
+    :data_received,
+    :data_sent,
+    :dup_blks_received,
+    :dup_data_received,
+    :messages_received,
+    :peers,
+    :provide_buf_len,
+    :wantlist
+  ]
   defstruct blocks_received: nil,
             blocks_sent: nil,
             data_received: nil,
