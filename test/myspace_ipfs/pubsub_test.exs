@@ -7,7 +7,8 @@ defmodule MyspaceIPFS.PubsubTest do
 
   NB! The tests are not mocked. They are designed to be run against a live IPFS node. This is
   """
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
+  ExUnit.configure(seed: 0)
   alias MyspaceIPFS.PubSub
 
   test "subscribe to a topic" do

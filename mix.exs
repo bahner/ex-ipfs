@@ -1,4 +1,5 @@
 defmodule MyspaceIPFS.Mixfile do
+  @moduledoc false
   use Mix.Project
 
   def project do

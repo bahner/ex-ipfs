@@ -1,5 +1,6 @@
 defmodule MyspaceIPFS.AddResultTest do
-  use ExUnit.Case
+  @moduledoc false
+  use ExUnit.Case, async: true
 
   alias MyspaceIPFS.AddResult
 
