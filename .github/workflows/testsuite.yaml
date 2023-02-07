@@ -1,4 +1,7 @@
-name: CI - Test suite
+# NB! This file is generated from templates/Dockerfile.
+# Make sure to make change to the template, not
+# the in situ file.
+name: IPFS Unit and integration tests
 
 on:
   push:
