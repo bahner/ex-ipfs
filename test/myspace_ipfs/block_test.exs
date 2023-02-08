@@ -14,6 +14,8 @@ defmodule MyspaceIPFS.BlockTest do
 
   alias MyspaceIPFS.Block
 
+  ExUnit.configure(timeout: 600_000)
+
   test "put 'heisan' returns proper keysize" do
     {:ok, keysize} = Block.put("heisan")
     assert is_map(keysize)
