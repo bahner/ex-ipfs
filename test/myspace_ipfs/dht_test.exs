@@ -7,8 +7,10 @@ defmodule MyspaceIPFS.DhtTest do
 
   NB! The tests are not mocked. They are designed to be run against a live IPFS node. This is
   """
+  @timeout 180_000
   use ExUnit.Case, async: true
-  ExUnit.configure(seed: 0, timeout: 120_000)
+  @moduletag timeout: @timeout
+  ExUnit.configure(seed: 0, timeout: @timeout)
   alias MyspaceIPFS.Dht
 
   # defp list_consists_of_dht_query_responses?(list) do

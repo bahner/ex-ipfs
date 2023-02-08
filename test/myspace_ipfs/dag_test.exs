@@ -1,6 +1,5 @@
 defmodule MyspaceIPFS.DagTest do
   @moduledoc """
-  @moduletag timeout: 180_000
   Test the MyspaceIPFS API
 
   This test suite is designed to test the MyspaceIPFS API. It is not designed to test the IPFS API
@@ -9,6 +8,8 @@ defmodule MyspaceIPFS.DagTest do
   NB! The tests are not mocked. They are designed to be run against a live IPFS node. This is
   """
   use ExUnit.Case, async: true
+  @moduletag timeout: 180_000
+
   alias MyspaceIPFS.Dag, as: Dag
   alias MyspaceIPFS.SlashCID
   alias MyspaceIPFS.DagImport

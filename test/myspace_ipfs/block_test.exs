@@ -7,7 +7,11 @@ defmodule MyspaceIPFS.BlockTest do
 
   NB! The tests are not mocked. They are designed to be run against a live IPFS node. This is
   """
+  @timeout 180_000
   use ExUnit.Case, async: true
+  @moduletag timeout: @timeout
+  ExUnit.configure(seed: 0, timeout: @timeout)
+
   alias MyspaceIPFS.Block
 
   test "put 'heisan' returns proper keysize" do
