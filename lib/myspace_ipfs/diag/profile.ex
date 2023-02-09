@@ -26,11 +26,11 @@ defmodule MyspaceIPFS.DiagProfile do
 
   def new(opts) do
     %__MODULE__{
-      output: opts.output,
-      timeout: opts.timeout,
-      writer: opts.writer,
-      ref: opts.ref,
-      query_options: opts.query_options
+      output: opts["Output"],
+      timeout: opts["Timeout"],
+      writer: opts["Writer"],
+      ref: opts["Ref"],
+      query_options: opts["QueryOptions"]
     }
   end
 
