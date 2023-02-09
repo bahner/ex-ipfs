@@ -1,12 +1,12 @@
 defmodule MyspaceIPFS.AddResult do
   @moduledoc false
 
-  defstruct bytes: nil, hash: nil, size: nil, name: nil
+  defstruct bytes: 0, hash: nil, size: nil, name: nil
 
   @spec new(map) :: MyspaceIPFS.add_result()
   def new(opts) when is_map(opts) do
     %__MODULE__{
-      bytes: opts["Bytes"],
+      bytes: Map.get(opts, "Bytes", 0),
       hash: opts["Hash"],
       name: opts["Name"],
       size: opts["Size"]

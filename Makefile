@@ -29,6 +29,10 @@ docs:
 	mix docs
 	xdg-open doc/index.html
 
+cover:
+	mix coveralls.html
+	xdg-open cover/excoveralls.html
+
 image: templates
 	docker build -t $(DOCKER_IMAGE) --no-cache .
 
@@ -66,5 +70,6 @@ distclean: clean
 
 clean:
 	rm -f Qm*
+	rm -rf cover
 
-.PHONY: compile docs docker test templates
+.PHONY: compile docs docker test templates cover

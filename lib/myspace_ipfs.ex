@@ -43,6 +43,18 @@ defmodule MyspaceIPFS do
         }
 
   @typedoc """
+  A struct for the ID returned by the id command.
+  """
+  @type id :: %MyspaceIPFS.Id{
+          addresses: list,
+          agent_version: String.t(),
+          id: String.t(),
+          protocol_version: String.t(),
+          public_key: String.t(),
+          protocols: list
+        }
+
+  @typedoc """
   This struct is very simple. Some results are listed as "Value": size. This is a
   convenience struct to make it easier match on the result.
   """
@@ -289,10 +301,11 @@ defmodule MyspaceIPFS do
     - Protocols: the protocols of the node.
   """
   # FIXME: return a struct
-  @spec id :: {:ok, map} | MyspaceIPFS.Api.error_response()
+  @spec id :: {:ok, id()} | MyspaceIPFS.Api.error_response()
   def id,
     do:
       post_query("/id")
+      |> MyspaceIPFS.Id.new()
       |> okify()
 
   @doc """
