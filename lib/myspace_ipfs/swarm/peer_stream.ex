@@ -6,7 +6,7 @@ defmodule MyspaceIPFS.SwarmPeerStream do
   @spec new(map) :: MyspaceIPFS.Swarm.peer_stream()
   def new(data) do
     %__MODULE__{
-      protocol: data["Protocol"],
+      protocol: data["Protocol"]
     }
   end
 end

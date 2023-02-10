@@ -4,7 +4,7 @@ defmodule MyspaceIPFS.SwarmPeerTest do
 
   alias MyspaceIPFS.SwarmPeer
 
-  @data  %{
+  @data %{
     "Addr" => "/ip4/foo/bar",
     "Direction" => "test",
     "Latency" => "test",
@@ -15,12 +15,12 @@ defmodule MyspaceIPFS.SwarmPeerTest do
 
   test "new/1 returns a SwarmPeer struct" do
     assert %SwarmPeer{
-      addr: "/ip4/foo/bar",
-      direction: "test",
-      latency: "test",
-      muxer: "test",
-      peer: "test",
-      streams: [%{"Protocol" => "test"}]
-    } = SwarmPeer.new(@data)
+             addr: "/ip4/foo/bar",
+             direction: "test",
+             latency: "test",
+             muxer: "test",
+             peer: "test",
+             streams: [%{"Protocol" => "test"}]
+           } = SwarmPeer.new(@data)
   end
 end

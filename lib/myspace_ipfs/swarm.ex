@@ -6,18 +6,17 @@ defmodule MyspaceIPFS.Swarm do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-
   @typedoc """
   A struct that represents a peer in the swarm.
   """
   @type peer :: %MyspaceIPFS.SwarmPeer{
-    addr: binary(),
-    direction: binary(),
-    latency: binary(),
-    muxer: binary(),
-    peer: binary(),
-    streams: list()
-  }
+          addr: binary(),
+          direction: binary(),
+          latency: binary(),
+          muxer: binary(),
+          peer: binary(),
+          streams: list()
+        }
 
   @typedoc """
   A list of peers in the swarm.
@@ -28,8 +27,8 @@ defmodule MyspaceIPFS.Swarm do
   A struct that represents a stream for a peer in the swarm.
   """
   @type peer_stream :: %MyspaceIPFS.SwarmPeerStream{
-    protocol: binary()
-  }
+          protocol: binary()
+        }
   @doc """
   List the addresses of known peers.
   """
