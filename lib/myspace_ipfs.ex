@@ -195,10 +195,18 @@ defmodule MyspaceIPFS do
 
   """
   # FIXME return a struct
-  @spec add(Path.t(), list) :: {:ok, add_result()} | MyspaceIPFS.Api.error_response()
-  def add(fspath, opts \\ []),
+  @spec add_file(Path.t(), list) :: {:ok, add_result()} | MyspaceIPFS.Api.error_response()
+  def add_file(fspath, opts \\ []),
     do:
       multipart(fspath)
+      |> post_multipart("/add", query: opts)
+      |> MyspaceIPFS.AddResult.new()
+      |> okify()
+
+  @spec add(binary, any) :: {:error, any} | {:ok, any}
+  def add(data, opts \\ []),
+    do:
+      multipart_content(data)
       |> post_multipart("/add", query: opts)
       |> MyspaceIPFS.AddResult.new()
       |> okify()
