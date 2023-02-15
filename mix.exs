@@ -5,7 +5,7 @@ defmodule MyspaceIPFS.Mixfile do
   def project do
     [
       app: :myspace_ipfs,
-      version: "0.1.0",
+      version: "0.2.0-alpha.1",
       elixir: "~> 1.13",
       name: "Myspace IPFS",
       start_permanent: Mix.env() == :prod,
