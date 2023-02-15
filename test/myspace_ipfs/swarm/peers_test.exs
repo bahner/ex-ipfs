@@ -12,7 +12,7 @@ defmodule MMyspaceIPFS.SwarmPeersTest do
         "Latency" => "test",
         "Muxer" => "test",
         "Peer" => "test",
-        "Streams" => %{"Protocol" => "test"}
+        "Streams" => [%{"Protocol" => "test"}]
       },
       %{
         "Addr" => "/ip4/foo/bar",
@@ -20,7 +20,7 @@ defmodule MMyspaceIPFS.SwarmPeersTest do
         "Latency" => "test",
         "Muxer" => "test",
         "Peer" => "test",
-        "Streams" => %{"Protocol" => "test"}
+        "Streams" => [%{"Protocol" => "test"}]
       }
     ]
   }

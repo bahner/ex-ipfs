@@ -7,7 +7,8 @@ defmodule MyspaceIPFSTest do
 
   NB! The tests are not mocked. They are designed to be run against a live IPFS node.
   """
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
+  ExUnit.configure(seed: 0)
 
   test "resolve should return an error, when dnslink is missing" do
     {:error, response} = MyspaceIPFS.resolve("/ipns/ipns.foo")

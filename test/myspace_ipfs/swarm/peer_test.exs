@@ -10,7 +10,7 @@ defmodule MyspaceIPFS.SwarmPeerTest do
     "Latency" => "test",
     "Muxer" => "test",
     "Peer" => "test",
-    "Streams" => %{"Protocol" => "test"}
+    "Streams" => [%{"Protocol" => "test"}]
   }
 
   test "new/1 returns a SwarmPeer struct" do
@@ -20,7 +20,7 @@ defmodule MyspaceIPFS.SwarmPeerTest do
              latency: "test",
              muxer: "test",
              peer: "test",
-             streams: [%{"Protocol" => "test"}]
+             streams: [%MyspaceIPFS.SwarmPeerStream{protocol: "test"}]
            } = SwarmPeer.new(@data)
   end
 end
