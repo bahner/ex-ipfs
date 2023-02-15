@@ -223,7 +223,6 @@ defmodule MyspaceIPFS do
       |> MyspaceIPFS.AddResult.new()
       |> okify()
 
-
   @doc """
   Get a file or directory from IPFS.
 

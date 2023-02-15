@@ -5,31 +5,31 @@ defmodule MyspaceIPFS.Key do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
 
-  @doc """
-  Export a keypair.
+  # @doc """
+  # Export a keypair.
 
-  ## Parameters
-    `key` - Name of the key to export.
-    `output` - Output file path or :memory.
-              :memory just returns the key as a binary.
+  # ## Parameters
+  #   `key` - Name of the key to export.
+  #   `output` - Output file path or :memory.
+  #             :memory just returns the key as a binary.
 
-  ## Options
-  https://docs.ipfs.io/reference/http/api/#api-v0-key-export
-  ```
-  [
-    format: <string>, # Key format.
-  ]
-  ```
-  """
-  @spec export(binary(), Path.t() | atom, list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
-  def export(key, output \\ :memory, opts \\ []) do
-    key = post_query("/key/export?arg=" <> key, query: opts)
+  # ## Options
+  # https://docs.ipfs.io/reference/http/api/#api-v0-key-export
+  # ```
+  # [
+  #   format: <string>, # Key format.
+  # ]
+  # ```
+  # """
+  # @spec export(binary(), Path.t() | atom, list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
+  # def export(key, output \\ :memory, opts \\ []) do
+  #   key = post_query("/key/export?arg=" <> key, query: opts)
 
-    case output do
-      :memory -> okify(key)
-      _ -> File.write(output, key)
-    end
-  end
+  #   case output do
+  #     :memory -> okify(key)
+  #     _ -> File.write(output, key)
+  #   end
+  # end
 
   @doc """
   Create a new keypair.
@@ -57,7 +57,8 @@ defmodule MyspaceIPFS.Key do
   Import a key and prints imported key id.
 
   ## Parameters
-    `key` - Name of the key to import.
+  `key` - Name of the key to import.
+  `name` - Name of the key to import.
 
   ## Options
   https://docs.ipfs.io/reference/http/api/#api-v0-key-import
@@ -69,8 +70,8 @@ defmodule MyspaceIPFS.Key do
   ]
   ```
   """
-  @spec import(binary(), binary, list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
-  def import(name, key, opts \\ []) do
+  @spec import(binary(), binary(), list()) :: {:ok, any} | MyspaceIPFS.Api.error_response()
+  def import(key, name, opts \\ []) do
     multipart_content(key)
     |> post_multipart("/key/import?arg=" <> name, query: opts)
   end
