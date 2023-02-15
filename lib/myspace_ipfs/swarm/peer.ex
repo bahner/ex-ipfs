@@ -21,9 +21,6 @@ defmodule MyspaceIPFS.SwarmPeer do
     Enum.map(data, &new/1)
   end
 
-  defp generate_peer(data) do
-  end
-
   defp generate_streams(streams) when is_list(streams) do
     Enum.map(streams, &SwarmPeerStream.new/1)
   end

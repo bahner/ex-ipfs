@@ -195,13 +195,34 @@ defmodule MyspaceIPFS do
 
   """
   # FIXME return a struct
-  @spec add(Path.t(), list) :: {:ok, add_result()} | MyspaceIPFS.Api.error_response()
-  def add(fspath, opts \\ []),
+  @spec add_fspath(Path.t(), list) :: {:ok, add_result()} | MyspaceIPFS.Api.error_response()
+  def add_fspath(fspath, opts \\ []),
     do:
       multipart(fspath)
       |> post_multipart("/add", query: opts)
       |> MyspaceIPFS.AddResult.new()
       |> okify()
+
+        @doc """
+  Add a file to IPFS.
+
+  ## Parameters
+  * `fspath` - The file system path to the file or directory to be sent to the node.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
+
+
+  """
+  # FIXME return a struct
+  @spec add(any, list) :: {:ok, add_result()} | MyspaceIPFS.Api.error_response()
+  def add(data, opts \\ []),
+    do:
+      multipart_content(data)
+      |> post_multipart("/add", query: opts)
+      |> MyspaceIPFS.AddResult.new()
+      |> okify()
+
 
   @doc """
   Get a file or directory from IPFS.
