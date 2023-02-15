@@ -34,7 +34,6 @@ defmodule MyspaceIPFS.Mixfile do
     [
       {:hackney, "~> 1.18"},
       {:jason, "~> 1.4"},
-      {:libp2p_crypto, "~> 1.4"},
       {:nanoid, "~> 2.0"},
       {:recase, "~> 0.7.0"},
       {:tesla, "~> 1.5"},

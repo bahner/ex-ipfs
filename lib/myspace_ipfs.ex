@@ -203,7 +203,7 @@ defmodule MyspaceIPFS do
       |> MyspaceIPFS.AddResult.new()
       |> okify()
 
-        @doc """
+  @doc """
   Add a file to IPFS.
 
   ## Parameters
