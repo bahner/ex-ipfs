@@ -74,8 +74,8 @@ defmodule MyspaceIPFS.PubSub do
   """
   @spec sub(pid, binary) :: any | MyspaceIPFS.Api.error_response()
   def sub(pid, topic) do
-    MyspaceIPFS.PubSubChannel.new!(pid, topic)
-    |> MyspaceIPFS.PubSubChannel.start_link()
+    MyspaceIPFS.PubSub.Channel.new!(pid, topic)
+    |> MyspaceIPFS.PubSub.Channel.start_link()
   end
 
   @doc """

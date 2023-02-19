@@ -1,21 +1,21 @@
-defmodule MyspaceIPFS.PubSubChannel do
+defmodule MyspaceIPFS.PubSub.Channel do
   @moduledoc false
-  use GenServer
+  use GenServer, restart: :transient
   require Logger
   import MyspaceIPFS.Utils
   alias MyspaceIPFS.Multibase
-  alias MyspaceIPFS.PubSubChannelMessage, as: Message
+  alias MyspaceIPFS.PubSub.ChannelMessage, as: Message
 
   @enforce_keys [:topic, :target]
   defstruct base64url_topic: nil, client: nil, raw: false, target: nil, topic: nil
 
-  @typep t :: %MyspaceIPFS.PubSubChannel{
-           base64url_topic: binary | nil,
-           client: reference | nil,
-           raw: boolean | nil,
-           target: pid,
-           topic: binary
-         }
+  @type t :: %__MODULE__{
+          base64url_topic: binary | nil,
+          client: reference | nil,
+          raw: boolean | nil,
+          target: pid | atom,
+          topic: binary
+        }
 
   @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0")
 
@@ -38,7 +38,7 @@ defmodule MyspaceIPFS.PubSubChannel do
     {:ok, %{channel | client: ref}}
   end
 
-  @spec new!(pid, binary, boolean) :: t()
+  @spec new!(pid | atom, binary, boolean) :: t()
   def new!(target, topic, raw \\ false) do
     %__MODULE__{
       base64url_topic: Multibase.encode!(topic),
