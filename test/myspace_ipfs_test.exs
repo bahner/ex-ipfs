@@ -58,7 +58,7 @@ defmodule MyspaceIPFSTest do
   end
 
   test "get hello world" do
-    File.rm!("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
+    File.rm_rf!("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
 
     {:ok, "Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z"} =
       MyspaceIPFS.get("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
