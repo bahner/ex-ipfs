@@ -5,7 +5,7 @@ defmodule MyspaceIPFS.Dag do
   import MyspaceIPFS.Api
   import MyspaceIPFS.Utils
   alias MyspaceIPFS.DagImport
-  alias MyspaceIPFS.SlashCID
+  alias MyspaceIPFS.Link
   require Logger
 
   @typedoc """
@@ -14,7 +14,7 @@ defmodule MyspaceIPFS.Dag do
   ```
   %MyspaceIPFS.DagImport{
     root: %MyspaceIPFS.DagImportRoot{
-      cid: MyspaceIPFS.SlashCID.t(),
+      cid: MyspaceIPFS.Link.t(),
       pin_error_msg: binary
     },
     stats: %MyspaceIPFS.DagImportStats{
@@ -33,7 +33,7 @@ defmodule MyspaceIPFS.Dag do
   A struct that represents the root of an import of a DAG.
   """
   @type import_root :: %MyspaceIPFS.DagImportRoot{
-          cid: MyspaceIPFS.slash_cid(),
+          cid: MyspaceIPFS.link(),
           pin_error_msg: binary
         }
 
@@ -112,12 +112,12 @@ defmodule MyspaceIPFS.Dag do
   ]
   ```
   """
-  @spec put(binary, list()) :: {:ok, MyspaceIPFS.slash_cid()} | MyspaceIPFS.Api.error_response()
+  @spec put(binary, list()) :: {:ok, MyspaceIPFS.link()} | MyspaceIPFS.Api.error_response()
   def put(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/dag/put", query: opts)
     |> Map.get("Cid", nil)
-    |> SlashCID.new()
+    |> Link.new()
     |> okify()
   end
 end

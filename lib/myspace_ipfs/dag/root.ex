@@ -1,7 +1,7 @@
 defmodule MyspaceIPFS.DagImportRoot do
   @moduledoc false
 
-  alias MyspaceIPFS.SlashCID
+  alias MyspaceIPFS.Link
   require Logger
   defstruct cid: nil, pin_error_msg: nil
 
@@ -13,7 +13,7 @@ defmodule MyspaceIPFS.DagImportRoot do
   @spec new(map) :: MyspaceIPFS.Dag.import_root()
   def new(root) do
     %__MODULE__{
-      cid: SlashCID.new(root["Cid"]),
+      cid: Link.new(root["Cid"]),
       pin_error_msg: root["PinErrorMsg"]
     }
   end

@@ -1,17 +1,17 @@
-defmodule MyspaceIPFS.SlashCID do
+defmodule MyspaceIPFS.Link do
   @moduledoc false
   defstruct /: nil
 
   require Logger
 
-  @spec new(any) :: MyspaceIPFS.slash_cid()
+  @spec new(any) :: MyspaceIPFS.link()
   def new(cid) when is_map(cid) do
     case cid do
       %{"/" => something} ->
-        %__MODULE__{/: something}
+        %{/: something}
 
       _ ->
-        %__MODULE__{/: cid./}
+        %{/: cid./}
     end
   end
 end

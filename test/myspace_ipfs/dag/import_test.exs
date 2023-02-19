@@ -23,7 +23,7 @@ defmodule MyspaceIPFS.DagImportTest do
     assert %DagImport{} = DagImport.new(data)
     import = DagImport.new(data)
 
-    assert import.root.cid == %MyspaceIPFS.SlashCID{
+    assert import.root.cid == %{
              /: "QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N"
            }
 

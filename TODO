@@ -5,5 +5,5 @@ QA commands against current API.
 Overhaul documentation and make it more uniform.
 write lots of tests
 add commands! with exclamation mark, maybe
-
+reduce number of structs and replace with typespec
 p2p
