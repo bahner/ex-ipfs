@@ -24,7 +24,7 @@ defmodule MyspaceIPFS.Bitswap do
           messages_received: list,
           peers: list(MyspaceIPFS.peer_id()),
           provide_buf_len: integer,
-          wantlist: list(MyspaceIPFS.slash_cid())
+          wantlist: list(MyspaceIPFS.link())
         }
 
   @typedoc """

@@ -11,7 +11,6 @@ defmodule MyspaceIPFS.DagTest do
   @moduletag timeout: 180_000
 
   alias MyspaceIPFS.Dag, as: Dag
-  alias MyspaceIPFS.SlashCID
   alias MyspaceIPFS.DagImport
   alias MyspaceIPFS.DagImportRoot
   alias MyspaceIPFS.DagImportStats
@@ -19,7 +18,7 @@ defmodule MyspaceIPFS.DagTest do
   test "Should return ok RootCID" do
     {:ok, root} = Dag.put("{\"Key\":\"Value\"}")
     assert is_map(root)
-    assert %SlashCID{} = root
+    assert is_map(root)
     assert is_bitstring(root./)
     assert root./ === "bafyreia353cr2t26iiuw5g2triyfelqehsu5peq4pn2u6t6q6oktrplzly"
 

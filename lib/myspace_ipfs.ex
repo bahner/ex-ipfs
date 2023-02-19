@@ -105,7 +105,7 @@ defmodule MyspaceIPFS do
   The name is odd, but it signifies that it is a CID of in the API notation, with the
   leading slash. It is used for the root of a tree.
   """
-  @type slash_cid :: %MyspaceIPFS.SlashCID{/: binary}
+  @type link :: %{/: binary}
 
   @doc """
   Start the IPFS daemon.
