@@ -17,49 +17,15 @@ defmodule MyspaceIPFS.PubSubChannel do
            topic: binary
          }
 
-  @doc """
-  Generate a PubSubChannel struct from a map or passthrough an error message
-  from the IPFS API
-  """
-  @spec new({:error, map}) :: {:error, map}
-  def new({:error, data}) do
-    {:error, data}
-  end
-
-  @spec new(pid, binary, boolean) :: t()
-  def new(target, topic, raw) do
-    %__MODULE__{
-      base64url_topic: Multibase.encode!(topic),
-      client: nil,
-      raw: raw,
-      target: target,
-      topic: topic
-    }
-  end
-
-  # @api_url Application.get_env(:myspace_ipfs, :api_url)
-  # @default_topic Application.get_env(:myspace_ipfs, :default_topic)
   @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0")
 
-  @spec start_link(pid, binary) :: :ignore | {:error, any} | {:ok, pid}
-  def start_link(pid, topic) do
+  @spec start_link(t(), list) :: :ignore | {:error, any} | {:ok, pid}
+  def start_link(channel, opts \\ []) do
     GenServer.start_link(
       __MODULE__,
-      build_channel(pid, topic)
+      channel,
+      opts
     )
-  end
-
-  @spec start_link(pid, binary, keyword) :: :ignore | {:error, any} | {:ok, pid}
-  def start_link(pid, topic, options) do
-    GenServer.start_link(
-      __MODULE__,
-      build_channel(pid, topic, options)
-    )
-  end
-
-  @spec build_channel(pid, binary, list) :: t()
-  defp build_channel(target, topic, options \\ []) do
-    new(target, topic, Keyword.get(options, :raw, false))
   end
 
   @spec init(t()) :: {:ok, t()}
@@ -70,6 +36,22 @@ defmodule MyspaceIPFS.PubSubChannel do
     {:ok, ref} = spawn_client(self(), url)
     Logger.debug("Subscribed to #{url} with #{inspect(ref)}")
     {:ok, %{channel | client: ref}}
+  end
+
+  @spec new!(pid, binary, boolean) :: t()
+  def new!(target, topic, raw \\ false) do
+    %__MODULE__{
+      base64url_topic: Multibase.encode!(topic),
+      client: nil,
+      raw: raw,
+      target: target,
+      topic: topic
+    }
+  end
+
+  @spec new(pid, binary, boolean) :: {:ok, t()}
+  def new(target, topic, raw \\ false) do
+    {:ok, new!(target, topic, raw)}
   end
 
   def handle_info({:hackney_response, _ref, data}, state) do
