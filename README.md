@@ -2,8 +2,8 @@
 
 ![](https://ipfs.io/ipfs/QmQJ68PFMDdAsgCZvA1UVzzn18asVcf7HVvCDgpjiSCAse)
 
-[![Unit and integration tests](https://github.com/bahner/myspace-ipfs/actions/workflows/testsuite.yaml/badge.svg)](https://github.com/bahner/myspace-ipfs/actions/workflows/testsuite.yaml)
-[![Coverage Status](https://coveralls.io/repos/github/bahner/myspace-ipfs/badge.svg?branch=develop)](https://coveralls.io/github/bahner/myspace-ipfs?branch=develop)
+[![Unit and integration tests](https://github.com/bahner/ex-ipfs/actions/workflows/testsuite.yaml/badge.svg)](https://github.com/bahner/ex-ipfs/actions/workflows/testsuite.yaml)
+[![Coverage Status](https://coveralls.io/repos/github/bahner/ex-ipfs/badge.svg?branch=develop)](https://coveralls.io/github/bahner/ex-ipfs?branch=develop)
 
 ## This library is still a work in progress
 
@@ -15,11 +15,11 @@ Version 0.2.0 is substantially better than version 0.1.0. I consider it of beta-
 
 ## Install
 
-Add myspace_ipfs to your `mix.exs` dependencies:
+Add ex_ipfs to your `mix.exs` dependencies:
 ```elixir
 def deps do
 [
-    {:myspace_ipfs, "~> 0.2.0"},
+    {:ex_ipfs, "~> 0.2.0"},
 ]
 end
 ```
@@ -31,32 +31,32 @@ and run `make mix` to install the dependencies.
 The default should brobably be OK, but you may override the default with the environment variables.
 
 ```
-export MYSPACE_IPFS_API_URL="http://127.0.0.1:5001"
+export EX_IPFS_API_URL="http://127.0.0.1:5001"
 ```
 
 ## Documentation
 The documentation is very unbalanced. I am feeling my way forward as to how much I should document here. Each command will receive a link to the official documentation at least.
 
 ## Usage
-Make sure ipfs is running. Then you can start using the module. If ipfs isn't running, you may try `MyspaceIPFS.daemon()`.
+Make sure ipfs is running. Then you can start using the module. If ipfs isn't running, you may try `ExIPFS.daemon()`.
 
 To use do:
 ```elixir
-alias MyspaceIPFS, as: IPFS
+alias ExIPFS, as: IPFS
 IPFS.id()
 
-MyspaceIPFS.Refs.refs("/ipns/myspace.bahner.com")
+ExIPFS.Refs.refs("/ipns/ex.bahner.com")
 
-alias MyspaceIPFS.Refs
+alias ExIPFS.Refs
 Refs.local()
 
 # Subscribe to a PubSub Channel and send the message to my inbox
-MyspaceIPFS.PubSub.Channel.start_link(self(), "mychannel")
+ExIPFS.PubSub.Channel.start_link(self(), "mychannel")
 flush
 ```
 Some commands, like channel and tail that streams data needs a pid to send messages to. 
 
-The basic commands are in the MyspaceIPFS module. The grouped ipfs commands each have their separate module, eg. MyspaceIPFS.Refs, MyspaceIPFS.Blocks etc.
+The basic commands are in the ExIPFS module. The grouped ipfs commands each have their separate module, eg. ExIPFS.Refs, ExIPFS.Blocks etc.
 
 ## Development
 

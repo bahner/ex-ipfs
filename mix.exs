@@ -1,19 +1,19 @@
-defmodule MyspaceIPFS.Mixfile do
+defmodule ExIPFS.Mixfile do
   @moduledoc false
   use Mix.Project
 
   def project do
     [
-      app: :myspace_ipfs,
-      version: "0.2.0-alpha.2",
-      elixir: "~> 1.13",
-      name: "Myspace IPFS",
+      app: :ex_ipfs,
+      version: "0.0.1",
+      elixir: "~> 1.14",
+      name: "Elixir IPFS",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
       description: description(),
-      name: "myspace_ipfs",
-      source_url: "https://github.com/bahner/myspace-ipfs.git",
+      name: "ex_ipfs",
+      source_url: "https://github.com/bahner/ex-ipfs.git",
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         coveralls: :test,
@@ -27,7 +27,7 @@ defmodule MyspaceIPFS.Mixfile do
   def application do
     [
       extra_applications: [:logger, :tesla],
-      mod: {MyspaceIPFS.Application, []}
+      mod: {ExIPFS.Application, []}
     ]
   end
 
@@ -46,15 +46,15 @@ defmodule MyspaceIPFS.Mixfile do
   end
 
   defp description() do
-    "A pretty good Kubo IPFS RPC API client for Elixir."
+    "Core Elixir IPFS module for Kubo IPFS RPC API"
   end
 
   defp package do
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*", "AUTHORS*"],
       maintainers: ["Lars Bahner"],
-      licenses: ["Apache-2.0"],
-      links: %{"GitHub" => "https://github.com/bahner/myspace-ipfs"}
+      licenses: ["GPLv3"],
+      links: %{"GitHub" => "https://github.com/bahner/ex-ipfs"}
     ]
   end
 end
