@@ -1,13 +1,16 @@
-defmodule ExIPFS.KeyValue do
+defmodule ExIPFS.Objects do
   @moduledoc false
 
-  defstruct key: nil, value: nil
+  defstruct objects: []
 
-  @spec new(map) :: ExIPFS.key_value()
+  @spec new(map) :: ExIPFS.objects()
   def new(opts) when is_map(opts) do
+    objects =
+      opts["Objects"]
+      |> Enum.map(&ExIPFS.HashLinks.new/1)
+
     %__MODULE__{
-      key: opts["Key"],
-      value: opts["Value"]
+      objects: objects
     }
   end
 

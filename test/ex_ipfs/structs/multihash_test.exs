@@ -1,0 +1,18 @@
+defmodule ExIPFS.MultiHash do
+  @moduledoc false
+  @enforce_keys [:name, :code]
+  defstruct [:name, :code]
+
+  @doc false
+  @spec new({:error, map}) :: {:error, map}
+  def new({:error, data}), do: {:error, data}
+
+  @spec new(map) :: ExIPFS.multi_hash()
+  def new(opts) when is_map(opts) do
+    # code and name are required and must be present.
+    %ExIPFS.MultiHash{
+      name: opts["Name"],
+      code: opts["Code"]
+    }
+  end
+end

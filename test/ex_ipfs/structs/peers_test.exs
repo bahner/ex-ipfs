@@ -1,13 +1,11 @@
-defmodule ExIPFS.KeyValue do
+defmodule ExIPFS.Peers do
   @moduledoc false
+  defstruct peers: []
 
-  defstruct key: nil, value: nil
-
-  @spec new(map) :: ExIPFS.key_value()
+  @spec new(map) :: ExIPFS.peers()
   def new(opts) when is_map(opts) do
     %__MODULE__{
-      key: opts["Key"],
-      value: opts["Value"]
+      peers: opts["Peers"]
     }
   end
 
