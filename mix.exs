@@ -27,7 +27,6 @@ defmodule ExIPFS.Mixfile do
   def application do
     [
       extra_applications: [:logger, :tesla],
-      mod: {ExIPFS.Application, []}
     ]
   end
 

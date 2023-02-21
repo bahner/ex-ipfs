@@ -329,27 +329,6 @@ defmodule ExIPFS do
       |> okify()
 
   @doc """
-  Ping a peer.
-  ## Parameters
-  - peer: the peer to ping.
-  ## Options
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-ping
-  ```
-  [
-    n|count: <int>,
-    timeout: <int>,
-  ]
-  ```
-  """
-  # FIXME verify return type
-  @spec(
-    ping(pid, ExIPFS.peer_id(), atom | integer, list) :: :ignore | {:ok, pid},
-    {:error, reason}
-  )
-  def ping(pid, peer, timeout \\ 10, opts \\ []),
-    do: ExIPFS.Ping.start_link(pid, peer, timeout, opts)
-
-  @doc """
   Mount an IPFS read-only mountpoint.
 
   ## Options
