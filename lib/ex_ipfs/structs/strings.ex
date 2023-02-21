@@ -3,7 +3,7 @@ defmodule ExIPFS.Strings do
   @enforce_keys [:strings]
   defstruct strings: []
 
-  @spec new(tuple) :: ExIPFS.strings()
+  @spec new(tuple) :: ExIPFS.strings() | ExIPFS.Api.error_response()
   def new(data) when is_tuple(data) do
     case data do
       {_, nil} ->
