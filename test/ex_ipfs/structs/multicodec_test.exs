@@ -1,18 +1,24 @@
-defmodule ExIPFS.MultiCodec do
+defmodule ExIpfs.MulticodecTest do
   @moduledoc false
 
-  @enforce_keys [:name, :code]
-  defstruct [:name, :code]
+  use ExUnit.Case, async: true
 
-  @spec new({:error, map}) :: {:error, map}
-  def new({:error, data}), do: {:error, data}
+  alias ExIpfs.Multicodec
 
-  @spec new(map) :: ExIPFS.multi_codec()
-  def new(opts) when is_map(opts) do
-    # code and name are required and must be present.
-    %__MODULE__{
-      name: opts["Name"],
-      code: opts["Code"]
-    }
+  @data %{"Name" => "name", "Code" => 0}
+
+  test "fails on missing data" do
+    catch_error(%Multicodec{} = Multicodec.new())
+  end
+
+  test "test creation of error" do
+    assert %Multicodec{} = Multicodec.new(@data)
+    e = Multicodec.new(@data)
+    assert e.name == "name"
+    assert e.code == 0
+  end
+
+  test "passed on error data" do
+    assert {:error, @data} = Multicodec.new({:error, @data})
   end
 end

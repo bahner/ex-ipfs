@@ -1,4 +1,4 @@
-defmodule ExIPFS.MultibaseCodec do
+defmodule ExIpfs.MultibaseCodec do
   @moduledoc false
   @enforce_keys [:name, :code]
   defstruct [:name, :code, prefix: nil, description: nil]
@@ -8,7 +8,7 @@ defmodule ExIPFS.MultibaseCodec do
     {:error, data}
   end
 
-  @spec new(map) :: ExIPFS.Multibase.codec()
+  @spec new(map) :: ExIpfs.Multibase.codec()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       name: opts["Name"],

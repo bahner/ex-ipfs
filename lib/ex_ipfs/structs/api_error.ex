@@ -1,7 +1,7 @@
-defmodule ExIPFS.ApiError do
+defmodule ExIpfs.ApiError do
   @moduledoc false
 
-  import ExIPFS.Utils
+  import ExIpfs.Utils
   require Logger
 
   defstruct code: nil, message: nil, type: nil
@@ -11,16 +11,16 @@ defmodule ExIPFS.ApiError do
     {:error, data}
   end
 
-  @spec new(map) :: ExIPFS.Api.error()
+  @spec new(map) :: ExIpfs.Api.error()
   def new(map) do
-    %ExIPFS.ApiError{
+    %ExIpfs.ApiError{
       code: map["Code"],
       message: map["Message"],
       type: map["Type"]
     }
   end
 
-  @spec handle_api_error(map) :: {:error, ExIPFS.Api.error()}
+  @spec handle_api_error(map) :: {:error, ExIpfs.Api.error()}
   def handle_api_error(body) do
     Logger.debug("IPFS error: #{inspect(body)}")
 

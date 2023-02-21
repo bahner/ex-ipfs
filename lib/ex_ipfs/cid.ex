@@ -1,18 +1,18 @@
-defmodule ExIPFS.Cid do
+defmodule ExIpfs.Cid do
   @moduledoc """
-  ExIPFS.Cid is where the cid commands of the IPFS API reside.
+  ExIpfs.Cid is where the cid commands of the IPFS API reside.
   """
-  import ExIPFS.Api
-  import ExIPFS.Utils
-  alias ExIPFS.CidBase32CID
-  alias ExIPFS.MultibaseEncoding
-  alias ExIPFS.MultiCodec
-  alias ExIPFS.MultiHash
+  import ExIpfs.Api
+  import ExIpfs.Utils
+  alias ExIpfs.CidBase32CID
+  alias ExIpfs.MultibaseEncoding
+  alias ExIpfs.Multicodec
+  alias ExIpfs.MultiHash
 
   @typedoc """
   A v1 CID. This is the new Base32 CID format, which is likely to last and is preferred.
   """
-  @type base32cid :: %ExIPFS.CidBase32CID{
+  @type base32cid :: %ExIpfs.CidBase32CID{
           cid_str: binary,
           formatted: binary,
           error_msg: binary
@@ -26,7 +26,7 @@ defmodule ExIPFS.Cid do
   `cid` - The CID to convert to base32.
   """
 
-  @spec base32(binary()) :: {:ok, base32cid()} | ExIPFS.Api.error_response()
+  @spec base32(binary()) :: {:ok, base32cid()} | ExIpfs.Api.error_response()
   def base32(cid),
     do:
       post_query("/cid/base32?arg=" <> cid)
@@ -37,7 +37,7 @@ defmodule ExIPFS.Cid do
   List available multibase encodings.
 
   """
-  @spec bases(list()) :: {:ok, list} | ExIPFS.Api.error_response()
+  @spec bases(list()) :: {:ok, list} | ExIpfs.Api.error_response()
   def bases(opts \\ []),
     do:
       post_query("/cid/bases", query: opts)
@@ -54,11 +54,11 @@ defmodule ExIPFS.Cid do
   `supported` <bool> - Show only supported codecs.
   """
   @spec codecs(list()) ::
-          {:ok, [ExIPFS.multi_codec()]} | ExIPFS.Api.error_response()
+          {:ok, [ExIpfs.multi_codec()]} | ExIpfs.Api.error_response()
   def codecs(opts \\ []),
     do:
       post_query("/cid/codecs", query: opts)
-      |> Enum.map(&MultiCodec.new/1)
+      |> Enum.map(&Multicodec.new/1)
       |> okify()
 
   @doc """
@@ -74,7 +74,7 @@ defmodule ExIPFS.Cid do
   `b` <string> - Multibase to display CID in.
   `mc` <string> - Multicodec.
   """
-  @spec format(binary(), list()) :: {:ok, any} | ExIPFS.Api.error_response()
+  @spec format(binary(), list()) :: {:ok, any} | ExIpfs.Api.error_response()
   def format(cid, opts \\ []),
     do:
       post_query("/cid/format?arg=" <> cid, query: opts)
@@ -90,7 +90,7 @@ defmodule ExIPFS.Cid do
   `supported` <bool> - Show only supported hashes.
   """
   @spec hashes(list()) ::
-          {:ok, ExIPFS.multi_hash()} | ExIPFS.Api.error_response()
+          {:ok, ExIpfs.multi_hash()} | ExIpfs.Api.error_response()
   def hashes(opts \\ []),
     do:
       post_query("/cid/hashes", query: opts)

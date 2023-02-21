@@ -1,16 +1,16 @@
-defmodule ExIPFS.Get do
+defmodule ExIpfs.Get do
   @moduledoc """
   Get a file from IPFS and write it to a file or directory.
   """
-  import ExIPFS.Api
-  import ExIPFS.Utils
+  import ExIpfs.Api
+  import ExIpfs.Utils
   require Logger
 
   @enforce_keys [:path, :fspath, :content]
   defstruct [:path, :fspath, :name, :content, archive: false]
 
   @doc false
-  @spec get(Path.t(), list) :: {:ok, Path.t()} | ExIPFS.Api.error_response()
+  @spec get(Path.t(), list) :: {:ok, Path.t()} | ExIpfs.Api.error_response()
   def get(path, opts \\ []) do
     content = get_get_data(path, opts)
 
@@ -24,7 +24,7 @@ defmodule ExIPFS.Get do
     end
   end
 
-  # @spec get_get_data(path, opts) :: {:ok, fspath} | ExIPFS.Api.error_response
+  # @spec get_get_data(path, opts) :: {:ok, fspath} | ExIpfs.Api.error_response
   defp get_get_data(path, opts) do
     options = create_query_opts(opts)
 

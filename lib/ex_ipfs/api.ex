@@ -1,11 +1,11 @@
-defmodule ExIPFS.Api do
+defmodule ExIpfs.Api do
   @moduledoc """
   A module that contains the functions that are used to interact with the IPFS API.
   """
   use Tesla, docs: false
-  alias ExIPFS.ApiError
+  alias ExIpfs.ApiError
   require Logger
-  import ExIPFS.Utils, only: [unokify: 1, filter_empties: 1]
+  import ExIpfs.Utils, only: [unokify: 1, filter_empties: 1]
 
   @api_url Application.compile_env(:ex_ipfs, :api_url, "http://localhost:5001/api/v0/")
 
@@ -15,7 +15,7 @@ defmodule ExIPFS.Api do
   A structured error returned from the upstream IPFS API.
 
   """
-  @type error :: %ExIPFS.ApiError{
+  @type error :: %ExIpfs.ApiError{
           code: integer,
           message: binary,
           type: binary
@@ -30,7 +30,7 @@ defmodule ExIPFS.Api do
   A an aggregate type that represents the possible errors that can be returned from the API.
   """
   @type error_response ::
-          {:error, ExIPFS.Api.error()} | {:error, Tesla.Env.t()} | {:error, atom}
+          {:error, ExIpfs.Api.error()} | {:error, Tesla.Env.t()} | {:error, atom}
 
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @api_url)

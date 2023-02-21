@@ -1,9 +1,9 @@
-defmodule ExIPFS.KeyValueTest do
+defmodule ExIpfs.KeyValueTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
 
-  alias ExIPFS.KeyValue, as: KeyValue
+  alias ExIpfs.KeyValue, as: KeyValue
 
   @data %{"Key" => "key", "Value" => "value"}
 

@@ -1,9 +1,9 @@
-defmodule ExIPFS.HashLinksTest do
+defmodule ExIpfs.HashLinksTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
 
-  alias ExIPFS.HashLinks, as: HashLinks
+  alias ExIpfs.HashLinks, as: HashLinks
 
   @data %{
     "Hash" => "hash",
@@ -26,7 +26,10 @@ defmodule ExIPFS.HashLinksTest do
     assert %HashLinks{} = HashLinks.new(@data)
     e = HashLinks.new(@data)
     assert e.hash == "hash"
-    assert e.links == [%ExIPFS.Hash{hash: "hash", name: "name", size: 0, target: "target", type: 0}]
+
+    assert e.links == [
+             %ExIpfs.Hash{hash: "hash", name: "name", size: 0, target: "target", type: 0}
+           ]
   end
 
   test "pass on error data" do

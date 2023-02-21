@@ -1,10 +1,10 @@
-defmodule ExIPFS.Refs do
+defmodule ExIpfs.Refs do
   @moduledoc """
-  ExIPFS.Refs is where the main commands of the IPFS API reside.
+  ExIpfs.Refs is where the main commands of the IPFS API reside.
   """
 
-  import ExIPFS.Api
-  import ExIPFS.Utils
+  import ExIpfs.Api
+  import ExIpfs.Utils
 
   defstruct [
     :Ref,
@@ -27,7 +27,7 @@ defmodule ExIPFS.Refs do
 
   Response is a list of Refs.t().
   """
-  @spec local :: {:ok, any} | ExIPFS.Api.error_response()
+  @spec local :: {:ok, any} | ExIpfs.Api.error_response()
   def local,
     do:
       post_query("/refs/local")
@@ -39,7 +39,7 @@ defmodule ExIPFS.Refs do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-refs
   """
-  @spec refs(Path.t(), list()) :: {:ok, any} | ExIPFS.Api.error_response()
+  @spec refs(Path.t(), list()) :: {:ok, any} | ExIpfs.Api.error_response()
   def refs(path, opts \\ []),
     do:
       post_query("/refs?arg=" <> path, query: opts)

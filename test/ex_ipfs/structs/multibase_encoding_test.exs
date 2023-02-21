@@ -1,18 +1,24 @@
-defmodule ExIPFS.MultibaseEncoding do
+defmodule ExIpfs.MultibaseEncodingTest do
   @moduledoc false
-  @enforce_keys [:name, :code]
-  defstruct [:name, :code]
 
-  @spec new({:error, map}) :: {:error, map}
-  def new({:error, data}) do
-    {:error, data}
+  use ExUnit.Case, async: true
+
+  alias ExIpfs.MultibaseEncoding
+
+  @data %{"Name" => "name", "Code" => 0}
+
+  test "fails on missing data" do
+    catch_error(%MultibaseEncoding{} = MultibaseEncoding.new())
   end
 
-  @spec new(map) :: ExIPFS.Multibase.encoding()
-  def new(opts) when is_map(opts) do
-    %__MODULE__{
-      name: opts["Name"],
-      code: opts["Code"]
-    }
+  test "test creation of error" do
+    assert %MultibaseEncoding{} = MultibaseEncoding.new(@data)
+    e = MultibaseEncoding.new(@data)
+    assert e.name == "name"
+    assert e.code == 0
+  end
+
+  test "passed on error data" do
+    assert {:error, @data} = MultibaseEncoding.new({:error, @data})
   end
 end

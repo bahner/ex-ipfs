@@ -1,17 +1,32 @@
-defmodule ExIPFS.Link do
+defmodule ExIpfs.LinkTest do
   @moduledoc false
-  defstruct /: nil
 
-  require Logger
+  use ExUnit.Case, async: true
 
-  @spec new(any) :: ExIPFS.link()
-  def new(cid) when is_map(cid) do
-    case cid do
-      %{"/" => something} ->
-        %{/: something}
+  alias ExIpfs.Link
 
-      _ ->
-        %{/: cid./}
-    end
+  @data %{
+    "/" => "Qmname"
+  }
+
+  test "fails on missing data" do
+    catch_error(%Link{} = Link.new())
+  end
+
+  test "test creation of link" do
+    assert %Link{} = Link.new(@data)
+    e = Link.new(@data)
+    assert e./ == "Qmname"
+  end
+
+  test "creates link from binary" do
+    assert %Link{} = Link.new("Qmname")
+    e = Link.new("Qmname")
+    assert e./ == "Qmname"
+  end
+
+  test "passes on error data" do
+    {:error, result} = Link.new({:error, @data})
+    assert result == @data
   end
 end

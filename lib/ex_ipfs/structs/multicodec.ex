@@ -1,4 +1,4 @@
-defmodule ExIPFS.MultiCodec do
+defmodule ExIpfs.Multicodec do
   @moduledoc false
 
   @enforce_keys [:name, :code]
@@ -7,7 +7,7 @@ defmodule ExIPFS.MultiCodec do
   @spec new({:error, map}) :: {:error, map}
   def new({:error, data}), do: {:error, data}
 
-  @spec new(map) :: ExIPFS.multi_codec()
+  @spec new(map) :: ExIpfs.multi_codec()
   def new(opts) when is_map(opts) do
     # code and name are required and must be present.
     %__MODULE__{

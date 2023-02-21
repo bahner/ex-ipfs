@@ -1,8 +1,8 @@
-defmodule ExIPFS.AddResultTest do
+defmodule ExIpfs.AddResultTest do
   @moduledoc false
   use ExUnit.Case, async: true
 
-  alias ExIPFS.AddResult
+  alias ExIpfs.AddResult
 
   describe "new/1" do
     test "returns a struct" do

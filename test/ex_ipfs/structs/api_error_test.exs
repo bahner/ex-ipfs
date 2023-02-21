@@ -1,9 +1,9 @@
-defmodule ExIPFS.ApiErrorTest do
+defmodule ExIpfs.ApiErrorTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
 
-  alias ExIPFS.ApiError, as: ApiError
+  alias ExIpfs.ApiError, as: ApiError
 
   test "fails on missing data" do
     catch_error(%ApiError{} = ApiError.new())
@@ -24,7 +24,9 @@ defmodule ExIPFS.ApiErrorTest do
   end
 
   test "handling of api error" do
-    assert {:error, %ApiError{}} = ApiError.handle_api_error(%{"Message" => "message", "Code" => 0})
+    assert {:error, %ApiError{}} =
+             ApiError.handle_api_error(%{"Message" => "message", "Code" => 0})
+
     e = ApiError.handle_api_error(%{"Message" => "message", "Code" => 0})
     assert e == {:error, %ApiError{message: "message", code: 0}}
   end

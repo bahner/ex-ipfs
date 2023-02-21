@@ -1,9 +1,9 @@
-defmodule ExIPFS.AddResult do
+defmodule ExIpfs.AddResult do
   @moduledoc false
 
   defstruct bytes: 0, hash: nil, size: nil, name: nil
 
-  @spec new(map) :: ExIPFS.add_result()
+  @spec new(map) :: ExIpfs.add_result()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       bytes: Map.get(opts, "Bytes", 0),
@@ -13,7 +13,7 @@ defmodule ExIPFS.AddResult do
     }
   end
 
-  @spec new(list) :: list(ExIPFS.add_result())
+  @spec new(list) :: list(ExIpfs.add_result())
   def new(opts) when is_list(opts) do
     Enum.map(opts, &new/1)
   end

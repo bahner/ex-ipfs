@@ -1,8 +1,8 @@
-defmodule ExIPFS.Peers do
+defmodule ExIpfs.Peers do
   @moduledoc false
   defstruct peers: []
 
-  @spec new(map) :: ExIPFS.peers()
+  @spec new(map) :: ExIpfs.peers()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       peers: opts["Peers"]

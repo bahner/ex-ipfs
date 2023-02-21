@@ -1,4 +1,4 @@
-defmodule ExIPFS.Utils do
+defmodule ExIpfs.Utils do
   @moduledoc false
 
   require Logger
@@ -84,12 +84,12 @@ defmodule ExIPFS.Utils do
 
   @doc """
   Creates a unique directory in the given directory and returns the path.
-  The directory name will be prefixed with "ex-". This way you can easily remove
+  The directory name will be prefixed with "ex-ipfs-". This way you can easily remove
   all the temporary directories created by this function.
   """
   @spec mktempdir(Path.t()) :: binary
   def mktempdir(parent_dir) do
-    dir_path = "#{parent_dir}/ex-#{Nanoid.generate()}"
+    dir_path = "#{parent_dir}/ex-ipfs-#{Nanoid.generate()}"
     File.mkdir_p(dir_path)
     dir_path
   end
@@ -99,7 +99,7 @@ defmodule ExIPFS.Utils do
 
   ## Examples
 
-  iex> ExIPFS.Utils.unokify({:ok, "data"})
+  iex> ExIpfs.Utils.unokify({:ok, "data"})
   "data"
   """
   @spec unokify(any) :: {:ok, any} | nil
@@ -125,11 +125,11 @@ defmodule ExIPFS.Utils do
   ## Examples
 
   iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
-  iex> ExIPFS.Utils.recase_headers(headers, :kebab)
+  iex> ExIpfs.Utils.recase_headers(headers, :kebab)
   [{"content-type", "application/json"}, {"x-my-header", "value"}]
 
   iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
-  iex> ExIPFS.Utils.recase_headers(headers, :snake)
+  iex> ExIpfs.Utils.recase_headers(headers, :snake)
   [{"content_type", "application/json"}, {"x_my_header", "value"}]
 
   """
@@ -188,7 +188,7 @@ defmodule ExIPFS.Utils do
   in the directory recursively.
   """
   @spec multipart(Path.t()) :: Multipart.t()
-  def multipart(fspath) do
+  def multipart(fspath) when is_binary(fspath) do
     Multipart.new()
     |> multipart_add_files(fspath)
   end
@@ -198,7 +198,7 @@ defmodule ExIPFS.Utils do
   the IPFS API expects this.
   """
   @spec multipart_content(binary, binary) :: Multipart.t()
-  def multipart_content(data, type \\ "file") do
+  def multipart_content(data, type \\ "file") when is_binary(data) and is_binary(type) do
     Multipart.new()
     |> Multipart.add_file_content(data, type)
   end

@@ -1,18 +1,23 @@
-defmodule ExIPFS.MultiHash do
+defmodule ExIpfs.MultiHashTest do
   @moduledoc false
-  @enforce_keys [:name, :code]
-  defstruct [:name, :code]
+  use ExUnit.Case, async: true
 
-  @doc false
-  @spec new({:error, map}) :: {:error, map}
-  def new({:error, data}), do: {:error, data}
+  alias ExIpfs.MultiHash
 
-  @spec new(map) :: ExIPFS.multi_hash()
-  def new(opts) when is_map(opts) do
-    # code and name are required and must be present.
-    %ExIPFS.MultiHash{
-      name: opts["Name"],
-      code: opts["Code"]
-    }
+  @data %{"Name" => "name", "Code" => 0}
+
+  test "fails on missing data" do
+    catch_error(%MultiHash{} = MultiHash.new())
+  end
+
+  test "test creation of error" do
+    assert %MultiHash{} = MultiHash.new(@data)
+    e = MultiHash.new(@data)
+    assert e.name == "name"
+    assert e.code == 0
+  end
+
+  test "passed on error data" do
+    assert {:error, @data} = MultiHash.new({:error, @data})
   end
 end

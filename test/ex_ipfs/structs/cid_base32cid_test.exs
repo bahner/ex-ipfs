@@ -1,9 +1,9 @@
-defmodule ExIPFS.CidBase32CIDTest do
+defmodule ExIpfs.CidBase32CIDTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
 
-  alias ExIPFS.CidBase32CID, as: Base32CID
+  alias ExIpfs.CidBase32CID, as: Base32CID
 
   test "fails on missing data" do
     catch_error(%Base32CID{} = Base32CID.new())

@@ -1,4 +1,4 @@
-defmodule ExIPFS.Link do
+defmodule ExIpfs.Link do
   @moduledoc false
 
   @enforce_keys [:/]
@@ -6,10 +6,9 @@ defmodule ExIPFS.Link do
 
   require Logger
 
-  @spec new(map | binary) :: ExIPFS.link()
+  @spec new(map | binary) :: ExIpfs.link()
   def new(cid) when is_map(cid) do
-
-        %__MODULE__{/: cid["/"]}
+    %__MODULE__{/: cid["/"]}
   end
 
   def new(cid) when is_binary(cid) do

@@ -1,13 +1,13 @@
-defmodule ExIPFS.Objects do
+defmodule ExIpfs.Objects do
   @moduledoc false
 
   defstruct objects: []
 
-  @spec new(map) :: ExIPFS.objects()
+  @spec new(map) :: ExIpfs.objects()
   def new(opts) when is_map(opts) do
     objects =
       opts["Objects"]
-      |> Enum.map(&ExIPFS.HashLinks.new/1)
+      |> Enum.map(&ExIpfs.HashLinks.new/1)
 
     %__MODULE__{
       objects: objects

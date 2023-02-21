@@ -1,4 +1,4 @@
-defmodule ExIPFS.MultibaseEncoding do
+defmodule ExIpfs.MultibaseEncoding do
   @moduledoc false
   @enforce_keys [:name, :code]
   defstruct [:name, :code]
@@ -8,7 +8,7 @@ defmodule ExIPFS.MultibaseEncoding do
     {:error, data}
   end
 
-  @spec new(map) :: ExIPFS.Multibase.encoding()
+  @spec new(map) :: ExIpfs.Multibase.encoding()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       name: opts["Name"],

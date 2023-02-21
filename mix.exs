@@ -1,4 +1,4 @@
-defmodule ExIPFS.Mixfile do
+defmodule ExIpfs.Mixfile do
   @moduledoc false
   use Mix.Project
 
@@ -26,7 +26,7 @@ defmodule ExIPFS.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger, :tesla],
+      extra_applications: [:logger, :tesla]
     ]
   end
 

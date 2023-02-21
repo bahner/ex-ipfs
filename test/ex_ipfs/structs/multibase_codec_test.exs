@@ -1,20 +1,32 @@
-defmodule ExIPFS.MultibaseCodec do
+defmodule ExIpfs.MultibaseCodecTest do
   @moduledoc false
-  @enforce_keys [:name, :code]
-  defstruct [:name, :code, prefix: nil, description: nil]
 
-  @spec new({:error, map}) :: {:error, map}
-  def new({:error, data}) do
-    {:error, data}
+  use ExUnit.Case, async: true
+
+  alias ExIpfs.MultibaseCodec
+
+  @data %{
+    "Name" => "name",
+    "Code" => 0,
+    "Prefix" => "prefix",
+    "Description" => "description"
+  }
+
+  test "fails on missing data" do
+    catch_error(%MultibaseCodec{} = MultibaseCodec.new())
   end
 
-  @spec new(map) :: ExIPFS.Multibase.codec()
-  def new(opts) when is_map(opts) do
-    %__MODULE__{
-      name: opts["Name"],
-      code: opts["Code"],
-      prefix: Map.get(opts, "Prefix", nil),
-      description: Map.get(opts, "Description", nil)
-    }
+  test "test creation of error" do
+    assert %MultibaseCodec{} = MultibaseCodec.new(@data)
+    e = MultibaseCodec.new(@data)
+    assert e.name == "name"
+    assert e.code == 0
+    assert e.prefix == "prefix"
+    assert e.description == "description"
+  end
+
+  test "passed on error data" do
+    data = {:error}
+    assert {:error, @data} = MultibaseCodec.new({:error, @data})
   end
 end

@@ -1,9 +1,9 @@
-defmodule ExIPFS.IdTest do
+defmodule ExIpfs.IdTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
 
-  alias ExIPFS.Id
+  alias ExIpfs.Id
 
   @data %{
     "Addresses" => ["/ip4/"],

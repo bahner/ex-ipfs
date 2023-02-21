@@ -38,25 +38,25 @@ export EX_IPFS_API_URL="http://127.0.0.1:5001"
 The documentation is very unbalanced. I am feeling my way forward as to how much I should document here. Each command will receive a link to the official documentation at least.
 
 ## Usage
-Make sure ipfs is running. Then you can start using the module. If ipfs isn't running, you may try `ExIPFS.daemon()`.
+Make sure ipfs is running. Then you can start using the module. If ipfs isn't running, you may try `ExIpfs.daemon()`.
 
 To use do:
 ```elixir
-alias ExIPFS, as: IPFS
+alias ExIpfs, as: IPFS
 IPFS.id()
 
-ExIPFS.Refs.refs("/ipns/ex.bahner.com")
+ExIpfs.Refs.refs("/ipns/ex.bahner.com")
 
-alias ExIPFS.Refs
+alias ExIpfs.Refs
 Refs.local()
 
 # Subscribe to a PubSub Channel and send the message to my inbox
-ExIPFS.PubSub.Channel.start_link(self(), "mychannel")
+ExIpfs.PubSub.Channel.start_link(self(), "mychannel")
 flush
 ```
 Some commands, like channel and tail that streams data needs a pid to send messages to. 
 
-The basic commands are in the ExIPFS module. The grouped ipfs commands each have their separate module, eg. ExIPFS.Refs, ExIPFS.Blocks etc.
+The basic commands are in the ExIpfs module. The grouped ipfs commands each have their separate module, eg. ExIpfs.Refs, ExIpfs.Blocks etc.
 
 ## Development
 
