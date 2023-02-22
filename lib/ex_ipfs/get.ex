@@ -82,8 +82,6 @@ defmodule ExIpfs.Get do
       if :ok == extract_result do
         File.rename!("#{cwd}/#{elem}", output)
         :ok
-      else
-        extract_result
       end
     end
   end
