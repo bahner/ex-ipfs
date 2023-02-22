@@ -43,7 +43,6 @@ defmodule ExIpfs.Refs do
     do:
       post_query("/refs?arg=" <> path, query: opts)
       |> okify()
+
   # coveralls-ignore-stop
-
-
-    end
+end

@@ -32,7 +32,7 @@ defmodule ExIpfs.UtilsTest do
   end
 
   test "okify returns {:ok, data} when given {:ok, data}" do
-    assert Utils.okify({:ok, "data"}) == {:ok, "data"}
+    assert Utils.okify("data") == {:ok, "data"}
   end
 
   test "okicy passes on :ok tuple" do
@@ -46,7 +46,6 @@ defmodule ExIpfs.UtilsTest do
   test "str2bool! returns false when given \"false\"" do
     assert Utils.str2bool!("false") == false
   end
-
 
   test "filter_empties returns an empty list when given an empty list" do
     list_with_empty = ["", nil, [], {}, "data"]
@@ -66,6 +65,9 @@ defmodule ExIpfs.UtilsTest do
     assert Utils.unokify({:ok, "data"}) == "data"
   end
 
+  test "unlist passes through non list" do
+    assert Utils.unlist("data") == "data"
+  end
 
   test "recase_headers returns a map with the headers in the correct case" do
     [recased_header | tail] = Utils.recase_headers(@headers)
