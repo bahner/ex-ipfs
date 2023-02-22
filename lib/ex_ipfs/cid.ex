@@ -7,7 +7,7 @@ defmodule ExIpfs.Cid do
   alias ExIpfs.CidBase32CID
   alias ExIpfs.MultibaseEncoding
   alias ExIpfs.Multicodec
-  alias ExIpfs.MultiHash
+  alias ExIpfs.Multihash
 
   @typedoc """
   A v1 CID. This is the new Base32 CID format, which is likely to last and is preferred.
@@ -82,7 +82,7 @@ defmodule ExIpfs.Cid do
       |> okify()
 
   @doc """
-  List available multihashes.
+  List available Multihashes.
 
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cid-hashes
@@ -94,6 +94,6 @@ defmodule ExIpfs.Cid do
   def hashes(opts \\ []),
     do:
       post_query("/cid/hashes", query: opts)
-      |> Enum.map(&MultiHash.new/1)
+      |> Enum.map(&Multihash.new/1)
       |> okify()
 end

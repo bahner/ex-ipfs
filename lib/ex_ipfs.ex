@@ -24,25 +24,6 @@ defmodule ExIpfs do
         }
 
   @typedoc """
-  A struct for a hash in the hash links list in Objects.
-  """
-  @type object :: %ExIpfs.Object{
-          hash: binary(),
-          name: binary(),
-          size: non_neg_integer(),
-          target: binary(),
-          type: non_neg_integer()
-        }
-
-  @typedoc """
-  A struct for the links of hash in Objects.
-  """
-  @type object_links :: %ExIpfs.ObjectLinks{
-          hash: binary(),
-          links: list(object())
-        }
-
-  @typedoc """
   A struct for the ID returned by the id command.
   """
   @type id :: %ExIpfs.Id{
@@ -66,15 +47,6 @@ defmodule ExIpfs do
   @type link :: %ExIpfs.Link{/: binary()}
 
   @typedoc """
-  Results when mounting IPFS in a FUSE filesystem.
-  """
-  @type mount_result :: %ExIpfs.MountResult{
-          fuse_allow_other: boolean(),
-          ipfs: binary(),
-          ipns: binary()
-        }
-
-  @typedoc """
   ExIpfs.MultibaseCodec is a struct representing a hash. Seems much like a codec structure to me, but hey. Things may differ.
   """
   @type multi_codec :: %ExIpfs.Multicodec{
@@ -83,11 +55,22 @@ defmodule ExIpfs do
         }
 
   @typedoc """
-  A multihash.
+  A Multihash.
   """
-  @type multi_hash :: %ExIpfs.MultiHash{
+  @type multi_hash :: %ExIpfs.Multihash{
           name: binary(),
           code: non_neg_integer()
+        }
+
+  @typedoc """
+  A struct for a hash in the hash links list in Objects.
+  """
+  @type object :: %ExIpfs.Object{
+          hash: binary(),
+          name: binary(),
+          size: non_neg_integer(),
+          target: binary(),
+          type: non_neg_integer()
         }
 
   @typedoc """
@@ -96,21 +79,26 @@ defmodule ExIpfs do
   @type objects :: %ExIpfs.Objects{objects: list(object_links())}
 
   @typedoc """
+  A struct for the links of hash in Objects.
+  """
+  @type object_links :: %ExIpfs.ObjectLinks{
+          hash: binary(),
+          links: list(object())
+        }
+
+  @typedoc """
   B58 encoded peer ID.
   """
   @type peer_id() :: <<_::48, _::_*8>>
 
   @typedoc """
-  A struct for list of peers in the network.
+  A ref as reported from the refs group of commands
   """
-  @type peers :: %ExIpfs.Peers{
-          peers: list | nil
+  @type ref() :: %ExIpfs.Ref{
+          ref: binary(),
+          err: binary() | nil
         }
 
-  @typedoc """
-  A struct when IPFS API returns a list of strings.
-  """
-  @type strings :: %ExIpfs.Strings{strings: list(binary())}
   @doc """
   Resolve the value of names to IPFS.
 
@@ -142,28 +130,12 @@ defmodule ExIpfs do
 
 
   """
-  @spec add_fspath!(Path.t(), list) :: add_result | ExIpfs.Api.error_response()
-  def add_fspath!(fspath, opts \\ []),
+  @spec add_fspath(Path.t(), list) :: add_result | ExIpfs.Api.error_response()
+  def add_fspath(fspath, opts \\ []),
     do:
       multipart(fspath)
       |> post_multipart("/add", query: opts)
       |> ExIpfs.AddResult.new()
-
-  @doc """
-  Add a file to IPFS.
-
-  ## Parameters
-  * `fspath` - The file system path to the file or directory to be sent to the node.
-
-  ## Options
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
-
-
-  """
-  @spec add_fspath(Path.t(), list) :: {:ok, add_result()} | ExIpfs.Api.error_response()
-  def add_fspath(fspath, opts \\ []),
-    do:
-      add_fspath!(fspath, opts)
       |> okify()
 
   @doc """
@@ -263,16 +235,11 @@ defmodule ExIpfs do
   }
   ```
   """
-  @spec ls!(Path.t(), list) :: {:ok, objects()} | ExIpfs.Api.error_response()
-  def ls!(path, opts \\ []),
-    do:
-      post_query("/ls?arg=" <> path, query: opts)
-      |> ExIpfs.Objects.new()
-
   @spec ls(Path.t(), list) :: {:ok, objects()} | ExIpfs.Api.error_response()
   def ls(path, opts \\ []),
     do:
-      ls!(path, opts)
+      post_query("/ls?arg=" <> path, query: opts)
+      |> ExIpfs.Objects.new()
       |> okify()
 
   @doc """

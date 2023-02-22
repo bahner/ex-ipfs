@@ -21,12 +21,22 @@ defmodule ExIpfs.UtilsTest do
     assert Utils.timestamp() > 1_677_020_518
   end
 
+  test "timestamp creates a iso8601 timestamp" do
+    assert is_binary(Utils.timestamp(:iso))
+    assert String.length(Utils.timestamp(:iso)) == 27
+    assert String.ends_with?(Utils.timestamp(:iso), "Z")
+  end
+
   test "creates timestamp that can be converted back to a datetime" do
     assert DateTime.from_unix(Utils.timestamp()) != {:error, "Invalid date"}
   end
 
   test "okify returns {:ok, data} when given {:ok, data}" do
-    assert Utils.okify("data") == {:ok, "data"}
+    assert Utils.okify({:ok, "data"}) == {:ok, "data"}
+  end
+
+  test "okicy passes on :ok tuple" do
+    assert Utils.okify({:ok, "data"}) == {:ok, "data"}
   end
 
   test "str2bool! returns true when given \"true\"" do
@@ -37,10 +47,15 @@ defmodule ExIpfs.UtilsTest do
     assert Utils.str2bool!("false") == false
   end
 
+
   test "filter_empties returns an empty list when given an empty list" do
     list_with_empty = ["", nil, [], {}, "data"]
     assert Utils.filter_empties([]) == []
     assert Utils.filter_empties(list_with_empty) == ["data"]
+  end
+
+  test "filter_empties passes on error data" do
+    assert Utils.filter_empties({:error, "data"}) == {:error, "data"}
   end
 
   test "unlist returns the data if it is not a list" do
@@ -50,6 +65,7 @@ defmodule ExIpfs.UtilsTest do
   test "unokify returns the data if it is not a tuple" do
     assert Utils.unokify({:ok, "data"}) == "data"
   end
+
 
   test "recase_headers returns a map with the headers in the correct case" do
     [recased_header | tail] = Utils.recase_headers(@headers)

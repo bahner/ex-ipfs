@@ -74,6 +74,7 @@ defmodule ExIpfs.Api do
       {:ok, %Tesla.Env{status: 500, body: body}} ->
         ApiError.handle_api_error(body)
 
+      # coveralls-ignore-start
       {:ok, %Tesla.Env{status: 400}} ->
         {:error, unokify(response)}
 
@@ -86,11 +87,15 @@ defmodule ExIpfs.Api do
       {:ok, %Tesla.Env{status: 405}} ->
         {:error, unokify(response)}
 
+      # coveralls-ignore-stop
+
       {:error, {Tesla.Middleware.JSON, :decode, json_error}} ->
         extract_data_from_json_error(json_error.data)
 
+      # coveralls-ignore-start
       {:error, :timeout} ->
         {:error, :timeout}
+        # coveralls-ignore-stop
     end
   end
 
@@ -105,7 +110,10 @@ defmodule ExIpfs.Api do
       # Hence the interpolation.
       |> Enum.map(fn line -> Jason.decode!("#{line}") end)
     rescue
-      _ -> error
+      # coveralls-ignore-start
+      _ ->
+        error
+        # coveralls-ignore-stop
     end
   end
 end

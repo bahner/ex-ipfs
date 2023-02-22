@@ -47,14 +47,14 @@ defmodule ExIpfs.Utils do
   Wraps the data in an elixir standard response tuple.
   {:ok, data} or {:error, data}
   """
-  @spec okify(:ok, any) :: {:ok, any}
-  def okify(:ok, data), do: {:ok, data}
-
-  @spec okify(:error, any) :: {:error, any}
-  def okify({:error, data}), do: {:error, data}
-
   @spec okify(any) :: {:ok, any} | {:error, any}
-  def okify(res), do: {:ok, res}
+  def okify(input) when is_tuple(input) do
+    case input do
+      {:ok, data} -> {:ok, data}
+      {:error, data} -> {:error, data}
+      _ -> {:ok, input}
+    end
+  end
 
   @doc """
   Unlists a list if it only contains one element.

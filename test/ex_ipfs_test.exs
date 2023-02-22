@@ -71,6 +71,16 @@ defmodule ExIpfsTest do
     assert stat.size == 14
   end
 
+  test "get as archive hello world" do
+    File.rm_rf!("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
+
+    {:ok, "Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z"} =
+      ExIpfs.get("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z", archive: true)
+
+    assert File.exists?("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
+    stat = File.stat!("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
+  end
+
   test "Get the ID of the local ipfs daemon" do
     {:ok, response} = ExIpfs.id()
 
@@ -98,5 +108,19 @@ defmodule ExIpfsTest do
     assert {:ok, added} = ExIpfs.add_fspath(dir)
     assert is_list(added)
     assert %ExIpfs.AddResult{} = List.first(added)
+  end
+
+  test "test bases returns a list of valid bases" do
+    {:ok, bases} = ExIpfs.Cid.bases()
+    assert is_list(bases)
+    assert %ExIpfs.MultibaseEncoding{} = List.first(bases)
+    assert find_base_code("base58btc") == 122
+    assert find_base_code("identity") == 0
+  end
+
+  defp find_base_code(name) do
+    {:ok, bases} = ExIpfs.Cid.bases()
+    base = Enum.find(bases, fn base -> base.name == name end)
+    base.code
   end
 end

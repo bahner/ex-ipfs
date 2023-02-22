@@ -36,20 +36,6 @@ defmodule ExIpfs.Multibase do
     |> post_multipart("/multibase/decode")
   end
 
-  @spec decode!(list) :: any | ExIpfs.Api.error_response()
-  def decode!(data) when is_list(data) do
-    Enum.map(data, &decode!/1)
-  end
-
-  @spec decode!(tuple) :: any | ExIpfs.Api.error_response()
-  def decode!({key, nil}), do: {key, nil}
-
-  @doc """
-  Decode a multibase encoded string.
-
-  ## Parameters
-    `data` - Data to decode.
-  """
   @spec decode(binary) :: {:ok, binary()} | ExIpfs.Api.error_response()
   def decode(data) when is_binary(data) do
     decode!(data)
@@ -62,22 +48,6 @@ defmodule ExIpfs.Multibase do
     |> okify()
   end
 
-  @spec decode(tuple) :: any | ExIpfs.Api.error_response()
-  def decode({key, nil}), do: {key, nil}
-
-  @doc """
-  Decode a multibase encoded file.
-
-  ## Parameters
-    `data` - File to decode.
-  """
-  @spec decode_file(Path.t()) :: {:ok, any} | ExIpfs.Api.error_response()
-  def decode_file(data) do
-    multipart_content(data)
-    |> post_multipart("/multibase/decode")
-    |> okify()
-  end
-
   @doc """
   Encode a string to a multibase encoded string.
 
@@ -87,14 +57,21 @@ defmodule ExIpfs.Multibase do
   ## Options
     `b` - Multibase encoding to use.
   """
-  @spec encode!(binary, list()) :: any | ExIpfs.Api.error_response()
-  def encode!(data, opts \\ []) do
+  @spec encode!(binary, list) :: binary() | ExIpfs.Api.error_response()
+  def encode!(data, opts) when is_binary(data) do
     multipart_content(data)
     |> post_multipart("/multibase/encode", query: opts)
   end
 
   @spec encode(binary, list) :: {:ok, binary()} | ExIpfs.Api.error_response()
-  def encode(data, opts \\ []) do
+  def encode(data, opts \\ [])
+
+  def encode(data, opts) when is_list(data) do
+    Enum.map(data, &encode!(&1, opts))
+    |> okify()
+  end
+
+  def encode(data, opts) when is_binary(data) do
     encode!(data, opts)
     |> okify()
   end

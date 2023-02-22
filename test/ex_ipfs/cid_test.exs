@@ -54,4 +54,22 @@ defmodule ExIpfs.CidTest do
     assert cid.formatted == "QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXmmE7DWjhx5N"
     assert cid.error_msg == ""
   end
+
+  test "bases returns a list of MultibaseEncoding" do
+    {:ok, bases} = Cid.bases()
+    assert is_list(bases)
+    assert %ExIpfs.MultibaseEncoding{} = List.first(bases)
+  end
+
+  test "codecs returns a list of MultiCodec" do
+    {:ok, codecs} = Cid.codecs()
+    assert is_list(codecs)
+    assert %ExIpfs.Multicodec{} = List.first(codecs)
+  end
+
+  test "hashess returns a list of Multihashes" do
+    {:ok, hashes} = Cid.hashes()
+    assert is_list(hashes)
+    assert %ExIpfs.Multihash{} = List.first(hashes)
+  end
 end

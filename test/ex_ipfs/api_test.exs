@@ -24,5 +24,15 @@ defmodule ExIpfs.ApiTest do
   end
 
   doctest ExIpfs.Api
-  ## TODO: add Unit testing
+
+  test "post_query returns 404" do
+    {:error, response} = Ipfs.Api.post_query("test")
+    assert %Tesla.Env{} = response
+    assert response.status == 404
+  end
+
+  test "post_query returns 400" do
+    {:error, response} = Ipfs.Api.post_query("/id?arg=foo")
+    assert %ExIpfs.ApiError{} = response
+  end
 end
