@@ -36,6 +36,7 @@ defmodule ExIpfs.Mixfile do
       {:jason, "~> 1.4"},
       {:nanoid, "~> 2.0"},
       {:recase, "~> 0.7.0"},
+      {:temp, "~> 0.4.7"},
       {:tesla, "~> 1.5"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},

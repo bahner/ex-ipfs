@@ -1,11 +1,11 @@
-defmodule ExIpfs.HashLinks do
+defmodule ExIpfs.ObjectLinks do
   @moduledoc false
 
   defstruct hash: nil, links: []
 
-  @spec new(map) :: ExIpfs.hash_links()
+  @spec new(map) :: ExIpfs.object_links()
   def new(opts) when is_map(opts) do
-    with links <- opts["Links"] |> Enum.map(&ExIpfs.Hash.new/1),
+    with links <- opts["Links"] |> Enum.map(&ExIpfs.Object.new/1),
          do: %__MODULE__{
            hash: opts["Hash"],
            links: links

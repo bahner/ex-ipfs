@@ -8,7 +8,7 @@ defmodule ExIpfs.MountResult do
     %__MODULE__{
       fuse_allow_other: data["FuseAllowOther"],
       ipfs: data["IPFS"],
-      ipns: data["IPNS"],
+      ipns: data["IPNS"]
     }
   end
 end

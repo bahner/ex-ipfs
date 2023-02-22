@@ -26,7 +26,7 @@ defmodule ExIpfs do
   @typedoc """
   A struct for a hash in the hash links list in Objects.
   """
-  @type hash :: %ExIpfs.Hash{
+  @type object :: %ExIpfs.Object{
           hash: binary(),
           name: binary(),
           size: non_neg_integer(),
@@ -37,9 +37,9 @@ defmodule ExIpfs do
   @typedoc """
   A struct for the links of hash in Objects.
   """
-  @type hash_links :: %ExIpfs.HashLinks{
+  @type object_links :: %ExIpfs.ObjectLinks{
           hash: binary(),
-          links: list(hash())
+          links: list(object())
         }
 
   @typedoc """
@@ -69,10 +69,10 @@ defmodule ExIpfs do
   Results when mounting IPFS in a FUSE filesystem.
   """
   @type mount_result :: %ExIpfs.MountResult{
-    fuse_allow_other: boolean(),
-    ipfs: binary(),
-    ipns: binary(),
-  }
+          fuse_allow_other: boolean(),
+          ipfs: binary(),
+          ipns: binary()
+        }
 
   @typedoc """
   ExIpfs.MultibaseCodec is a struct representing a hash. Seems much like a codec structure to me, but hey. Things may differ.
@@ -93,7 +93,7 @@ defmodule ExIpfs do
   @typedoc """
   A struct that represents the objects in IPFS.
   """
-  @type objects :: %ExIpfs.Objects{objects: list(hash_links())}
+  @type objects :: %ExIpfs.Objects{objects: list(object_links())}
 
   @typedoc """
   B58 encoded peer ID.
@@ -142,12 +142,28 @@ defmodule ExIpfs do
 
 
   """
-  @spec add_fspath(Path.t(), list) :: {:ok, add_result()} | ExIpfs.Api.error_response()
-  def add_fspath(fspath, opts \\ []),
+  @spec add_fspath!(Path.t(), list) :: add_result | ExIpfs.Api.error_response()
+  def add_fspath!(fspath, opts \\ []),
     do:
       multipart(fspath)
       |> post_multipart("/add", query: opts)
       |> ExIpfs.AddResult.new()
+
+  @doc """
+  Add a file to IPFS.
+
+  ## Parameters
+  * `fspath` - The file system path to the file or directory to be sent to the node.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
+
+
+  """
+  @spec add_fspath(Path.t(), list) :: {:ok, add_result()} | ExIpfs.Api.error_response()
+  def add_fspath(fspath, opts \\ []),
+    do:
+      add_fspath!(fspath, opts)
       |> okify()
 
   @doc """
@@ -247,12 +263,16 @@ defmodule ExIpfs do
   }
   ```
   """
-  # FIXME: return a struct
-  @spec ls(Path.t(), list) :: {:ok, objects()} | ExIpfs.Api.error_response()
-  def ls(path, opts \\ []),
+  @spec ls!(Path.t(), list) :: {:ok, objects()} | ExIpfs.Api.error_response()
+  def ls!(path, opts \\ []),
     do:
       post_query("/ls?arg=" <> path, query: opts)
       |> ExIpfs.Objects.new()
+
+  @spec ls(Path.t(), list) :: {:ok, objects()} | ExIpfs.Api.error_response()
+  def ls(path, opts \\ []),
+    do:
+      ls!(path, opts)
       |> okify()
 
   @doc """
@@ -273,24 +293,5 @@ defmodule ExIpfs do
     do:
       post_query("/id")
       |> ExIpfs.Id.new()
-      |> okify()
-
-  @doc """
-  Mount an IPFS read-only mountpoint.
-
-  ## Options
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-mount
-  ```
-  [
-    ipfs-path: <string>, # default: /ipfs
-    ipns-path: <string>, # default: /ipns
-  ]
-  ```
-  """
-  # FIXME veridy return type
-  @spec mount(list) :: {:ok, any} | ExIpfs.Api.error_response()
-  def mount(opts \\ []),
-    do:
-      post_query("/mount", query: opts)
       |> okify()
 end

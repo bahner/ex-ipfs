@@ -7,7 +7,10 @@ defmodule ExIpfsTest do
 
   NB! The tests are not mocked. They are designed to be run against a live IPFS node.
   """
+  alias ExUnit.DocTest
+
   use ExUnit.Case, async: false
+
   ExUnit.configure(seed: 0)
 
   test "resolve should return an error, when dnslink is missing" do
@@ -33,7 +36,7 @@ defmodule ExIpfsTest do
     {:ok, response} = ExIpfs.ls("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
 
     %ExIpfs.Objects{} = response
-    %ExIpfs.HashLinks{} = List.first(response.objects)
+    %ExIpfs.ObjectLinks{} = List.first(response.objects)
     object = List.first(response.objects)
     assert is_binary(object.hash)
     assert object.hash == "Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z"
@@ -81,25 +84,19 @@ defmodule ExIpfsTest do
   end
 
   test "add_fspath adds a file to a multipart body" do
-    {:ok, file} = ExIpfs.Utils.write_temp_file("data", "/tmp/add_fspath")
-    assert {:ok, multiparts} = ExIpfs.add_fspath("/tmp/foo")
-    assert is_list(multiparts)
-    assert %ExIpfs.AddResult{} = List.first(multiparts)
-    File.rm_rf("/tmp/add_fspath")
+    Temp.track!()
+    {_pid, file} = Temp.open!("add_fspath")
+    assert {:ok, %ExIpfs.AddResult{}} = ExIpfs.add_fspath(file)
+    assert {:ok, added} = ExIpfs.add_fspath(file)
+    assert added.name == Path.basename(file)
   end
 
-  test "mount should return a map with a path key" do
-    ipfs_mount_point = Utils.mktempdir("/tmp")
-    ipns_mount_point = Utils.mktempdir("/tmp")
-    mount_points = [
-      {"ipfs-path", ipfs_mount_point},
-      {"ipns-path", ipns_mount_point}
-    ]
-
-    {:ok, response} = ExIpfs.mount()
-
-    assert is_map(response)
-    assert is_binary(Map.fetch!(response, "IPFS"))
-    assert is_binary(Map.fetch!(response, "IPNS"))
+  test "add_fspath adds a directory to a multipart body" do
+    Temp.track!()
+    dir = Temp.mkdir!("add_fspath")
+    File.write(Path.join(dir, "add_fspath"), "some content")
+    assert {:ok, added} = ExIpfs.add_fspath(dir)
+    assert is_list(added)
+    assert %ExIpfs.AddResult{} = List.first(added)
   end
 end

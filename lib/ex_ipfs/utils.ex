@@ -68,39 +68,15 @@ defmodule ExIpfs.Utils do
   end
 
   @doc """
-  Creates a unique file in the given directory and returns the path.
-
-  Path defaults to "/tmp" if not given.
-  """
-  @spec write_temp_file(binary, Path.t()) :: {:ok, Path.t()}
-  def write_temp_file(data, dir \\ "/tmp") do
-    with dir <- mktempdir(dir),
-         name <- Nanoid.generate(),
-         file <- dir <> "/" <> name do
-      File.write!(file, data)
-      {:ok, file}
-    end
-  end
-
-  @doc """
-  Creates a unique directory in the given directory and returns the path.
-  The directory name will be prefixed with "ex-ipfs-". This way you can easily remove
-  all the temporary directories created by this function.
-  """
-  @spec mktempdir(Path.t()) :: binary
-  def mktempdir(parent_dir) do
-    dir_path = "#{parent_dir}/ex-ipfs-#{Nanoid.generate()}"
-    File.mkdir_p(dir_path)
-    dir_path
-  end
-
-  @doc """
   A simple function to extract the data from a tuple.
 
   ## Examples
 
   iex> ExIpfs.Utils.unokify({:ok, "data"})
   "data"
+  iex> ExIpfs.Utils.unokify({:error, "data"})
+  {:error, "data"}
+
   """
   @spec unokify(any) :: {:ok, any} | nil
   def unokify(data) do

@@ -1,9 +1,9 @@
-defmodule ExIpfs.HashTest do
+defmodule ExIpfs.ObjectTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
 
-  alias ExIpfs.Hash, as: Hash
+  alias ExIpfs.Object, as: Hash
 
   test "fails on missing data" do
     catch_error(%Hash{} = Hash.new())

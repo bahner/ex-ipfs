@@ -3,7 +3,10 @@ defmodule ExIpfs.UtilsTest do
 
   use ExUnit.Case, async: true
 
+  alias ExUnit.DocTest
   alias ExIpfs.Utils
+
+  DocTest.doctest(ExIpfs.Utils)
 
   @headers [
     {"content_type", "application/json"},
@@ -42,32 +45,6 @@ defmodule ExIpfs.UtilsTest do
 
   test "unlist returns the data if it is not a list" do
     assert Utils.unlist(["data"]) == "data"
-  end
-
-  test "write_temp_file writes a file to the temp directory" do
-    {:ok, file} = Utils.write_temp_file("data")
-    assert File.exists?(file)
-    assert File.rm(file)
-  end
-
-  test "write_temp_file fails to write to /root" do
-    assert catch_error(Utils.write_temp_file("data", "/tmpfoo"))
-  end
-
-  test "write_temp_file in a dir" do
-    id = Nanoid.generate()
-    {:ok, file} = Utils.write_temp_file("data", "/tmp/" <> id)
-    assert File.exists?(file)
-    assert File.dir?(Path.dirname(file))
-    assert File.dir?("/tmp/" <> id)
-    assert File.rm_rf("/tmp/" <> id)
-  end
-
-  test "mktempdir creates a directory in the temp directory" do
-    dir = Utils.mktempdir("/tmp/elixir-ipfs")
-    assert File.exists?(dir)
-    assert File.dir?(dir)
-    assert File.rm_rf(dir)
   end
 
   test "unokify returns the data if it is not a tuple" do
@@ -111,6 +88,14 @@ defmodule ExIpfs.UtilsTest do
   end
 
   test "multipart_add_files adds files to a multipart body" do
-    assert %Tesla.Multipart{} = Utils.multipart_add_files(Utils.multipart("data"), ["/tmp/foo"])
+    Temp.track!()
+    multipart = Utils.multipart("data")
+    {_pid, tmpfile} = Temp.open!("foo")
+
+    assert %Tesla.Multipart{} = Utils.multipart_add_files(multipart, tmpfile)
+
+    multipart = Utils.multipart_add_files(multipart, tmpfile)
+    assert is_list(multipart.parts)
+    assert %Tesla.Multipart.Part{} = List.last(multipart.parts)
   end
 end

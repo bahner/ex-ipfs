@@ -3,7 +3,6 @@ defmodule ExIpfs.Get do
   Get a file from IPFS and write it to a file or directory.
   """
   import ExIpfs.Api
-  import ExIpfs.Utils
   require Logger
 
   @enforce_keys [:path, :fspath, :content]
@@ -59,30 +58,31 @@ defmodule ExIpfs.Get do
     }
   end
 
-  # @spec handle_output(t) :: {:ok, fspath} | {:error, any}
   defp handle_output(get) do
-    {:ok, tmp} = write_temp_file(get.content)
+    Temp.track!()
+
+    {:ok, fd, tmp} = Temp.open("ex_handle_output")
+
+    IO.binwrite(fd, get.content)
 
     if get.archive do
       File.rename!(tmp, get.fspath)
       {:ok, get.fspath}
     else
       extract_elem_from_tar_to(tmp, get.name, get.fspath)
-      File.rm_rf!(tmp)
       {:ok, get.fspath}
     end
   end
 
-  # @spec extract_elem_from_tar_to(fspath, fspath, fspath, fspath) :: :ok | {:error, any}
   defp extract_elem_from_tar_to(file, elem, output, parent_tmp_dir \\ "/tmp") do
-    with cwd when is_bitstring(cwd) <- mktempdir(parent_tmp_dir),
+    Temp.track!()
+
+    with cwd when is_bitstring(cwd) <- Temp.path!(parent_tmp_dir),
          extract_result <- :erl_tar.extract(file, [{:cwd, ~c'#{cwd}'}]) do
       if :ok == extract_result do
         File.rename!("#{cwd}/#{elem}", output)
-        File.rm_rf!(cwd)
         :ok
       else
-        File.rm_rf!(cwd)
         extract_result
       end
     end

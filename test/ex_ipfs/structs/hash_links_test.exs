@@ -1,9 +1,9 @@
-defmodule ExIpfs.HashLinksTest do
+defmodule ExIpfs.ObjectLinksTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
 
-  alias ExIpfs.HashLinks, as: HashLinks
+  alias ExIpfs.ObjectLinks, as: ObjectLinks
 
   @data %{
     "Hash" => "hash",
@@ -19,20 +19,20 @@ defmodule ExIpfs.HashLinksTest do
   }
 
   test "fails on missing data" do
-    catch_error(%HashLinks{} = HashLinks.new())
+    catch_error(%ObjectLinks{} = ObjectLinks.new())
   end
 
   test "test creation of hash links" do
-    assert %HashLinks{} = HashLinks.new(@data)
-    e = HashLinks.new(@data)
+    assert %ObjectLinks{} = ObjectLinks.new(@data)
+    e = ObjectLinks.new(@data)
     assert e.hash == "hash"
 
     assert e.links == [
-             %ExIpfs.Hash{hash: "hash", name: "name", size: 0, target: "target", type: 0}
+             %ExIpfs.Object{hash: "hash", name: "name", size: 0, target: "target", type: 0}
            ]
   end
 
   test "pass on error data" do
-    assert {:error, @data} = HashLinks.new({:error, @data})
+    assert {:error, @data} = ObjectLinks.new({:error, @data})
   end
 end

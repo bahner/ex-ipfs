@@ -7,7 +7,7 @@ defmodule ExIpfs.Objects do
   def new(opts) when is_map(opts) do
     objects =
       opts["Objects"]
-      |> Enum.map(&ExIpfs.HashLinks.new/1)
+      |> Enum.map(&ExIpfs.ObjectLinks.new/1)
 
     %__MODULE__{
       objects: objects

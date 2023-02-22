@@ -1,9 +1,9 @@
-defmodule ExIpfs.Hash do
+defmodule ExIpfs.Object do
   @moduledoc false
   @enforce_keys [:hash, :name, :size, :type]
   defstruct hash: nil, name: nil, size: nil, target: "", type: nil
 
-  @spec new(map) :: ExIpfs.hash()
+  @spec new(map) :: ExIpfs.object()
   def new(opts) when is_map(opts) do
     %__MODULE__{
       hash: opts["Hash"],
