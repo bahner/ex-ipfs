@@ -3,7 +3,7 @@
 ![](https://ipfs.io/ipfs/QmQJ68PFMDdAsgCZvA1UVzzn18asVcf7HVvCDgpjiSCAse)
 
 [![Unit and integration tests](https://github.com/bahner/ex-ipfs/actions/workflows/testsuite.yaml/badge.svg)](https://github.com/bahner/ex-ipfs/actions/workflows/testsuite.yaml)
-[![Coverage Status](https://coveralls.io/repos/github/bahner/ex-ipfs/badge.svg?branch=develop)](https://coveralls.io/github/bahner/ex-ipfs?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/github/bahner/ex-ipfs/badge.svg)](https://coveralls.io/github/bahner/ex-ipfs)
 
 ## This library is still a work in progress
 
