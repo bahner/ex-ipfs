@@ -7,11 +7,7 @@
 
 ## This library is still a work in progress
 
-The reason for starting a new IPFS module is that none of the others seem to work at all.
-
-All commands added, but *not* verified. For your everyday IPFS operations the module should work by now. But no guarantees. :-) Please, please, please - file issues and feature requests.
-
-Version 0.2.0 is substantially better than version 0.1.0. I consider it of beta-quality.
+Core IPFS module for Elixir. This is the main package with the Api handler and most common types and structs. It suffices to for working with IPFS data as files, but IPLD will be a separate package.
 
 ## Install
 
@@ -19,7 +15,7 @@ Add ex_ipfs to your `mix.exs` dependencies:
 ```elixir
 def deps do
 [
-    {:ex_ipfs, "~> 0.2.0"},
+    {:ex_ipfs, "~> 0.0.1"},
 ]
 end
 ```
@@ -35,10 +31,10 @@ export EX_IPFS_API_URL="http://127.0.0.1:5001"
 ```
 
 ## Documentation
-The documentation is very unbalanced. I am feeling my way forward as to how much I should document here. Each command will receive a link to the official documentation at least.
+The documentation is a little unbalanced. I am feeling my way forward as to how much I should document here. Each command will receive a link to the official documentation at least.
 
 ## Usage
-Make sure ipfs is running. Then you can start using the module. If ipfs isn't running, you may try `ExIpfs.daemon()`.
+Make sure ipfs is running. This module does not provide handling of the IPFS daemon, but it does provide a docker container that matches the API.
 
 To use do:
 ```elixir
@@ -50,13 +46,14 @@ ExIpfs.Refs.refs("/ipns/ex.bahner.com")
 alias ExIpfs.Refs
 Refs.local()
 
-# Subscribe to a PubSub Channel and send the message to my inbox
-ExIpfs.PubSub.Channel.start_link(self(), "mychannel")
-flush
 ```
-Some commands, like channel and tail that streams data needs a pid to send messages to. 
 
-The basic commands are in the ExIpfs module. The grouped ipfs commands each have their separate module, eg. ExIpfs.Refs, ExIpfs.Blocks etc.
+### Docker
+Install docker-compose and run
+```
+docker-compose up
+```
+See below for how to build special versions. This docker enables the experimental features. Otherwise you can use any IPFS installation.
 
 ## Development
 

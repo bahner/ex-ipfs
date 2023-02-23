@@ -11,13 +11,6 @@ defmodule ExIpfs.Refs do
     :Err
   ]
 
-  @typedoc """
-    Type for the response of entries in the refs list.
-
-    ## Options
-    https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-refs
-  """
-
   @doc """
   Get a list of all local references.
 
