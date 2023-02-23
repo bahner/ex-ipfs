@@ -1,7 +1,6 @@
 defmodule ExIpfs.Get do
-  @moduledoc """
-  Get a file from IPFS and write it to a file or directory.
-  """
+  @moduledoc false
+
   import ExIpfs.Api
   require Logger
 
