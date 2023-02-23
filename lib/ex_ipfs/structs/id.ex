@@ -1,4 +1,4 @@
-defmodule ExIPFS.Id do
+defmodule ExIpfs.Id do
   @moduledoc false
 
   defstruct [
@@ -10,8 +10,8 @@ defmodule ExIPFS.Id do
     :protocols
   ]
 
-  @spec new(map) :: ExIPFS.id()
-  def new(map) do
+  @spec new(map) :: ExIpfs.id()
+  def new(map) when is_map(map) do
     %__MODULE__{
       addresses: map["Addresses"],
       agent_version: map["AgentVersion"],
@@ -21,4 +21,7 @@ defmodule ExIPFS.Id do
       protocols: map["Protocols"]
     }
   end
+
+  @spec new({:error, map}) :: {:error, map}
+  def new({:error, data}), do: {:error, data}
 end

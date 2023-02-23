@@ -1,14 +1,14 @@
-defmodule ExIPFS.ApiTest do
+defmodule ExIpfs.ApiTest do
   @moduledoc """
-  Test the ExIPFS API
+  Test the ExIpfs API
 
-  This test suite is designed to test the ExIPFS API. It is not designed to test the IPFS API
-  itself. It is designed to test the ExIPFS API wrapper. This test suite is designed to be run
+  This test suite is designed to test the ExIpfs API. It is not designed to test the IPFS API
+  itself. It is designed to test the ExIpfs API wrapper. This test suite is designed to be run
 
   NB! The tests are not mocked. They are designed to be run against a live IPFS node. This is
   """
   use ExUnit.Case, async: true
-  alias ExIPFS, as: Ipfs
+  alias ExIpfs, as: Ipfs
 
   test "get should return a binary when passed a valid key" do
     {:ok, bin} = Ipfs.get("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
@@ -23,6 +23,16 @@ defmodule ExIPFS.ApiTest do
     assert bin.code === 0
   end
 
-  doctest ExIPFS.Api
-  ## TODO: add Unit testing
+  doctest ExIpfs.Api
+
+  test "post_query returns 404" do
+    {:error, response} = Ipfs.Api.post_query("test")
+    assert %Tesla.Env{} = response
+    assert response.status == 404
+  end
+
+  test "post_query returns 400" do
+    {:error, response} = Ipfs.Api.post_query("/id?arg=foo")
+    assert %ExIpfs.ApiError{} = response
+  end
 end

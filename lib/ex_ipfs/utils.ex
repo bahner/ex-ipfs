@@ -1,4 +1,4 @@
-defmodule ExIPFS.Utils do
+defmodule ExIpfs.Utils do
   @moduledoc false
 
   require Logger
@@ -47,14 +47,14 @@ defmodule ExIPFS.Utils do
   Wraps the data in an elixir standard response tuple.
   {:ok, data} or {:error, data}
   """
-  @spec okify(:ok, any) :: {:ok, any}
-  def okify(:ok, data), do: {:ok, data}
-
-  @spec okify(:error, any) :: {:error, any}
-  def okify({:error, data}), do: {:error, data}
-
   @spec okify(any) :: {:ok, any} | {:error, any}
-  def okify(res), do: {:ok, res}
+  def okify(input) do
+    case input do
+      {:ok, data} -> {:ok, data}
+      {:error, data} -> {:error, data}
+      _ -> {:ok, input}
+    end
+  end
 
   @doc """
   Unlists a list if it only contains one element.
@@ -68,39 +68,15 @@ defmodule ExIPFS.Utils do
   end
 
   @doc """
-  Creates a unique file in the given directory and returns the path.
-
-  Path defaults to "/tmp" if not given.
-  """
-  @spec write_temp_file(binary, Path.t()) :: {:ok, Path.t()}
-  def write_temp_file(data, dir \\ "/tmp") do
-    with dir <- mktempdir(dir),
-         name <- Nanoid.generate(),
-         file <- dir <> "/" <> name do
-      File.write!(file, data)
-      {:ok, file}
-    end
-  end
-
-  @doc """
-  Creates a unique directory in the given directory and returns the path.
-  The directory name will be prefixed with "ex-". This way you can easily remove
-  all the temporary directories created by this function.
-  """
-  @spec mktempdir(Path.t()) :: binary
-  def mktempdir(parent_dir) do
-    dir_path = "#{parent_dir}/ex-#{Nanoid.generate()}"
-    File.mkdir_p(dir_path)
-    dir_path
-  end
-
-  @doc """
   A simple function to extract the data from a tuple.
 
   ## Examples
 
-  iex> ExIPFS.Utils.unokify({:ok, "data"})
+  iex> ExIpfs.Utils.unokify({:ok, "data"})
   "data"
+  iex> ExIpfs.Utils.unokify({:error, "data"})
+  {:error, "data"}
+
   """
   @spec unokify(any) :: {:ok, any} | nil
   def unokify(data) do
@@ -125,11 +101,11 @@ defmodule ExIPFS.Utils do
   ## Examples
 
   iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
-  iex> ExIPFS.Utils.recase_headers(headers, :kebab)
+  iex> ExIpfs.Utils.recase_headers(headers, :kebab)
   [{"content-type", "application/json"}, {"x-my-header", "value"}]
 
   iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
-  iex> ExIPFS.Utils.recase_headers(headers, :snake)
+  iex> ExIpfs.Utils.recase_headers(headers, :snake)
   [{"content_type", "application/json"}, {"x_my_header", "value"}]
 
   """
@@ -188,7 +164,7 @@ defmodule ExIPFS.Utils do
   in the directory recursively.
   """
   @spec multipart(Path.t()) :: Multipart.t()
-  def multipart(fspath) do
+  def multipart(fspath) when is_binary(fspath) do
     Multipart.new()
     |> multipart_add_files(fspath)
   end
@@ -198,7 +174,7 @@ defmodule ExIPFS.Utils do
   the IPFS API expects this.
   """
   @spec multipart_content(binary, binary) :: Multipart.t()
-  def multipart_content(data, type \\ "file") do
+  def multipart_content(data, type \\ "file") when is_binary(data) and is_binary(type) do
     Multipart.new()
     |> Multipart.add_file_content(data, type)
   end
@@ -242,73 +218,6 @@ defmodule ExIPFS.Utils do
       true ->
         []
     end
-  end
-
-  @doc """
-  Converts JSON key strings to snake cased atoms. If action fails, it just passes on the data.
-  """
-
-  # @spec snake_atomize(list) :: list
-  # def snake_atomize(list) when is_list(list) do
-  #   list
-  #   |> Enum.map(&snake_atomize/1)
-  # end
-
-  @spec snake_atomize({:error, any}) :: {:error, any}
-  def snake_atomize({:error, data}) do
-    Logger.error("Error: #{inspect(data)}")
-    {:error, data}
-  end
-
-  @spec snake_atomize(map) :: map
-  def snake_atomize(map) when is_map(map) do
-    map
-    |> Recase.Enumerable.convert_keys(&Recase.to_snake/1)
-    |> Recase.Enumerable.convert_keys(&String.to_existing_atom/1)
-  end
-
-  # Need to handle some empty cases.
-  @spec snake_atomize(nil) :: nil
-  def snake_atomize(nil) do
-    Logger.error("Error: nil")
-    nil
-  end
-
-  @spec snake_atomize(binary) :: binary
-  def snake_atomize("") do
-    Logger.error("Error: empty string")
-    ""
-  end
-
-  @spec spawn_client(
-          any,
-          binary
-          | [binary | maybe_improper_list(any, binary | []) | char]
-          | {:hackney_url, atom, atom, binary, :undefined | binary, nil | :undefined | binary,
-             binary, binary, charlist, :undefined | integer, binary, binary},
-          :infinity | integer,
-          any
-        ) :: {:error, any} | {:ok, any} | {:ok, integer, list} | {:ok, integer, list, any}
-  @doc """
-  Starts a stream client and returns a reference to the client.
-  ## Parameters
-    - pid: The pid to stream the data to.
-    - url: The url to stream the data from.
-    - timeout: The timeout for the stream. Defaults to infinity.
-    - query_options: A list of query options to add to the url.
-  """
-  def spawn_client(pid, url, timeout \\ :infinity, query_options \\ [])
-
-  def spawn_client(pid, url, :infinity, query_options) do
-    Logger.debug("Starting stream client for #{url} with query options #{inspect(query_options)}")
-    options = [stream_to: pid, async: true, recv_timeout: :infinity, query: query_options]
-    :hackney.request(:post, url, [], <<>>, options)
-  end
-
-  def spawn_client(pid, url, timeout, query_options) when is_integer(timeout) do
-    Logger.debug("Starting stream client for #{url} with query options #{inspect(query_options)}")
-    options = [stream_to: pid, async: true, recv_timeout: :infinity, query: query_options]
-    :hackney.request(:post, url, [], <<>>, options)
   end
 
   @doc """

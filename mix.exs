@@ -1,4 +1,4 @@
-defmodule ExIPFS.Mixfile do
+defmodule ExIpfs.Mixfile do
   @moduledoc false
   use Mix.Project
 
@@ -26,8 +26,7 @@ defmodule ExIPFS.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger, :tesla],
-      mod: {ExIPFS.Application, []}
+      extra_applications: [:logger, :tesla]
     ]
   end
 
@@ -37,6 +36,7 @@ defmodule ExIPFS.Mixfile do
       {:jason, "~> 1.4"},
       {:nanoid, "~> 2.0"},
       {:recase, "~> 0.7.0"},
+      {:temp, "~> 0.4.7"},
       {:tesla, "~> 1.5"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
