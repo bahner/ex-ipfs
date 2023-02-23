@@ -32,7 +32,6 @@ defmodule ExIpfs.Mixfile do
 
   defp deps do
     [
-      {:hackney, "~> 1.18"},
       {:jason, "~> 1.4"},
       {:nanoid, "~> 2.0"},
       {:recase, "~> 0.7.0"},
