@@ -69,6 +69,7 @@ defmodule ExIpfsTest do
     assert File.exists?("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
     stat = File.stat!("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
     assert stat.size == 14
+    File.rm_rf!("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
   end
 
   test "get as archive hello world" do
@@ -79,6 +80,7 @@ defmodule ExIpfsTest do
 
     assert File.exists?("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
     stat = File.stat!("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
+    File.rm_rf!("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
   end
 
   test "Get the ID of the local ipfs daemon" do
