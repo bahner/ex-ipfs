@@ -1,4 +1,4 @@
-defmodule ExIpfs.Ref do
+defmodule ExIpfs.RefsRef do
   @moduledoc false
 
   @enforce_keys [:ref]
@@ -7,7 +7,7 @@ defmodule ExIpfs.Ref do
     :err
   ]
 
-  @spec new(map) :: ExIpfs.ref()
+  @spec new(map) :: ExIpfs.Refs.t()
   def new(map) when is_map(map) do
     %__MODULE__{
       ref: map["Ref"],

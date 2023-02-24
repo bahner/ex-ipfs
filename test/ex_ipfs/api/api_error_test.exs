@@ -3,7 +3,7 @@ defmodule ExIpfs.ApiErrorTest do
 
   use ExUnit.Case, async: true
 
-  alias ExIpfs.ApiError, as: ApiError
+  alias ExIpfs.ApiError
 
   test "fails on missing data" do
     catch_error(%ApiError{} = ApiError.new())

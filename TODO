@@ -1,8 +1,4 @@
 TODO
 ===
 
-QA commands against current API.
-Overhaul documentation and make it more uniform.
-write lots of tests
-add commands! with exclamation mark, maybe
-reduce number of structs and replace with typespec
+Not one for all, but one ping server for each request, so that a parsed response can be sent to client.

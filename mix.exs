@@ -26,12 +26,14 @@ defmodule ExIpfs.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger, :tesla]
+      extra_applications: [:logger, :tesla],
+      mod: {ExIpfs.Application, []}
     ]
   end
 
   defp deps do
     [
+      {:hackney, "~> 1.18"},
       {:jason, "~> 1.4"},
       {:nanoid, "~> 2.0"},
       {:recase, "~> 0.7.0"},

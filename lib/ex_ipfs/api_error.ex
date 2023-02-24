@@ -1,8 +1,9 @@
 defmodule ExIpfs.ApiError do
   @moduledoc false
 
-  import ExIpfs.Utils
   require Logger
+
+  import ExIpfs.Utils, only: [errify: 1]
 
   defstruct code: nil, message: nil, type: nil
 

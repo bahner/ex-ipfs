@@ -1,12 +1,12 @@
 defmodule ExIpfs do
   @moduledoc """
-  ExIpfs is where the main commands of the IPFS API reside.
-  Alias this library and you can run the commands via Api.<cmd_name>.
+  Core commands and types for ExIpfs.
+  In order for this module to work you need to have an IPFS daemon running. See README.md for details.
 
         ## Examples
 
         iex> alias ExIpfs, as: Ipfs
-        iex> Ipfs.cat(QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
+        iex> Ipfs.cat("QmZ4tDuvesekSs4qM5ZBKpXiZGun7S2CYtEZRB3DYXkjGx")
         <<0, 19, 148, 0, ... >>
   """
 
@@ -91,14 +91,6 @@ defmodule ExIpfs do
   """
   @type peer_id() :: <<_::48, _::_*8>>
 
-  @typedoc """
-  A ref as reported from the refs group of commands
-  """
-  @type ref() :: %ExIpfs.Ref{
-          ref: binary(),
-          err: binary() | nil
-        }
-
   @doc """
   Resolve the value of names to IPFS.
 
@@ -142,7 +134,7 @@ defmodule ExIpfs do
   Add a file to IPFS.
 
   ## Parameters
-  * `fspath` - The file system path to the file or directory to be sent to the node.
+  * `data` - The data to be sent to the IPFS node.
 
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
@@ -157,6 +149,25 @@ defmodule ExIpfs do
       |> post_multipart("/add", query: opts)
       |> ExIpfs.AddResult.new()
       |> okify()
+
+  @doc """
+  Get the contents of a file from ipfs.
+  Easy way to get the contents of a text file for instance.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cat
+  ```
+  [
+    offset: <int64>,
+    length: <int64>,
+    progress: <bool>
+  ]
+  ```
+  """
+  # FIXME: return a struct
+  @spec cat(Path.t(), list) :: {:ok, any} | ExIpfs.Api.error_response()
+  def cat(path, opts \\ []),
+    do: post_query("/cat?arg=" <> path, query: opts)
 
   @doc """
   Get a file or directory from IPFS.
@@ -179,68 +190,27 @@ defmodule ExIpfs do
   """
   @spec get(Path.t(), list) :: {:ok, Path.t()} | ExIpfs.Api.error_response()
   defdelegate get(path, opts \\ []), to: ExIpfs.Get
+  # # # @doc """
+  # # # Get a file or directory from IPFS.
 
-  @doc """
-  Get the contents of a file from ipfs.
-  Easy way to get the contents of a text file for instance.
+  # # # *NB! Unsafe (relative symlinks) will raise an error.* This is a limitation of the underlying library.
 
-  ## Options
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cat
-  ```
-  [
-    offset: <int64>,
-    length: <int64>,
-    progress: <bool>
-  ]
-  ```
-  """
-  # FIXME: return a struct
-  @spec cat(Path.t(), list) :: {:ok, any} | ExIpfs.Api.error_response()
-  def cat(path, opts \\ []),
-    do: post_query("/cat?arg=" <> path, query: opts)
+  # # # ## Options
+  # # # https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-get
+  # # # ```
+  # # # [
+  # # #   output: <string>, # Output to file or directory name. Optional, default: <cid-ipfs-or-ipns-path>
+  # # #   archive: <bool>, # Output as a tarball. Optional, default: false
+  # # #   timeout: <int64>, # Timeout in seconds. Optional, default: 100
+  # # # ]
+  # # # ```
+  # # # Compression is not implemented.
 
-  @doc """
-  List the files in an IPFS object.
-
-  ## Options
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-ls
-  ```
-  [
-    headers: <bool>,
-    resolve-type: <bool>,
-    stream: <bool>,
-    size: <bool>,
-  ]
-  ```
-
-  ## Response
-  ```
-  {
-    Objects: [
-      {
-        "Name": "string",
-        "Hash": "string",
-        "Size": 0,
-        "Type": 0,
-        "Links": [
-          {
-            "Name": "string",
-            "Hash": "string",
-            "Size": 0,
-            "Type": 0
-          }
-        ]
-      }
-    ]
-  }
-  ```
-  """
-  @spec ls(Path.t(), list) :: {:ok, objects()} | ExIpfs.Api.error_response()
-  def ls(path, opts \\ []),
-    do:
-      post_query("/ls?arg=" <> path, query: opts)
-      |> ExIpfs.Objects.new()
-      |> okify()
+  # # # If you feel that you need more timeouts, you can use the `:timeout` option in the `opts` list.
+  # # # But the default should be enough for most cases. More likely your content isn't available....
+  # # # """
+  # # # @spec get(Path.t(), list) :: {:ok, Path.t()} | ExIpfs.Api.error_response()
+  # # # defdelegate get(path, opts \\ []), to: ExIpfs.Get
 
   @doc """
   Show the id of the IPFS node.
@@ -254,11 +224,42 @@ defmodule ExIpfs do
     - ProtocolVersion: the protocol version of the node.
     - Protocols: the protocols of the node.
   """
-  # FIXME: return a struct
   @spec id :: {:ok, id()} | ExIpfs.Api.error_response()
   def id,
     do:
       post_query("/id")
       |> ExIpfs.Id.new()
       |> okify()
+
+  @doc """
+  List directory contents for Unix filesystem objects in IPFS.
+
+  ## Options
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-ls
+  ```
+  [
+    headers: <bool>, # Print table headers (Hash, Size, Name). Optional, default: false
+    resolve-type: <bool>, # Resolve linked objects to find out their types. Optional, default: false
+    timeout: <int64>, # Timeout in seconds. Optional, default: 100
+  ]
+  ```
+
+  Streaming is not supported yet, but might be in there future. Post a feature request if you need it.
+  """
+  @spec ls(Path.t(), list) :: {:ok, objects()} | ExIpfs.Api.error_response()
+  def ls(path, opts \\ []),
+    do:
+      post_query("/ls?arg=" <> path, query: opts)
+      |> ExIpfs.Objects.new()
+      |> okify()
+
+  @doc """
+  Ping a peer in the IPFS network.
+
+  """
+  # @spec ping(peer_id(), list) :: {:ok, ping()} | ExIpfs.Api.error_response()
+  def ping(peer_id, pid \\ self(), timeout \\ :infinity, opts \\ []) do
+    request = ExIpfs.PingRequest.new(peer_id, pid, timeout, opts)
+    ExIpfs.Ping.new(request)
+  end
 end
