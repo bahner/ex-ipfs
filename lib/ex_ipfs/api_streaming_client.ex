@@ -5,10 +5,6 @@ defmodule ExIpfs.ApiStreamingClient do
 
   require Logger
 
-  # @api_url Application.get_env(:myspace_ipfs, :api_url)
-  # @default_topic Application.get_env(:myspace_ipfs, :default_topic)
-  @api_url Application.compile_env(:ex_ipfs, :api_url, "http://localhost:5001/api/v0")
-
   @spec new(
           pid,
           binary,
