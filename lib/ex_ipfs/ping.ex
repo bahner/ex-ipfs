@@ -27,6 +27,7 @@ defmodule ExIpfs.Ping do
   @spec start_link(request, list) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(request, opts) do
     Logger.info("Starting ping server for #{request.peer_id}")
+
     GenServer.start_link(
       __MODULE__,
       request,
@@ -42,8 +43,7 @@ defmodule ExIpfs.Ping do
 
   @spec new(request()) :: any
   def new(request) do
-
-    start_link(request, [name: String.to_atom(request.request_id)])
+    start_link(request, name: String.to_atom(request.request_id))
   end
 
   def handle_cast({:new_request, request}, state) do
@@ -92,6 +92,6 @@ defmodule ExIpfs.Ping do
 
     {:noreply, state}
   end
-  # coveralls-ignore-stop
 
+  # coveralls-ignore-stop
 end
