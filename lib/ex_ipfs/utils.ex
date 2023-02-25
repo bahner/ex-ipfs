@@ -5,11 +5,12 @@ defmodule ExIpfs.Utils do
   alias Tesla.Multipart
 
   @doc """
-  Converts a string to a boolean or integer or vise versa
+  Returns the data in an {:error, tuple}
   """
-  @spec str2bool!(<<_::32, _::_*8>>) :: boolean
-  def str2bool!("true"), do: true
-  def str2bool!("false"), do: false
+  @spec errify(any) :: {:error, any}
+  def errify(data) do
+    {:error, data}
+  end
 
   @doc """
   Filter out any empty values from a list.
@@ -22,98 +23,6 @@ defmodule ExIpfs.Utils do
       {:error, data} -> {:error, data}
       [] -> []
       _ -> Enum.reject(data, fn x -> Enum.member?(["", nil, [], {}], x) end)
-    end
-  end
-
-  @spec timestamp :: integer
-  @doc """
-  Returns the current timestamp in unix time.
-  """
-  def timestamp() do
-    DateTime.utc_now()
-    |> DateTime.to_unix()
-  end
-
-  @doc """
-  Returns the current timestamp in iso8601 format.
-  """
-  @spec timestamp(:iso) :: binary
-  def timestamp(:iso) do
-    DateTime.utc_now()
-    |> DateTime.to_iso8601()
-  end
-
-  @doc """
-  Wraps the data in an elixir standard response tuple.
-  {:ok, data} or {:error, data}
-  """
-  @spec okify(any) :: {:ok, any} | {:error, any}
-  def okify(input) do
-    case input do
-      {:ok, data} -> {:ok, data}
-      {:error, data} -> {:error, data}
-      _ -> {:ok, input}
-    end
-  end
-
-  @doc """
-  Unlists a list if it only contains one element.
-  """
-  @spec unlist(list) :: any
-  def unlist(list) do
-    case list do
-      [x] -> x
-      _ -> list
-    end
-  end
-
-  @doc """
-  A simple function to extract the data from a tuple.
-
-  ## Examples
-
-  iex> ExIpfs.Utils.unokify({:ok, "data"})
-  "data"
-  iex> ExIpfs.Utils.unokify({:error, "data"})
-  {:error, "data"}
-
-  """
-  @spec unokify(any) :: {:ok, any} | nil
-  def unokify(data) do
-    case data do
-      {:ok, data} -> data
-      _ -> data
-    end
-  end
-
-  @doc """
-  Recase the headers to snake or kebab case. The headers from tesla is a list of tuples.
-  So some sugar to make it easier to work with.
-  The default is snake case.
-
-  The use for this is to make it easier to pattern match on headers.
-
-  ## Parameters
-
-  - headers: A list of tuples. The first element is the header name, the second is the value.
-  - format: The format to convert the headers to. Either :snake or :kebab.
-
-  ## Examples
-
-  iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
-  iex> ExIpfs.Utils.recase_headers(headers, :kebab)
-  [{"content-type", "application/json"}, {"x-my-header", "value"}]
-
-  iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
-  iex> ExIpfs.Utils.recase_headers(headers, :snake)
-  [{"content_type", "application/json"}, {"x_my_header", "value"}]
-
-  """
-  @spec recase_headers(list, :kebab | :snake) :: list
-  def recase_headers(headers, format \\ :snake) when is_list(headers) do
-    case format do
-      :snake -> Enum.map(headers, fn {k, v} -> {Recase.to_snake(k), v} end)
-      :kebab -> Enum.map(headers, fn {k, v} -> {Recase.to_kebab(k), v} end)
     end
   end
 
@@ -140,6 +49,33 @@ defmodule ExIpfs.Utils do
     |> Map.get(key)
   end
 
+  # Thanks to some forum :-)
+  defp ls_r(path) do
+    cond do
+      File.regular?(path) ->
+        [path]
+
+      File.dir?(path) ->
+        File.ls!(path)
+        |> Enum.map(&Path.join(path, &1))
+        |> Enum.map(&ls_r/1)
+        |> Enum.concat()
+
+      true ->
+        []
+    end
+  end
+
+  @doc """
+  Creates a multipart request from a file path. This takes care of adding all the files
+  in the directory recursively.
+  """
+  @spec multipart(Path.t()) :: Multipart.t()
+  def multipart(fspath) when is_binary(fspath) do
+    Multipart.new()
+    |> multipart_add_files(fspath)
+  end
+
   @doc """
   Adds a file to the multipart request.
   This function is written explicitly to remove the base directory from the
@@ -157,16 +93,6 @@ defmodule ExIpfs.Utils do
       filename: relative_filename,
       detect_content_type: true
     )
-  end
-
-  @doc """
-  Creates a multipart request from a file path. This takes care of adding all the files
-  in the directory recursively.
-  """
-  @spec multipart(Path.t()) :: Multipart.t()
-  def multipart(fspath) when is_binary(fspath) do
-    Multipart.new()
-    |> multipart_add_files(fspath)
   end
 
   @doc """
@@ -203,28 +129,116 @@ defmodule ExIpfs.Utils do
     end
   end
 
-  # Thanks to some forum :-)
-  defp ls_r(path) do
-    cond do
-      File.regular?(path) ->
-        [path]
-
-      File.dir?(path) ->
-        File.ls!(path)
-        |> Enum.map(&Path.join(path, &1))
-        |> Enum.map(&ls_r/1)
-        |> Enum.concat()
-
-      true ->
-        []
+  @doc """
+  Wraps the data in an elixir standard response tuple.
+  {:ok, data} or {:error, data}
+  """
+  @spec okify(any) :: {:ok, any} | {:error, any}
+  def okify(input) do
+    case input do
+      {:ok, data} -> {:ok, data}
+      {:error, data} -> {:error, data}
+      _ -> {:ok, input}
     end
   end
 
   @doc """
-  Returns the data in an {:error, tuple}
+  Returns the current timestamp in iso8601 format.
   """
-  @spec errify(any) :: {:error, any}
-  def errify(data) do
-    {:error, data}
+  @spec timestamp(:iso) :: binary
+  def timestamp(:iso) do
+    DateTime.utc_now()
+    |> DateTime.to_iso8601()
+  end
+
+  @doc """
+  Recase the headers to snake or kebab case. The headers from tesla is a list of tuples.
+  So some sugar to make it easier to work with.
+  The default is snake case.
+
+  The use for this is to make it easier to pattern match on headers.
+
+  ## Parameters
+
+  - headers: A list of tuples. The first element is the header name, the second is the value.
+  - format: The format to convert the headers to. Either :snake or :kebab.
+
+  ## Examples
+
+  iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
+  iex> ExIpfs.Utils.recase_headers(headers, :kebab)
+  [{"content-type", "application/json"}, {"x-my-header", "value"}]
+
+  iex> headers = [{"Content-Type", "application/json"}, {"X-My-Header", "value"}]
+  iex> ExIpfs.Utils.recase_headers(headers, :snake)
+  [{"content_type", "application/json"}, {"x_my_header", "value"}]
+
+  """
+  @spec recase_headers(list, :kebab | :snake) :: list
+  def recase_headers(headers, format \\ :snake) when is_list(headers) do
+    case format do
+      :snake -> Enum.map(headers, fn {k, v} -> {Recase.to_snake(k), v} end)
+      :kebab -> Enum.map(headers, fn {k, v} -> {Recase.to_kebab(k), v} end)
+    end
+  end
+
+  @doc """
+  Converts a string to a boolean or integer or vise versa
+  """
+  @spec str2bool!(<<_::32, _::_*8>>) :: boolean
+  def str2bool!("true"), do: true
+  def str2bool!("false"), do: false
+
+  @doc """
+  Converts a struct to a map to a JSON string.
+
+  There is no obvious reverse function for this. The reason is that the struct
+  can contain functions. So the reverse function would have to be aware of the
+  struct and remove the functions. This is not possible in a generic way.
+  """
+  @spec struct2json!(struct) :: binary
+  def struct2json!(struct) do
+    struct
+    |> Map.from_struct()
+    |> Jason.encode!()
+  end
+
+  @spec timestamp :: integer
+  @doc """
+  Returns the current timestamp in unix time.
+  """
+  def timestamp() do
+    DateTime.utc_now()
+    |> DateTime.to_unix()
+  end
+
+  @doc """
+  Unlists a list if it only contains one element.
+  """
+  @spec unlist(list) :: any
+  def unlist(list) do
+    case list do
+      [x] -> x
+      _ -> list
+    end
+  end
+
+  @doc """
+  A simple function to extract the data from a tuple.
+
+  ## Examples
+
+  iex> ExIpfs.Utils.unokify({:ok, "data"})
+  "data"
+  iex> ExIpfs.Utils.unokify({:error, "data"})
+  {:error, "data"}
+
+  """
+  @spec unokify(any) :: {:ok, any} | nil
+  def unokify(data) do
+    case data do
+      {:ok, data} -> data
+      _ -> data
+    end
   end
 end

@@ -116,4 +116,9 @@ defmodule ExIpfs.UtilsTest do
     assert is_list(multipart.parts)
     assert %Tesla.Multipart.Part{} = List.last(multipart.parts)
   end
+
+  test "struct2json! returns a json string" do
+    {:ok, struct} = ExIpfs.id()
+    assert is_binary(Utils.struct2json!(struct))
+  end
 end
