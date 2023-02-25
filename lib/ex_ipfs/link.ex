@@ -8,7 +8,10 @@ defmodule ExIpfs.Link do
 
   @spec new(map | binary) :: ExIpfs.link()
   def new(cid) when is_map(cid) do
-    %__MODULE__{/: cid["/"]}
+    case cid do
+      %{/: data} -> %__MODULE__{/: data}
+      %{"/" => data} -> %__MODULE__{/: data}
+    end
   end
 
   def new(cid) when is_binary(cid) do
