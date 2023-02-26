@@ -257,9 +257,13 @@ defmodule ExIpfs do
   Ping a peer in the IPFS network.
 
   """
+  # coveralls-ignore-start
+  # We don't have anything to ping. So we can't test this.
   @spec ping(peer_id, pid, atom | integer, list) :: :ignore | {:error, any} | {:ok, pid}
   def ping(peer_id, pid \\ self(), timeout \\ :infinity, opts \\ []) do
     request = ExIpfs.PingRequest.new(peer_id, pid, timeout, opts)
     ExIpfs.Ping.new(request)
   end
+
+  # coveralls-ignore-stop
 end

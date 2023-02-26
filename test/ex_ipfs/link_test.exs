@@ -5,17 +5,27 @@ defmodule ExIpfs.LinkTest do
 
   alias ExIpfs.Link
 
-  @data %{
+  @data_binary %{
     "/" => "Qmname"
+  }
+
+  @data_atom %{
+    /: "Qmname"
   }
 
   test "fails on missing data" do
     catch_error(%Link{} = Link.new())
   end
 
-  test "test creation of link" do
-    assert %Link{} = Link.new(@data)
-    e = Link.new(@data)
+  test "test creation binary of link" do
+    assert %Link{} = Link.new(@data_binary)
+    e = Link.new(@data_binary)
+    assert e./ == "Qmname"
+  end
+
+  test "test creation arom of link" do
+    assert %Link{} = Link.new(@data_atom)
+    e = Link.new(@data_atom)
     assert e./ == "Qmname"
   end
 
