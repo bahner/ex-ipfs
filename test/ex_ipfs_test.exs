@@ -35,9 +35,8 @@ defmodule ExIpfsTest do
   test "ls should return a list of objects" do
     {:ok, response} = ExIpfs.ls("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
 
-    %ExIpfs.Objects{} = response
-    %ExIpfs.ObjectLinks{} = List.first(response.objects)
-    object = List.first(response.objects)
+    %ExIpfs.Object{} = List.first(response)
+    object = List.first(response)
     assert is_binary(object.hash)
     assert object.hash == "Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z"
     assert is_list(object.links)

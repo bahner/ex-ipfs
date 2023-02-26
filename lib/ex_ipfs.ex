@@ -10,6 +10,8 @@ defmodule ExIpfs do
         <<0, 19, 148, 0, ... >>
   """
 
+  require Logger
+
   import ExIpfs.Api
   import ExIpfs.Utils
 
@@ -63,28 +65,31 @@ defmodule ExIpfs do
         }
 
   @typedoc """
-  A struct for a hash in the hash links list in Objects.
+  An object in IPFS with a hash and links to other objects.
   """
   @type object :: %ExIpfs.Object{
           hash: binary(),
-          name: binary(),
-          size: non_neg_integer(),
-          target: binary(),
-          type: non_neg_integer()
-        }
-
-  @typedoc """
-  A struct that represents the objects in IPFS.
-  """
-  @type objects :: %ExIpfs.Objects{objects: list(object_links())}
-
-  @typedoc """
-  A struct for the links of hash in Objects.
-  """
-  @type object_links :: %ExIpfs.ObjectLinks{
-          hash: binary(),
           links: list(object())
         }
+
+  # @typedoc """
+  # A struct for a hash in the hash links list in Objects.
+  # """
+  # @type object :: %ExIpfs.Object{
+  #         hash: binary(),
+  #         name: binary(),
+  #         size: non_neg_integer(),
+  #         target: binary(),
+  #         type: non_neg_integer()
+  #       }
+
+  # @typedoc """
+  # A struct for the links of hash in Objects.
+  # """
+  # @type object_links :: %ExIpfs.ObjectLinks{
+  #         hash: binary(),
+  #         links: list(object())
+  #       }
 
   @typedoc """
   B58 encoded peer ID.
@@ -246,12 +251,15 @@ defmodule ExIpfs do
 
   Streaming is not supported yet, but might be in there future. Post a feature request if you need it.
   """
-  @spec ls(Path.t(), list) :: {:ok, objects()} | ExIpfs.Api.error_response()
-  def ls(path, opts \\ []),
-    do:
-      post_query("/ls?arg=" <> path, query: opts)
-      |> ExIpfs.Objects.new()
-      |> okify()
+  @spec ls(Path.t(), list) :: {:ok, list(object())} | ExIpfs.Api.error_response()
+  def ls(path, opts \\ []) do
+    with %{"Objects" => objects} <- post_query("/ls?arg=" <> path, query: opts) do
+      {:ok, Enum.map(objects, &ExIpfs.Object.new(&1))}
+    end
+  end
+
+  # |> ExIpfs.Objects.new()
+  # |> okify()
 
   @doc """
   Ping a peer in the IPFS network.
