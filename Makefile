@@ -7,19 +7,16 @@ export KUBO_VERSION ?= v0.18.1
 export DOCKER_USER ?= bahner
 export DOCKER_IMAGE ?= $(DOCKER_USER)/kubo:$(KUBO_VERSION)
 
-all: deps format compile
+all: deps format compile test
 
 commited: templates
 	./.check.uncommited
 
-compile: deps
+compile:
 	mix compile
 
 deps:
 	mix deps.get
-
-dialyzer:
-	mix dialyzer
 
 docker:
 	mkdir -p .docker/ipfs_staging .docker_data/ipfs_data
@@ -51,18 +48,18 @@ push: all commited test
 publish-image: image
 	docker push $(DOCKER_IMAGE)
 
-release: tag
+release: test
+	git tag $(VERSION)
 	mix hex.publish
 	git push --tags
-
-tag:
-	git tag $(VERSION)
 
 templates:
 	envsubst < templates/Dockerfile > Dockerfile
 	envsubst < templates/testsuite.yaml > .github/workflows/testsuite.yaml
 
-test: dialyzer
+test:
+	mix format --check-formatted
+	mix dialyzer
 	mix test
 
 distclean: clean
