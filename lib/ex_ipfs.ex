@@ -257,7 +257,7 @@ defmodule ExIpfs do
   Ping a peer in the IPFS network.
 
   """
-  # @spec ping(peer_id(), list) :: {:ok, ping()} | ExIpfs.Api.error_response()
+  @spec ping(peer_id, pid, atom | integer, list) :: :ignore | {:error, any} | {:ok, pid}
   def ping(peer_id, pid \\ self(), timeout \\ :infinity, opts \\ []) do
     request = ExIpfs.PingRequest.new(peer_id, pid, timeout, opts)
     ExIpfs.Ping.new(request)
