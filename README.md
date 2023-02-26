@@ -5,8 +5,6 @@
 [![Unit and integration tests](https://github.com/bahner/ex-ipfs/actions/workflows/testsuite.yaml/badge.svg)](https://github.com/bahner/ex-ipfs/actions/workflows/testsuite.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/bahner/ex-ipfs/badge.svg)](https://coveralls.io/github/bahner/ex-ipfs)
 
-## This library is still a work in progress
-
 Core IPFS module for Elixir. This is the main package with the Api handler and most common types and structs. It suffices to for working with IPFS data as files, but IPLD will be a separate package.
 
 If you are unfamiliar with how IPFS works, it uses a daemon that has a RPC API exposed on localhost:5001. Working with IPFS is then done by interacting with the API. Some commands are executed and interpreted directly on the command line by the daemon. One such function is `key export`. But that is not a problem in practicality. (Key handling is part of the [ex_ipns](https://hex.pm/packages/ex_ipns) package.) This modules acts as a hybrid of those. The intention is to make it easy to work with IPFS in your Elixir applications.
@@ -24,20 +22,6 @@ More modules are under way. The following are implemented:
 
 * [IPLD](https://hex.pm/packages/ex_ipld)
 * [IPNS](https://hex.pm/packages/ex_ipns)
-
-## Install
-
-Add ex_ipfs to your `mix.exs` dependencies:
-
-```elixir
-def deps do
-[
-    {:ex_ipfs, "~> 0.1.1"},
-]
-end
-```
-
-and run `make mix` to install the dependencies.
 
 ## Configuration
 
