@@ -9,6 +9,17 @@
 
 Core IPFS module for Elixir. This is the main package with the Api handler and most common types and structs. It suffices to for working with IPFS data as files, but IPLD will be a separate package.
 
+If you are unfamiliar with how IPFS works, it uses a daemon that has a RPC API exposed on localhost:5001. Working with IPFS is then done by interacting with the API. Some commands are executed and interpreted directly on the command line by the daemon. One such function is `key export`. But that is not a problem in practicality. (Key handling is part of the [ex_ipns](https://hex.pm/packages/ex_ipns) package.) This modules acts as a hybrid of those. The intention is to make it easy to work with IPFS in your Elixir applications.
+
+Feature requests are welcome. Features present in this module are:
+
+* API requests and error handling
+* CID conversions
+* Multibase formatting
+* Multibase codecs and encodings
+* Ping swarm peers
+* Publishing and retreiving immutable data as files in IPFS
+
 More modules are under way. The following are implemented:
 
 * [IPLD](https://hex.pm/packages/ex_ipld)
@@ -30,11 +41,15 @@ and run `make mix` to install the dependencies.
 
 ## Configuration
 
-The default should brobably be OK, but you may override the default with the environment variables.
+The default should be OK, but you may override the API with the following environment variables.
 
 ```bash
 export EX_IPFS_API_URL="http://127.0.0.1:5001"
 ```
+
+### Logger
+
+ExIPfs uses Logger and is quite noisy when you are developing. If you set your log level below `debug` you should be OK.
 
 ## Documentation
 
@@ -47,13 +62,9 @@ Make sure ipfs is running. This module does not provide handling of the IPFS dae
 To use do:
 
 ```elixir
-alias ExIpfs, as: IPFS
-IPFS.id()
-
-ExIpfs.Refs.refs("/ipns/ex.bahner.com")
-
-alias ExIpfs.Refs
-Refs.local()
+iex(1)> ExIpfs.cat("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
+"Hello World!\r\n"
+iex(2)>
 
 ```
 
@@ -85,3 +96,4 @@ KUBO_VERSION=v0.19.0rc2 DOCKER_USER=yourdockeraccount make publish-image # The s
 # or
 KUBO_VERSION=0.17.0 DOCKER_IMAGE=http://my.local.registry:5000/testing-buils/ipfs:testlabl make publish-image
 ```
+
