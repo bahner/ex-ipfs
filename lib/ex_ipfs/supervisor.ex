@@ -1,7 +1,6 @@
 defmodule ExIpfs.Supervisor do
-  @moduledoc """
-  The MyspaceObject.Supervisor is a supervisor for a colletion of MyspaceObject.
-  """
+  @moduledoc false
+
   use Supervisor
   require Logger
 

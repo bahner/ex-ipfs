@@ -1,7 +1,5 @@
 defmodule ExIpfs.Application do
-  @moduledoc """
-  The MyspaceObject.Application is the main application for MyspaceObject.
-  """
+  @moduledoc false
   use Application
 
   @spec start(any, any) :: {:error, any} | {:ok, pid}
