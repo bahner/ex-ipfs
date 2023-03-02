@@ -20,7 +20,10 @@ defmodule ExIpfs.ApiStreamingClient do
   - query_options: A list of query options to add to the url.
   """
   def new(pid, url, timeout \\ :infinity, query_options \\ []) do
-    Logger.debug("Starting stream client for #{url} with query options #{inspect(query_options)}")
+    Logger.debug(
+      "Starting IPFS API stream client for #{url} with query options #{inspect(query_options)}"
+    )
+
     options = [stream_to: pid, async: true, recv_timeout: timeout, query: query_options]
     :hackney.request(:post, url, [], <<>>, options)
   end
