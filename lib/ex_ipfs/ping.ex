@@ -20,7 +20,7 @@ defmodule ExIpfs.Ping do
           text: binary
         }
 
-  @api_url Application.compile_env(:ex_ipfs, :api_url, "http://localhost:5001/api/v0")
+  @api_url Application.compile_env(:ex_ipfs, :api_url, "http://127.0.0.1:5001/api/v0")
 
   # No good way to test this, so we'll just ignore it for coverage
   # coveralls-ignore-start

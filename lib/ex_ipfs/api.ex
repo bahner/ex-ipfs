@@ -7,7 +7,7 @@ defmodule ExIpfs.Api do
   require Logger
   import ExIpfs.Utils, only: [unokify: 1, filter_empties: 1]
 
-  @api_url Application.compile_env(:ex_ipfs, :api_url, "http://localhost:5001/api/v0/")
+  @api_url Application.compile_env(:ex_ipfs, :api_url, "http://127.0.0.1:5001/api/v0/")
 
   # Types
 
