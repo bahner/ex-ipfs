@@ -7,6 +7,7 @@ defmodule ExIpfsPubsub.Message do
   defstruct from: nil, data: nil, seqno: nil, topic_ids: nil
 
   # This is the raw format used in IPFS. Not really so interesting.
+  # But users can request it.
   @type t :: %__MODULE__{
           from: binary,
           data: binary,

@@ -16,16 +16,17 @@ defmodule ExIpfsPubsub.Supervisor do
 
   @spec add_child(Supervisor.child_spec()) :: Supervisor.on_start()
   def add_child(child_spec) do
-    Supervisor.start_child(__MODULE__, child_spec)
+    Supervisor.start_child(ExIpfsPubsub.Sub, child_spec)
   end
 
-  @spec new!(ExIpfsPubsub.Topic.t(), keyword()) :: Supervisor.child_spec()
-  def new!(Topic, options \\ []) when is_struct(Topic) do
-    Topic = ExIpfsPubsub.Topic.new!(Topic.target(), Topic.topic())
-
-    child_spec(%{
-      id: Topic.topic(),
-      start: {ExIpfsPubsub.Topic, :start_link, Topic, options}
-    })
+  @spec new_sub_child(atom | %{:topic => any, optional(any) => any}) :: %{
+          id: any,
+          start: {ExIpfsPubsub.Sub, :start_link, [[...] | {any, any}, ...]}
+        }
+  def new_sub_child(sub) do
+    %{
+      id: sub.topic,
+      start: {ExIpfsPubsub.Sub, :start_link, [[sub], name: sub.topic]}
+    }
   end
 end

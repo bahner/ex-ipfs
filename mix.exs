@@ -26,8 +26,8 @@ defmodule ExIpfsPubsub.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger, :tesla],
-      mod: {ExIpfs.Application, []}
+      extra_applications: [:logger],
+      mod: {ExIpfsPubsub.Application, []}
     ]
   end
 

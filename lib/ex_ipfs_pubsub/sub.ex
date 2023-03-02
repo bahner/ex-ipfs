@@ -1,10 +1,12 @@
-defmodule ExIpfsPubsub.Topic do
+defmodule ExIpfsPubsub.Sub do
   @moduledoc false
+
   use GenServer, restart: :transient
+
   require Logger
-  import ExIpfs.Utils
+  alias ExIpfs.ApiStreamingClient
   alias ExIpfs.Multibase
-  alias ExIpfsPubsub.TopicMessage, as: Message
+  alias ExIpfsPubsub.Message
 
   @enforce_keys [:topic, :target]
   defstruct base64url_topic: nil, client: nil, raw: false, target: nil, topic: nil
@@ -17,31 +19,42 @@ defmodule ExIpfsPubsub.Topic do
           topic: binary
         }
 
-  @api_url Application.compile_env(:myspace_ipfs, :api_url, "http://localhost:5001/api/v0")
+  @api_url Application.compile_env(:ex_ipfs, :api_url, "http://localhost:5001/api/v0")
 
-  @spec start_link(t(), list) :: :ignore | {:error, any} | {:ok, pid}
-  def start_link(Topic, opts \\ []) do
+  @spec start_link(t, list) :: :ignore | {:error, any} | {:ok, pid}
+  def start_link(sub, opts \\ []) do
     GenServer.start_link(
       __MODULE__,
-      Topic,
+      sub,
       opts
     )
   end
 
-  @spec init(t()) :: {:ok, t()}
-  def init(Topic) do
-    Logger.debug("Initializing Topic #{inspect(Topic)}")
-    url = "#{@api_url}/Pubsub/sub?arg=#{Topic.base64url_topic()}"
-    Logger.debug("Subscribing to #{url}")
-    {:ok, ref} = spawn_client(self(), url)
-    Logger.debug("Subscribed to #{url} with #{inspect(ref)}")
-    {:ok, %{Topic | client: ref}}
+  @spec init(map) :: {:ok, map}
+  def init(state) when is_map(state) do
+    handle_cast({:new_sub, state}, state)
+    {:ok, state}
+  end
+
+  def handle_cast({:new_sub, sub}, state) do
+    Logger.info("Starting subscription for #{sub.topic}")
+
+    url = "#{@api_url}/Pubsub/sub?arg=#{sub.base64url_topic}"
+
+    ApiStreamingClient.new(
+      self(),
+      url,
+      sub.timeout,
+      sub.query_options
+    )
+
+    {:noreply, state}
   end
 
   @spec new!(pid | atom, binary, boolean) :: t()
   def new!(target, topic, raw \\ false) do
     %__MODULE__{
-      base64url_topic: Multibase.encode!(topic),
+      base64url_topic: Multibase.encode(topic, :base64url),
       client: nil,
       raw: raw,
       target: target,
@@ -89,6 +102,6 @@ defmodule ExIpfsPubsub.Topic do
   # This is probably where we want to decrypt the message
   defp parse_Pubsub_message(data) do
     message = Message.new(data)
-    {:myspace_ipfs_Pubsub_Topic_message, Multibase.decode!(message.data)}
+    {:myspace_ipfs_Pubsub_sub_message, Multibase.decode!(message.data)}
   end
 end

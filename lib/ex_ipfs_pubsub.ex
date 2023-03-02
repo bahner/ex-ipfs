@@ -15,9 +15,9 @@ defmodule ExIpfsPubsub do
   @spec ls :: {:ok, ExIpfs.strings()} | ExIpfs.Api.error_response()
   def ls do
     post_query("/Pubsub/ls")
-    |> decode_strings()
-    |> ExIpfs.Strings.new()
-    |> okify()
+    # |> decode_strings()
+    # |> ExIpfs.Strings.new()
+    # |> okify()
   end
 
   @doc """
@@ -30,7 +30,7 @@ defmodule ExIpfsPubsub do
   """
   @spec peers(binary) :: {:ok, any} | ExIpfs.Api.error_response()
   def peers(topic) do
-    base64topic = Multibase.encode!(topic)
+    base64topic = Multibase.encode!(topic, [])
 
     post_query("/Pubsub/peers?arg=#{base64topic}")
     |> okify()
@@ -56,7 +56,7 @@ defmodule ExIpfsPubsub do
   @spec pub(binary, binary) :: {:ok, any} | ExIpfs.Api.error_response()
   def pub(data, topic) do
     multipart_content(data, "data")
-    |> post_multipart("/Pubsub/pub?arg=" <> Multibase.encode!(topic))
+    |> post_multipart("/Pubsub/pub?arg=" <> Multibase.encode!(topic, []))
     |> okify()
   end
 
@@ -74,8 +74,8 @@ defmodule ExIpfsPubsub do
   """
   @spec sub(pid, binary) :: any | ExIpfs.Api.error_response()
   def sub(pid, topic) do
-    ExIpfsPubsub.Topic.new!(pid, topic)
-    |> ExIpfsPubsub.Topic.start_link()
+    ExIpfsPubsub.Sub.new!(pid, topic)
+    |> ExIpfsPubsub.Sub.start_link()
   end
 
   @doc """
