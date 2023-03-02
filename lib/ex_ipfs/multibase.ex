@@ -58,7 +58,7 @@ defmodule ExIpfs.Multibase do
     `b` - Multibase encoding to use.
   """
   @spec encode!(binary, list) :: binary() | ExIpfs.Api.error_response()
-  def encode!(data, opts) when is_binary(data) do
+  def encode!(data, opts \\ []) when is_binary(data) do
     multipart_content(data)
     |> post_multipart("/multibase/encode", query: opts)
   end
