@@ -27,7 +27,7 @@ jobs:
         elixir: ["1.14.3"]
     services:
       ipfs:
-        image: bahner/kubo:v0.18.1
+        image: ipfs/kubo:latest
         ports:
           - 5001:5001
     steps:
@@ -62,5 +62,4 @@ jobs:
           mix dialyzer
       - name: Run test suite
         run: |
-          #mix coveralls
           mix coveralls.github

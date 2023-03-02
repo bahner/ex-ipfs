@@ -4,4 +4,4 @@
 FROM ipfs/kubo:${KUBO_VERSION}
 LABEL org.opencontainers.image.authors: "Lars Bahner <lars.bahner@gmail.com>"
 
-CMD ["daemon", "--migrate=true", "--agent-version-suffix=docker", "--enable-pubsub-experiment", "--enable-namesys-pubsub", "--enable-mplex-experiment"]
+CMD ["daemon", "--migrate=true", "--agent-version-suffix=docker", "--enable-Pubsub-experiment", "--enable-namesys-Pubsub", "--enable-mplex-experiment"]

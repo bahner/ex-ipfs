@@ -57,7 +57,7 @@ templates:
 	envsubst < templates/Dockerfile > Dockerfile
 	envsubst < templates/testsuite.yaml > .github/workflows/testsuite.yaml
 
-test:
+test: deps
 	mix format --check-formatted
 	mix dialyzer
 	mix test

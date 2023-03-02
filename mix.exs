@@ -1,19 +1,19 @@
-defmodule ExIpfs.Mixfile do
+defmodule ExIpfsPubsub.Mixfile do
   @moduledoc false
   use Mix.Project
 
   def project do
     [
-      app: :ex_ipfs,
-      version: "0.1.2",
+      app: :ex_ipfs_pubsub,
+      version: "0.0.1",
       elixir: "~> 1.14",
-      name: "Elixir IPFS",
+      name: "Elixir IPFS Pubsub Experiment for Elixir",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
       description: description(),
       name: "ex_ipfs",
-      source_url: "https://github.com/bahner/ex-ipfs.git",
+      source_url: "https://github.com/bahner/ex-ipfs-pubsub.git",
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         coveralls: :test,
@@ -33,12 +33,7 @@ defmodule ExIpfs.Mixfile do
 
   defp deps do
     [
-      {:hackney, "~> 1.18"},
-      {:jason, "~> 1.4"},
-      {:nanoid, "~> 2.0"},
-      {:recase, "~> 0.7.0"},
-      {:temp, "~> 0.4.7"},
-      {:tesla, "~> 1.5"},
+      {:ex_ipfs, "~> 0.1.2"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.29", only: :dev, runtime: false},
@@ -47,7 +42,7 @@ defmodule ExIpfs.Mixfile do
   end
 
   defp description() do
-    "Core Elixir IPFS module for Kubo IPFS RPC API"
+    "Elixir IPFS pubsub experiment module elixir."
   end
 
   defp package do
@@ -55,7 +50,7 @@ defmodule ExIpfs.Mixfile do
       files: ["lib", "mix.exs", "README*", "LICENSE*", "AUTHORS*"],
       maintainers: ["Lars Bahner"],
       licenses: ["GPLv3"],
-      links: %{"GitHub" => "https://github.com/bahner/ex-ipfs"}
+      links: %{"GitHub" => "https://github.com/bahner/ex-ipfs-pubsub"}
     ]
   end
 end
