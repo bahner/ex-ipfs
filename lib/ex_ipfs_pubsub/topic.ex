@@ -20,22 +20,23 @@ defmodule ExIpfsPubsub.Topic do
           topic: binary
         }
 
-  @spec start_link(binary, list) :: :ignore | {:error, any} | {:ok, pid}
-  def start_link(topic, _opts) when is_binary(topic) do
+  @spec start_link(t, list) :: :ignore | {:error, any} | {:ok, pid}
+  def start_link(topic, _opts) when is_struct(topic) do
     Logger.debug("Starting topic handler for #{topic}")
 
     GenServer.start_link(
       __MODULE__,
       topic,
-      name: via_tuple(name)
+      name: via_tuple(topic.topic)
     )
   end
 
-  @spec init({binary, maybe_improper_list}) :: {:ok, t()}
-  def init({topic, subscribers}) when is_binary(topic) and is_list(subscribers) do
-    state = get_or_create_topic(topic, self(), subscribers)
-
-    {:ok, state}
+  @spec init(binary) :: {:ok, t()} | {:stop, :already_registered}
+  def init(topic) when is_struct(topic) do
+    case ExIpfsPubsub.TopicRegistry.register_name(topic.topic, self()) do
+      :yes -> {:ok, %__MODULE__{topic | handler: self()}}
+      :no -> {:stop, :already_registered}
+    end
   end
 
   @spec new!(binary, pid, list) :: t()
@@ -49,7 +50,31 @@ defmodule ExIpfsPubsub.Topic do
     }
   end
 
-  def handle_cast(:new_sub, state) do
+  @spec subscribe(pid) :: :ok
+  def subscribe(subscriber) when is_pid(subscriber),
+    do: GenServer.cast(self(), {:add_subscriber, subscriber})
+
+  @spec unsubscribe(pid) :: :ok
+  def unsubscribe(subscriber) when is_pid(subscriber),
+    do: GenServer.cast(self(), {:remove_subscriber, subscriber})
+
+  @spec is_subscribed?(pid) :: boolean
+  def is_subscribed?(subscriber) when is_pid(subscriber),
+    do: GenServer.call(self(), {:is_subscribed?, subscriber})
+
+  # Server callbacks
+
+  def handle_call({:subscribed?, subscriber}, _from, state) do
+    state = refresh(state)
+    {:reply, MapSet.member?(state.subscribers, subscriber), state}
+  end
+
+  def handle_cast({:add_subscriber, subscriber}, _from, state) do
+    state = refresh(state)
+    {:reply, :ok, %__MODULE__{state | subscribers: MapSet.put(state.subscribers, subscriber)}}
+  end
+
+  def handle_cast(:subscribe, state) do
     Logger.info("Starting subscription for #{state.topic}")
 
     url = "#{@api_url}/pubsub/sub?arg=#{state.base64url_topic}"
@@ -63,6 +88,11 @@ defmodule ExIpfsPubsub.Topic do
     )
 
     {:noreply, state}
+  end
+
+  def handle_cast({:remove_subscriber, subscriber}, _from, state) do
+    state = refresh(state)
+    {:reply, :ok, %__MODULE__{state | subscribers: MapSet.delete(state.subscribers, subscriber)}}
   end
 
   def handle_info({:hackney_response, _ref, data}, state) do
@@ -97,19 +127,19 @@ defmodule ExIpfsPubsub.Topic do
     {:noreply, state}
   end
 
-  defp via_tuple(name) do
-    {:via, Registry, {ExIpfsPubsub.TopicRegistry, name}}
-  end
-
-  defp get_or_create_topic(topic, subscribers) do
-    case ExIpfsPubsub.Topics.get(topic) do
-      nil -> new!(topic, self(), subscribers)
-      topic -> topic
-    end
+  defp via_tuple(topic) when is_binary(topic) do
+    {:via, Registry, {ExIpfsPubsub.TopicRegistry, topic}}
   end
 
   defp parse_pubsub_message(data) do
     message = TopicMessage.new(data)
     {:ex_ipfs_pubsub_sub_message, Multibase.decode!(message.data)}
   end
+
+  @spec refresh(t) :: t
+  defp refresh(topic) do
+    topic
+    |> Map.put(:subscribers, Enum.filter(topic.subscribers, &Process.alive?/1))
+  end
+
 end

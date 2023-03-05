@@ -84,7 +84,7 @@ defmodule ExIpfsPubsub do
   """
   @spec sub(pid, binary) :: {:ok, pid} | ExIpfs.Api.error_response()
   def sub(pid, topic) do
-    if ExIpfsPubsub.Topics.is_subscribed?(pid, topic) do
+    if is_subscribed?(pid, topic) do
       Logger.warn("Already subscribed to topic #{topic}")
       {:ok, pid}
     else
