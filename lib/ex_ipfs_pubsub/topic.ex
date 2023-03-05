@@ -20,18 +20,19 @@ defmodule ExIpfsPubsub.Topic do
           topic: binary
         }
 
-  @spec start_link({binary, list(pid)}, list) :: :ignore | {:error, any} | {:ok, pid}
-  def start_link({topic, subscribers}, _opts) when is_binary(topic) and is_list(subscribers)do
+  @spec start_link(binary, list) :: :ignore | {:error, any} | {:ok, pid}
+  def start_link(topic, _opts) when is_binary(topic) do
     Logger.debug("Starting topic handler for #{topic}")
 
     GenServer.start_link(
       __MODULE__,
-      {topic, subscribers})
+      topic,
+      name: via_tuple(name)
+    )
   end
 
   @spec init({binary, maybe_improper_list}) :: {:ok, t()}
   def init({topic, subscribers}) when is_binary(topic) and is_list(subscribers) do
-
     state = get_or_create_topic(topic, self(), subscribers)
 
     {:ok, state}
@@ -94,6 +95,10 @@ defmodule ExIpfsPubsub.Topic do
     end
 
     {:noreply, state}
+  end
+
+  defp via_tuple(name) do
+    {:via, Registry, {ExIpfsPubsub.TopicRegistry, name}}
   end
 
   defp get_or_create_topic(topic, subscribers) do

@@ -39,7 +39,7 @@ defmodule ExIpfsPubsub.TopicRegistry do
 
   @spec init(any) :: {:ok, %{}}
   def init(_) do
-    {:ok, Map.new}
+    {:ok, Map.new()}
   end
 
   def handle_call({:whereis_name, topic}, _from, state) do
@@ -58,5 +58,14 @@ defmodule ExIpfsPubsub.TopicRegistry do
 
   def handle_cast({:unregister_name, topic}, state) do
     {:noreply, Map.delete(state, topic)}
+  end
+
+  def handle_info({:DOWN, _, :process, pid, _}, state) do
+    {:noreply, remove_pid(state, pid)}
+  end
+
+  defp remove_pid(state, pid_to_remove) do
+    remove = fn {_key, pid} -> pid != pid_to_remove end
+    Enum.filter(state, remove) |> Enum.into(%{})
   end
 end
