@@ -1,0 +1,62 @@
+defmodule ExIpfsPubsub.TopicRegistry do
+  @moduledoc false
+
+  use GenServer
+
+  # API
+
+  @spec start_link :: :ignore | {:error, any} | {:ok, pid}
+  def start_link do
+    GenServer.start_link(__MODULE__, nil, name: :ex_ipfs_pubsub_topic_registry)
+  end
+
+  @spec whereis_name(binary) :: any
+  def whereis_name(topic) do
+    GenServer.call(:ex_ipfs_pubsub_topic_registry, {:whereis_name, topic})
+  end
+
+  @spec register_name(binary, pid) :: any
+  def register_name(topic, pid) do
+    GenServer.call(:ex_ipfs_pubsub_topic_registry, {:register_name, topic, pid})
+  end
+
+  @spec unregister_name(binary) :: :ok
+  def unregister_name(topic) do
+    GenServer.cast(:ex_ipfs_pubsub_topic_registry, {:unregister_name, topic})
+  end
+
+  @spec send(binary, any) :: atom | pid | port | reference | {atom, atom | {binary, any}}
+  def send(topic, message) do
+    case whereis_name(topic) do
+      :undefined ->
+        {:badarg, {topic, message}}
+
+      pid ->
+        Kernel.send(pid, message)
+        pid
+    end
+  end
+
+  @spec init(any) :: {:ok, %{}}
+  def init(_) do
+    {:ok, Map.new}
+  end
+
+  def handle_call({:whereis_name, topic}, _from, state) do
+    {:reply, Map.get(state, topic, :undefined), state}
+  end
+
+  def handle_call({:register_name, topic, pid}, _from, state) do
+    case Map.get(state, topic) do
+      nil ->
+        {:reply, :yes, Map.put(state, topic, pid)}
+
+      _ ->
+        {:reply, :no, state}
+    end
+  end
+
+  def handle_cast({:unregister_name, topic}, state) do
+    {:noreply, Map.delete(state, topic)}
+  end
+end
