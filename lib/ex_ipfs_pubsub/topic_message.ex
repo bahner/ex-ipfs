@@ -1,4 +1,4 @@
-defmodule ExIpfsPubsub.Message do
+defmodule ExIpfsPubsub.TopicMessage do
   @moduledoc false
 
   require Logger

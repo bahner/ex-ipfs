@@ -1,4 +1,7 @@
 TODO
 ===
 
-Not one for all, but one ping server for each request, so that a parsed response can be sent to client.
+Maybe let each topic have only one listener, and let subscribers sub subscribe to it.
+
+Evaluate "https://github.com/simonewebdesign/elixir_pubsub" it looks simple and to the point. Maybe fork it and add the features we need.
+We only want one way communication. Only the master can publish.

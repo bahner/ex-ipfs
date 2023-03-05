@@ -7,32 +7,30 @@ defmodule ExIpfsPubsubTest do
 
   NB! The tests are not mocked. They are designed to be run against a live IPFS node. This is
   """
-  @timeout 180_000
   use ExUnit.Case, async: true
-  @moduletag timeout: @timeout
-  ExUnit.configure(seed: 0, timeout: @timeout)
+  @timeout 180_000
 
   import ExIpfsPubsub
+  @topic Nanoid.generate()
 
   test "subscribe to a topic" do
-    {:ok, pid} = sub(self(), "myspace")
+    {:ok, pid} = sub(self(), @topic)
     assert is_pid(pid)
     assert Process.alive?(pid)
 
     # ls
-    sub(self(), "myspace")
-    {:ok, %MyspaceIPFS.Strings{strings: topics}} = ls()
+    sub(self(), @topic)
+    {:ok, topics} = ls()
     assert is_list(topics)
-    assert Enum.member?(topics, "myspace")
+    assert Enum.member?(topics, @topic)
 
     # Publish and receive a message
-    sub(self(), "myspace")
-    pub("hello", "myspace")
-    assert_receive {:myspace_ipfs_pubsub_channel_message, "hello"}
+    sub(self(), @topic)
+    pub("hello", @topic)
+    assert_receive {:ex_ipfs_pubsub_sub_message, "hello"}
 
-    # Get peers
-    {:ok, %{"Strings" => peers}} = peers("myspace")
-    # The peer list is probably empty, but we can at least check that it is a list.
-    assert is_list(peers)
+    # Get peers. Probably an empty file.
+    {:ok, peerslist} = peers(@topic)
+    assert is_list(peerslist)
   end
 end

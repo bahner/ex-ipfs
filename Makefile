@@ -36,7 +36,7 @@ image: templates
 format:
 	mix format
 
-mix: all
+mix: compile
 	iex -S mix
 
 proper: distclean compile test
