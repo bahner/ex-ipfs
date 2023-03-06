@@ -1,4 +1,4 @@
-defmodule ExIpfsPubsub.TopicMessage do
+defmodule ExIpfsPubsub.Message do
   @moduledoc false
 
   require Logger
@@ -35,19 +35,19 @@ defmodule ExIpfsPubsub.TopicMessage do
 
   @spec new({:ok, map}) :: t()
   def new({:ok, opts}) when is_map(opts) do
-    Logger.debug("Pubsub.TopicMessage.new/map(#{inspect(opts)})")
+    Logger.debug("Pubsub.Message.new/map(#{inspect(opts)})")
     new(opts)
   end
 
   @spec new(list) :: list(t())
   def new(response) when is_list(response) do
-    Logger.debug("Pubsub.TopicMessage.new/list(#{inspect(response)})")
+    Logger.debug("Pubsub.Message.new/list(#{inspect(response)})")
     Enum.map(response, &new/1)
   end
 
   @spec new(binary) :: binary()
   def new(response) when is_binary(response) do
-    Logger.debug("Pubsub.TopicMessage.new/binary(#{inspect(response)})")
+    Logger.debug("Pubsub.Message.new/binary(#{inspect(response)})")
     new(Jason.decode!(response))
   end
 end

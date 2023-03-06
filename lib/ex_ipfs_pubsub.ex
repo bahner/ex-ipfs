@@ -5,6 +5,10 @@ defmodule ExIpfsPubsub do
   import ExIpfs.Api
   import ExIpfs.Utils
   alias ExIpfs.Multibase
+  alias ExIpfsPubsub.Topic
+  alias ExIpfsPubsub.Supervisor
+  alias ExIpfsPubsub.Registry
+
   require Logger
 
   @spec ls :: {:error, any} | {:ok, list}
@@ -84,12 +88,15 @@ defmodule ExIpfsPubsub do
   """
   @spec sub(pid, binary) :: {:ok, pid} | ExIpfs.Api.error_response()
   def sub(pid, topic) do
-    if is_subscribed?(pid, topic) do
-      Logger.warn("Already subscribed to topic #{topic}")
-      {:ok, pid}
-    else
-      ExIpfsPubsub.Topic.new!(pid, topic)
-      |> ExIpfsPubsub.Supervisor.supervise_topic()
+    handler = topic_handler(topic)
+    case handler do
+      nil ->
+        Logger.error("No handler registered for topic #{topic}")
+        # Create a topic with no handler and send it for supervision
+        topic = Topic.new!(topic, nil, [pid])
+        Supervisor.start_topic(topic)
+
+      _ -> {:ok, handler}
     end
   end
 
@@ -118,4 +125,6 @@ defmodule ExIpfsPubsub do
   end
 
   defp decode_strings(list), do: Enum.map(list, &decode_strings/1)
+
+  defp topic_handler(topic), do: Registry.whereis_name(topic)
 end

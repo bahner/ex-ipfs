@@ -6,7 +6,7 @@ defmodule ExIpfsPubsub.Application do
   def start(_type, _args) do
     children = [
       {ExIpfsPubsub.Supervisor, name: ExIpfsPubsub.Supervisor},
-      {Registry, keys: :unique, name: ExIpfsPubsub.TopicRegistry}
+      {Registry, keys: :unique, name: ExIpfsPubsub.Registry}
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one)

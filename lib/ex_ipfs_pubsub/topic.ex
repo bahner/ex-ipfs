@@ -6,7 +6,7 @@ defmodule ExIpfsPubsub.Topic do
   require Logger
   alias ExIpfs.ApiStreamingClient
   alias ExIpfs.Multibase
-  alias ExIpfsPubsub.TopicMessage
+  alias ExIpfsPubsub.Message
 
   @api_url Application.compile_env(:ex_ipfs, :api_url, "http://127.0.0.1:5001/api/v0")
 
@@ -20,8 +20,8 @@ defmodule ExIpfsPubsub.Topic do
           topic: binary
         }
 
-  @spec start_link(t, list) :: :ignore | {:error, any} | {:ok, pid}
-  def start_link(topic, _opts) when is_struct(topic) do
+  @spec start_link(t) :: :ignore | {:error, any} | {:ok, pid}
+  def start_link(topic) when is_struct(topic) do
     Logger.debug("Starting topic handler for #{topic}")
 
     GenServer.start_link(
@@ -31,17 +31,20 @@ defmodule ExIpfsPubsub.Topic do
     )
   end
 
-  @spec init(binary) :: {:ok, t()} | {:stop, :already_registered}
+  @spec init(%{:topic => binary, optional(any) => any}) ::
+          {:ok, ExIpfsPubsub.Topic.t()} | {:stop, :already_registered}
   def init(topic) when is_struct(topic) do
-    case ExIpfsPubsub.TopicRegistry.register_name(topic.topic, self()) do
-      :yes -> {:ok, %__MODULE__{topic | handler: self()}}
+    case ExIpfsPubsub.Registry.register_name(topic.topic, self()) do
+      :yes ->
+        GenServer.cast(self(), :subscribe)
+        {:ok, %__MODULE__{topic | handler: self()}}
       :no -> {:stop, :already_registered}
     end
   end
 
-  @spec new!(binary, pid, list) :: t()
+  @spec new!(binary, pid | nil, list) :: t()
   def new!(topic, handler, subscribers)
-      when is_pid(handler) and is_binary(topic) and is_list(subscribers) do
+      when is_binary(topic) and is_list(subscribers) do
     %__MODULE__{
       base64url_topic: Multibase.encode!(topic, b: "base64url"),
       handler: handler,
@@ -49,6 +52,10 @@ defmodule ExIpfsPubsub.Topic do
       topic: topic
     }
   end
+
+  @spec is_subscribed?(pid) :: boolean
+  def is_subscribed?(subscriber) when is_pid(subscriber),
+    do: GenServer.call(self(), {:is_subscribed, subscriber})
 
   @spec subscribe(pid) :: :ok
   def subscribe(subscriber) when is_pid(subscriber),
@@ -58,20 +65,26 @@ defmodule ExIpfsPubsub.Topic do
   def unsubscribe(subscriber) when is_pid(subscriber),
     do: GenServer.cast(self(), {:remove_subscriber, subscriber})
 
-  @spec is_subscribed?(pid) :: boolean
-  def is_subscribed?(subscriber) when is_pid(subscriber),
-    do: GenServer.call(self(), {:is_subscribed?, subscriber})
+    @spec handler(binary) :: pid | nil
+    def handler(topic) when is_binary(topic),
+      do: ExIpfsPubsub.Registry.whereis_name(topic)
 
   # Server callbacks
 
-  def handle_call({:subscribed?, subscriber}, _from, state) do
+  def handle_call({:is_subscribed, subscriber}, _from, state) do
     state = refresh(state)
     {:reply, MapSet.member?(state.subscribers, subscriber), state}
   end
 
   def handle_cast({:add_subscriber, subscriber}, _from, state) do
     state = refresh(state)
-    {:reply, :ok, %__MODULE__{state | subscribers: MapSet.put(state.subscribers, subscriber)}}
+    state = %__MODULE__{state | subscribers: MapSet.put(state.subscribers, subscriber)}
+    {:reply, :ok, state}
+  end
+
+  def handle_cast({:remove_subscriber, subscriber}, _from, state) do
+    state = refresh(state)
+    {:reply, :ok, %__MODULE__{state | subscribers: MapSet.delete(state.subscribers, subscriber)}}
   end
 
   def handle_cast(:subscribe, state) do
@@ -88,11 +101,6 @@ defmodule ExIpfsPubsub.Topic do
     )
 
     {:noreply, state}
-  end
-
-  def handle_cast({:remove_subscriber, subscriber}, _from, state) do
-    state = refresh(state)
-    {:reply, :ok, %__MODULE__{state | subscribers: MapSet.delete(state.subscribers, subscriber)}}
   end
 
   def handle_info({:hackney_response, _ref, data}, state) do
@@ -128,11 +136,11 @@ defmodule ExIpfsPubsub.Topic do
   end
 
   defp via_tuple(topic) when is_binary(topic) do
-    {:via, Registry, {ExIpfsPubsub.TopicRegistry, topic}}
+    {:via, Registry, {ExIpfsPubsub.Registry, topic}}
   end
 
   defp parse_pubsub_message(data) do
-    message = TopicMessage.new(data)
+    message = Message.new(data)
     {:ex_ipfs_pubsub_sub_message, Multibase.decode!(message.data)}
   end
 

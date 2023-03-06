@@ -1,4 +1,4 @@
-defmodule ExIpfsPubsub.TopicRegistry do
+defmodule ExIpfsPubsub.Registry do
   @moduledoc false
 
   use GenServer
@@ -7,22 +7,22 @@ defmodule ExIpfsPubsub.TopicRegistry do
 
   @spec start_link :: :ignore | {:error, any} | {:ok, pid}
   def start_link do
-    GenServer.start_link(__MODULE__, nil, name: :ex_ipfs_pubsub_topic_registry)
+    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
   @spec whereis_name(binary) :: any
   def whereis_name(topic) do
-    GenServer.call(:ex_ipfs_pubsub_topic_registry, {:whereis_name, topic})
+    GenServer.call(__MODULE__, {:whereis_name, topic})
   end
 
   @spec register_name(binary, pid) :: any
   def register_name(topic, pid) do
-    GenServer.call(:ex_ipfs_pubsub_topic_registry, {:register_name, topic, pid})
+    GenServer.call(__MODULE__, {:register_name, topic, pid})
   end
 
   @spec unregister_name(binary) :: :ok
   def unregister_name(topic) do
-    GenServer.cast(:ex_ipfs_pubsub_topic_registry, {:unregister_name, topic})
+    GenServer.cast(__MODULE__, {:unregister_name, topic})
   end
 
   @spec send(binary, any) :: atom | pid | port | reference | {atom, atom | {binary, any}}
