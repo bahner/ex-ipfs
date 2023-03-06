@@ -7,7 +7,7 @@ defmodule ExIpfsPubsub.Registry do
 
   @spec start_link :: :ignore | {:error, any} | {:ok, pid}
   def start_link do
-    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+    GenServer.start_link(__MODULE__, nil)
   end
 
   @spec whereis_name(binary) :: any

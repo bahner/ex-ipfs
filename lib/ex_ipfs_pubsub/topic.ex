@@ -31,8 +31,7 @@ defmodule ExIpfsPubsub.Topic do
     )
   end
 
-  @spec init(%{:topic => binary, optional(any) => any}) ::
-          {:ok, ExIpfsPubsub.Topic.t()} | {:stop, :already_registered}
+  @spec init(t()) :: {:ok, t()} | {:stop, :already_registered}
   def init(topic) when is_struct(topic) do
     case ExIpfsPubsub.Registry.register_name(topic.topic, self()) do
       :yes ->
@@ -76,6 +75,7 @@ defmodule ExIpfsPubsub.Topic do
     {:reply, MapSet.member?(state.subscribers, subscriber), state}
   end
 
+  @spec handle_cast(any, any, any) :: none
   def handle_cast({:add_subscriber, subscriber}, _from, state) do
     state = refresh(state)
     state = %__MODULE__{state | subscribers: MapSet.put(state.subscribers, subscriber)}
@@ -144,10 +144,8 @@ defmodule ExIpfsPubsub.Topic do
     {:ex_ipfs_pubsub_sub_message, Multibase.decode!(message.data)}
   end
 
-  @spec refresh(t) :: t
   defp refresh(topic) do
-    topic
-    |> Map.put(:subscribers, Enum.filter(topic.subscribers, &Process.alive?/1))
+    Map.put(topic, :subscribers, Enum.filter(topic.subscribers, &Process.alive?/1))
   end
 
 end
