@@ -146,7 +146,6 @@ defmodule ExIpfs do
 
 
   """
-  # FIXME return a struct
   @spec add(any, list) :: {:ok, add_result()} | ExIpfs.Api.error_response()
   def add(data, opts \\ []),
     do:
@@ -169,7 +168,6 @@ defmodule ExIpfs do
   ]
   ```
   """
-  # FIXME: return a struct
   @spec cat(Path.t(), list) :: {:ok, any} | ExIpfs.Api.error_response()
   def cat(path, opts \\ []),
     do: post_query("/cat?arg=" <> path, query: opts)

@@ -95,6 +95,8 @@ defmodule ExIpfs.Multibase do
   @doc """
   Transcode a multibase encoded string.
 
+  https://docs.ipfs.io/reference/http/api/#api-v0-multibase-transcode
+
   ## Parameters
     `data` - Data to transcode.
 
@@ -105,7 +107,6 @@ defmodule ExIpfs.Multibase do
   def transcode(data, opts \\ []) do
     multipart_content(data)
     |> post_multipart("/multibase/transcode", query: opts)
-    # FIXME: type goes here. Check it out.
     |> okify()
   end
 end
