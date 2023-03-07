@@ -36,6 +36,11 @@ image: templates
 format:
 	mix format
 
+map:
+	mix xref graph --format dot
+	dot -Tpng xref_graph.dot -o xref_graph.png
+	eog xref_graph.png
+
 mix: all
 	iex -S mix
 
@@ -59,6 +64,7 @@ templates:
 
 test:
 	mix format --check-formatted
+	mix credo
 	mix dialyzer
 	mix test
 
@@ -68,5 +74,6 @@ distclean: clean
 clean:
 	rm -f Qm*
 	rm -rf cover
+	rm -f xref_*
 
 .PHONY: compile docs docker test templates cover
