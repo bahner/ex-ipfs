@@ -3,16 +3,14 @@ defmodule ExIpfsPubsub.Registry do
 
   use GenServer
 
-  # API
-
   @spec start_link :: :ignore | {:error, any} | {:ok, pid}
   def start_link do
-    GenServer.start_link(__MODULE__, nil)
+    GenServer.start_link(__MODULE__, nil, name: Registry)
   end
 
   @spec whereis_name(binary) :: any
   def whereis_name(topic) do
-    GenServer.call(__MODULE__, {:whereis_name, topic})
+    GenServer.call(Registry, {:whereis_name, topic})
   end
 
   @spec register_name(binary, pid) :: any
@@ -22,7 +20,7 @@ defmodule ExIpfsPubsub.Registry do
 
   @spec unregister_name(binary) :: :ok
   def unregister_name(topic) do
-    GenServer.cast(__MODULE__, {:unregister_name, topic})
+    GenServer.cast(Registry, {:unregister_name, topic})
   end
 
   @spec send(binary, any) :: atom | pid | port | reference | {atom, atom | {binary, any}}

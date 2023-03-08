@@ -36,6 +36,11 @@ image: templates
 format:
 	mix format
 
+map:
+	mix xref graph --format dot
+	dot -Tpng xref_graph.dot -o xref_graph.png
+	eog xref_graph.png
+
 mix: compile
 	iex -S mix
 

@@ -22,7 +22,7 @@ defmodule ExIpfsPubsub.Topic do
 
   @spec start_link(t) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(topic) when is_struct(topic) do
-    Logger.debug("Starting topic handler for #{topic}")
+    Logger.debug("Starting topic handler for #{topic.topic}")
 
     GenServer.start_link(
       __MODULE__,
@@ -33,6 +33,7 @@ defmodule ExIpfsPubsub.Topic do
 
   @spec init(t()) :: {:ok, t()} | {:stop, :already_registered}
   def init(topic) when is_struct(topic) do
+    Logger.debug("Initializing topic handler for #{topic.topic}")
     case ExIpfsPubsub.Registry.register_name(topic.topic, self()) do
       :yes ->
         GenServer.cast(self(), :subscribe)
