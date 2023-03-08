@@ -2,25 +2,27 @@ defmodule ExIpfsPubsub.Registry do
   @moduledoc false
 
   use GenServer
+  require Logger
 
   @spec start_link :: :ignore | {:error, any} | {:ok, pid}
   def start_link do
-    GenServer.start_link(__MODULE__, nil, name: Registry)
+    GenServer.start_link(__MODULE__, nil, name: :ex_ipfs_pubsub_registry)
   end
 
   @spec whereis_name(binary) :: any
   def whereis_name(topic) do
-    GenServer.call(Registry, {:whereis_name, topic})
+    GenServer.call(:ex_ipfs_pubsub_registry, {:whereis_name, topic})
   end
 
   @spec register_name(binary, pid) :: any
   def register_name(topic, pid) do
-    GenServer.call(__MODULE__, {:register_name, topic, pid})
+    Logger.debug("Registering #{topic} with #{inspect(pid)}")
+    GenServer.call(:ex_ipfs_pubsub_registry, {:register_name, topic, pid})
   end
 
   @spec unregister_name(binary) :: :ok
   def unregister_name(topic) do
-    GenServer.cast(Registry, {:unregister_name, topic})
+    GenServer.cast(:ex_ipfs_pubsub_registry, {:unregister_name, topic})
   end
 
   @spec send(binary, any) :: atom | pid | port | reference | {atom, atom | {binary, any}}
@@ -52,6 +54,11 @@ defmodule ExIpfsPubsub.Registry do
       _ ->
         {:reply, :no, state}
     end
+  end
+
+  def handle_call(data, _from, state) do
+    Logger.warn("Unhandled call: #{inspect(data)}")
+    {:reply, :error, state}
   end
 
   def handle_cast({:unregister_name, topic}, state) do

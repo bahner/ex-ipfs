@@ -89,6 +89,7 @@ defmodule ExIpfsPubsub do
   @spec sub(pid, binary) :: {:ok, pid} | ExIpfs.Api.error_response()
   def sub(pid, topic) do
     handler = topic_handler(topic)
+
     case handler do
       nil ->
         Logger.error("No handler registered for topic #{topic}")
@@ -96,7 +97,8 @@ defmodule ExIpfsPubsub do
         topic = Topic.new!(topic, nil, [pid])
         Supervisor.start_topic(topic)
 
-      _ -> {:ok, handler}
+      _ ->
+        {:ok, handler}
     end
   end
 

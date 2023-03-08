@@ -11,11 +11,13 @@ defmodule ExIpfsPubsub.Supervisor do
   end
 
   def init(init_args) do
-    DynamicSupervisor.init(strategy: :one_for_one, extra_arguments: [init_args])
+    args = [strategy: :one_for_one, extra_arguments: [init_args]]
+    DynamicSupervisor.init(args)
   end
 
   @spec start_topic(topic) :: DynamicSupervisor.on_start_child()
   def start_topic(topic) when is_struct(topic) do
-    DynamicSupervisor.start_child(__MODULE__, {ExIpfsPubsub.Topic, topic})
+    topic_spec = {ExIpfsPubsub.Topic, topic}
+    DynamicSupervisor.start_child(__MODULE__, topic_spec)
   end
 end
