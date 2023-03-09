@@ -8,8 +8,8 @@ defmodule ExIpfsPubsub.Topic do
   alias ExIpfs.Multibase
   alias ExIpfsPubsub.Message
 
-  @registry :ex_ipfs_pubsub_registry
   @api_url Application.compile_env(:ex_ipfs, :api_url, "http://127.0.0.1:5001/api/v0")
+  @registry ExIpfsPubsub.Registry
 
   @enforce_keys [:base64url_topic, :handler, :subscribers, :topic]
   defstruct base64url_topic: nil, handler: nil, subscribers: MapSet.new(), topic: nil
@@ -21,13 +21,12 @@ defmodule ExIpfsPubsub.Topic do
           topic: binary
         }
 
-  @spec new!(binary, pid | nil, list) :: t()
-  def new!(topic, handler, subscribers)
-      when is_binary(topic) and is_list(subscribers) do
+  @spec new!(binary, pid) :: t()
+  def new!(topic, subscriber) when is_pid(subscriber) do
     %__MODULE__{
       base64url_topic: Multibase.encode!(topic, b: "base64url"),
-      handler: handler,
-      subscribers: MapSet.new(subscribers),
+      handler: nil,
+      subscribers: MapSet.new([subscriber]),
       topic: topic
     }
   end
@@ -36,17 +35,21 @@ defmodule ExIpfsPubsub.Topic do
   def start_link(topic) when is_struct(topic) do
     Logger.debug("Starting topic handler for #{topic.topic}")
 
+    name = via_tuple(topic.topic)
+
     GenServer.start_link(
       __MODULE__,
       topic,
-      name: via_tuple(topic.topic)
+      name: name
     )
   end
 
-  @spec init(t()) :: {:ok, t()} | {:stop, :already_registered}
+  @spec init(t()) :: {:ok, t()}
   def init(topic) when is_struct(topic) do
     Logger.debug("Initializing topic handler for #{topic.topic}")
     state = %__MODULE__{topic | handler: self()}
+    path = "pubsub/sub?arg=#{topic.base64url_topic}"
+    ApiStreamingClient.new(self(), path)
     {:ok, state}
   end
 
@@ -64,13 +67,19 @@ defmodule ExIpfsPubsub.Topic do
       |> via_tuple()
       |> GenServer.cast({:add_subscriber, subscriber})
 
-  @spec unsubscribe(pid) :: :ok
-  def unsubscribe(subscriber) when is_pid(subscriber),
-    do: GenServer.cast(self(), {:remove_subscriber, subscriber})
+  @spec unsubscribe(pid, binary) :: :ok
+  def unsubscribe(subscriber, topic) when is_pid(subscriber) and is_binary(topic),
+    do:
+      topic
+      |> via_tuple()
+      |> GenServer.cast({:remove_subscriber, subscriber})
 
   @spec handler(binary) :: pid | nil
   def handler(topic) when is_binary(topic),
-    do: ExIpfsPubsub.Registry.whereis_name(topic)
+    do:
+      topic
+      |> via_tuple
+      |> GenServer.call(:handler)
 
   # Server callbacks
 
@@ -79,8 +88,12 @@ defmodule ExIpfsPubsub.Topic do
     {:reply, MapSet.member?(state.subscribers, subscriber), state}
   end
 
+  def handle_call(:handler, _from, state) do
+    {:reply, state.handler, state}
+  end
+
   def handle_call(data, _from, state) do
-    Logger.info("Received data: #{inspect(data)}")
+    Logger.info("Handle Call received data: #{inspect(data)}")
     {:reply, :ok, state}
   end
 

@@ -1,7 +1,4 @@
 TODO
 ===
 
-Maybe let each topic have only one listener, and let subscribers sub subscribe to it.
-
-Evaluate "https://github.com/simonewebdesign/elixir_pubsub" it looks simple and to the point. Maybe fork it and add the features we need.
-We only want one way communication. Only the master can publish.
+FIX Supervisor. It fails to start topic genserver, before it reaches the actual invocation of start_link

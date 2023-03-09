@@ -2,39 +2,25 @@ defmodule ExIpfsPubsub.Registry do
   @moduledoc false
 
   use GenServer
-  require Logger
 
   @spec start_link :: :ignore | {:error, any} | {:ok, pid}
   def start_link do
-    GenServer.start_link(__MODULE__, nil, name: :ex_ipfs_pubsub_registry)
+    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
   @spec whereis_name(binary) :: any
   def whereis_name(topic) do
-    GenServer.call(:ex_ipfs_pubsub_registry, {:whereis_name, topic})
+    GenServer.call(__MODULE__, {:whereis_name, topic})
   end
 
   @spec register_name(binary, pid) :: any
   def register_name(topic, pid) do
-    Logger.debug("Registering #{topic} with #{inspect(pid)}")
-    GenServer.call(:ex_ipfs_pubsub_registry, {:register_name, topic, pid})
+    GenServer.call(__MODULE__, {:register_name, topic, pid})
   end
 
   @spec unregister_name(binary) :: :ok
   def unregister_name(topic) do
-    GenServer.cast(:ex_ipfs_pubsub_registry, {:unregister_name, topic})
-  end
-
-  @spec send(binary, any) :: atom | pid | port | reference | {atom, atom | {binary, any}}
-  def send(topic, message) do
-    case whereis_name(topic) do
-      :undefined ->
-        {:badarg, {topic, message}}
-
-      pid ->
-        Kernel.send(pid, message)
-        pid
-    end
+    GenServer.cast(__MODULE__, {:unregister_name, topic})
   end
 
   @spec init(any) :: {:ok, %{}}
@@ -57,16 +43,23 @@ defmodule ExIpfsPubsub.Registry do
   end
 
   def handle_call(data, _from, state) do
-    Logger.warn("Unhandled call: #{inspect(data)}")
-    {:reply, :error, state}
+    {:reply, data, state}
   end
 
   def handle_cast({:unregister_name, topic}, state) do
     {:noreply, Map.delete(state, topic)}
   end
 
+  def handle_cast(_data, state) do
+    {:noreply, state}
+  end
+
   def handle_info({:DOWN, _, :process, pid, _}, state) do
     {:noreply, remove_pid(state, pid)}
+  end
+
+  def handle_info(_data, state) do
+    {:noreply, state}
   end
 
   defp remove_pid(state, pid_to_remove) do

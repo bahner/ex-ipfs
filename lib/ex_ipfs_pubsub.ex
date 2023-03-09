@@ -6,8 +6,6 @@ defmodule ExIpfsPubsub do
   import ExIpfs.Utils
   alias ExIpfs.Multibase
   alias ExIpfsPubsub.Topic
-  alias ExIpfsPubsub.Supervisor
-  alias ExIpfsPubsub.Registry
 
   require Logger
 
@@ -86,20 +84,10 @@ defmodule ExIpfsPubsub do
   Returns {:ok, pid} where pid is the pid of the GenServer that is listening for messages.
   Messages will be sent to the provided as a parameter to the function.
   """
-  @spec sub(pid, binary) :: {:ok, pid} | ExIpfs.Api.error_response()
-  def sub(pid, topic) do
-    handler = topic_handler(topic)
-
-    case handler do
-      nil ->
-        Logger.error("No handler registered for topic #{topic}")
-        # Create a topic with no handler and send it for supervision
-        topic = Topic.new!(topic, nil, [pid])
-        Supervisor.start_topic(topic)
-
-      _ ->
-        {:ok, handler}
-    end
+  @spec sub(binary, pid) :: {:ok, pid} | ExIpfs.Api.error_response()
+  def sub(topic, pid \\ self()) do
+    topic = Topic.new!(topic, pid)
+    ExIpfsPubsub.Supervisor.start_topic(topic)
   end
 
   @doc """
@@ -128,5 +116,4 @@ defmodule ExIpfsPubsub do
 
   defp decode_strings(list), do: Enum.map(list, &decode_strings/1)
 
-  defp topic_handler(topic), do: Registry.whereis_name(topic)
 end

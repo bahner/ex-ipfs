@@ -2,7 +2,7 @@ defmodule ExIpfsPubsub.Application do
   @moduledoc false
   use Application
 
-  @registry :ex_ipfs_pubsub_registry
+  @registry ExIpfsPubsub.Registry
 
   @spec start(any, any) :: {:error, any} | {:ok, pid}
   def start(_type, _args) do
