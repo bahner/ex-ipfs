@@ -99,8 +99,9 @@ defmodule ExIpfs do
   @doc """
   Resolve the value of names to IPFS.
 
-  ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-resolve
+
+  ## Options
   ```
   [
     recursive: true,
@@ -119,13 +120,30 @@ defmodule ExIpfs do
   @doc """
   Add a file to IPFS.
 
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
+
   ## Parameters
   * `fspath` - The file system path to the file or directory to be sent to the node.
 
   ## Options
-  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-add
 
+  Only options deemed relevant are listed here. See the link above for the full list.
+  ```
+  [
+    chunker: "size-262144", # Chunking algorithm, size-[bytes], rabin-[min]-[avg]-[max] or buzhash
+    cid-version: 0, # Defaults to 0 unless an option that depends on CIDv1 is passed. Passing version 1 will cause the raw-leaves option to default to true.
+    fscache: true, # Check the filestore for pre-existing blocks. (experimental)
+    hash: "sha2-256", # Hash function to use. Implies CIDv1 if not sha2-256. (experimental)
+    inline-limit: 32, # Maximum block size to inline. (experimental)
+    inline: false, # Inline small blocks into CIDs. (experimental).
+    only-hash: false, # Only chunk and hash - do not write to disk.
+    pin: true, # Pin locally to protect added files from garbage collection.
+    raw-leaves: false, # Use raw blocks for leaf nodes. (experimental)
+    to-files: <<>>, #  Add reference to Files API (MFS) at the provided path.
+    trickle: false, # Use trickle-dag format for dag generation.
+    wrap-with-directory: false, # Wrap files with a directory object.
 
+  ```
   """
   @spec add_fspath(Path.t(), list) :: add_result | ExIpfs.Api.error_response()
   def add_fspath(fspath, opts \\ []),
