@@ -19,7 +19,10 @@ defmodule ExIpfs.ApiTest do
 
   test "get should return a :server when passed nothing or invalid key" do
     {:error, bin} = Ipfs.get("test_case")
-    assert bin.message === "invalid path \"test_case\": illegal base32 data at input byte 3"
+
+    assert bin.message ===
+             "invalid path \"test_case\": invalid cid: illegal base32 data at input byte 3"
+
     assert bin.code === 0
   end
 

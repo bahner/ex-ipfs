@@ -1,6 +1,6 @@
 defmodule ExIpfs.RefsTest do
   @moduledoc false
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   alias ExIpfs.RefsRef, as: Ref
   alias ExIpfs.Refs
@@ -35,8 +35,7 @@ defmodule ExIpfs.RefsTest do
   end
 
   test "local/0" do
-    assert {:ok, _} = Refs.local()
-    {:ok, refs} = Refs.local()
+    assert {:ok, refs} = Refs.local()
     assert Enum.all?(refs, fn ref -> is_map(ref) end)
     assert %Ref{} = Enum.at(refs, 0)
   end
