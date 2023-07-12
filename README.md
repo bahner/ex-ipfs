@@ -7,7 +7,7 @@
 
 Core IPFS module for Elixir. This is the main package with the Api handler and most common types and structs. It suffices to for working with IPFS data as files, but IPLD will be a separate package.
 
-If you are unfamiliar with how IPFS works, it uses a daemon that has a RPC API exposed on localhost:5001. Working with IPFS is then done by interacting with the API. Some commands are executed and interpreted directly on the command line by the daemon. One such function is `key export`. But that is not a problem in practicality. (Key handling is part of the [ex_ipns](https://hex.pm/packages/ex_ipns) package.) This modules acts as a hybrid of those. The intention is to make it easy to work with IPFS in your Elixir applications.
+If you are unfamiliar with how IPFS works, it uses a daemon that has a RPC API exposed on localhost:5001. Working with IPFS is then done by interacting with the API. Some commands are executed and interpreted directly on the command line by the daemon. One such function is `key export`. But that is not a problem in practicality. (Key handling is part of the [ex_ipfs_ipns](https://hex.pm/packages/ex_ipfs_ipns) package.) This modules acts as a hybrid of those. The intention is to make it easy to work with IPFS in your Elixir applications.
 
 Feature requests are welcome. Features present in this module are:
 
@@ -20,8 +20,8 @@ Feature requests are welcome. Features present in this module are:
 
 More modules are under way. The following are implemented:
 
-* [IPLD](https://hex.pm/packages/ex_ipld)
-* [IPNS](https://hex.pm/packages/ex_ipns)
+* [IPLD](https://hex.pm/packages/ex_ipfs_ipld)
+* [IPNS](https://hex.pm/packages/ex_ipfs_ipns)
 
 ## Configuration
 
@@ -33,7 +33,7 @@ export EX_IPFS_API_URL="http://127.0.0.1:5001"
 
 ### Logger
 
-ExIPfs uses Logger and is quite noisy when you are developing. If you set your log level below `debug` you should be OK.
+ExIpfs uses Logger and is quite noisy when you are developing. If you set your log level below `debug` you should be OK.
 
 ## Documentation
 
@@ -57,6 +57,7 @@ iex(2)>
 Install docker-compose and run
 
 ```bash
+make image
 docker-compose up
 ```
 
