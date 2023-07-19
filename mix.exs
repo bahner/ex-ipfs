@@ -12,7 +12,6 @@ defmodule ExIpfs.Mixfile do
       deps: deps(),
       package: package(),
       description: description(),
-      name: "ex_ipfs",
       source_url: "https://github.com/bahner/ex-ipfs.git",
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
