@@ -241,4 +241,20 @@ defmodule ExIpfs.Utils do
       _ -> data
     end
   end
+   
+   def map_has_keys?(response, expected_keys) do
+    if Enum.all?(expected_keys, &Map.has_key?(response, &1)) do
+      response
+    else
+      raise ArgumentError, message: "Missing some of #{inspect(expected_keys)} in response from IPFS API"
+    end
+  end
+
+  def map_get_key!(response, key) do
+    case response do
+      %{^key => value} -> value
+      _ -> raise ArgumentError, message: "Problem extracting #{inspect(key)} from response from IPFS API"
+    end
+  end
+
 end
