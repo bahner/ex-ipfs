@@ -5,7 +5,6 @@ defmodule ExIpfs.Id do
     :addresses,
     :agent_version,
     :id,
-    :protocol_version,
     :public_key,
     :protocols
   ]
@@ -16,7 +15,6 @@ defmodule ExIpfs.Id do
       addresses: map["Addresses"],
       agent_version: map["AgentVersion"],
       id: map["ID"],
-      protocol_version: map["ProtocolVersion"],
       public_key: map["PublicKey"],
       protocols: map["Protocols"]
     }

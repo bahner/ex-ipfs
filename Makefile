@@ -3,7 +3,7 @@
 VERSION ?= $(shell cat mix.exs | grep version | sed -e 's/.*version: "\(.*\)",/\1/')
 
 # Exporting the config values allows us to generate Dockerfile and github config using envsubst.
-export KUBO_VERSION ?= v0.21.0
+export KUBO_VERSION ?= v0.23.0
 export DOCKER_USER ?= ipfs
 export DOCKER_IMAGE ?= $(DOCKER_USER)/kubo:$(KUBO_VERSION)
 
@@ -53,7 +53,7 @@ push: all commited test
 publish-image: image
 	docker push $(DOCKER_IMAGE)
 
-release: test
+release: test publish-image
 	git tag $(VERSION)
 	mix hex.publish
 	git push --tags

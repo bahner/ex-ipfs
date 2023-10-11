@@ -5,14 +5,13 @@ defmodule ExIpfs.Mixfile do
   def project do
     [
       app: :ex_ipfs,
-      version: "0.1.5",
+      version: "0.1.6",
       elixir: "~> 1.14",
       name: "Elixir IPFS",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
       description: description(),
-      name: "ex_ipfs",
       source_url: "https://github.com/bahner/ex-ipfs.git",
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [

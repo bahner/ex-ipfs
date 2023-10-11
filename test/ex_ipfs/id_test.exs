@@ -9,7 +9,6 @@ defmodule ExIpfs.IdTest do
     "Addresses" => ["/ip4/"],
     "AgentVersion" => "go-ipfs/0.4.22/",
     "ID" => "Qm",
-    "ProtocolVersion" => "ipfs/0.1.0",
     "PublicKey" => "CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQD",
     "Protocols" => []
   }
@@ -28,7 +27,6 @@ defmodule ExIpfs.IdTest do
     assert e.addresses == ["/ip4/"]
     assert e.agent_version == "go-ipfs/0.4.22/"
     assert e.id == "Qm"
-    assert e.protocol_version == "ipfs/0.1.0"
     assert e.public_key == "CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQD"
     assert e.protocols == []
   end
