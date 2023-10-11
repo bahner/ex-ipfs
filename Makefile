@@ -53,7 +53,7 @@ push: all commited test
 publish-image: image
 	docker push $(DOCKER_IMAGE)
 
-release: test
+release: test publish-image
 	git tag $(VERSION)
 	mix hex.publish
 	git push --tags
