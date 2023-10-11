@@ -88,7 +88,6 @@ defmodule ExIpfsTest do
     assert %ExIpfs.Id{} = response
     assert is_binary(response.agent_version)
     assert is_binary(response.id)
-    assert is_binary(response.protocol_version)
     assert is_binary(response.public_key)
     assert is_list(response.addresses)
     assert is_list(response.protocols)

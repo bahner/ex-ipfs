@@ -32,7 +32,6 @@ defmodule ExIpfs do
           addresses: list,
           agent_version: String.t(),
           id: String.t(),
-          protocol_version: String.t(),
           public_key: String.t(),
           protocols: list
         }
@@ -242,7 +241,6 @@ defmodule ExIpfs do
     - PublicKey: the public key of the node.
     - Addresses: the addresses of the node.
     - AgentVersion: the version of the node.
-    - ProtocolVersion: the protocol version of the node.
     - Protocols: the protocols of the node.
   """
   @spec id :: {:ok, id()} | ExIpfs.Api.error_response()
