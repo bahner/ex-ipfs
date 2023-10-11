@@ -23,11 +23,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        otp: ["25"]
-        elixir: ["1.14", "1.15"]
+        otp: ["25.1.2"]
+        elixir: ["1.14.3", "1.15.2"]
     services:
       ipfs:
-        image: ipfs/kubo:latest
+        image: ipfs/kubo:v0.23.0
         ports:
           - 5001:5001
     steps:
@@ -70,11 +70,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        otp: ["26"]
-        elixir: ["1.15"]
+        otp: ["26.0.2"]
+        elixir: ["1.15.2"]
     services:
       ipfs:
-        image: ipfs/kubo:latest
+        image: ipfs/kubo:v0.23.0
         ports:
           - 5001:5001
     steps:
