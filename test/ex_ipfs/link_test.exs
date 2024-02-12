@@ -36,7 +36,7 @@ defmodule ExIpfs.LinkTest do
   end
 
   test "passes on error data" do
-    {:error, result} = Link.new({:error, @data})
-    assert result == @data
+    {:error, result} = Link.new({:error, @data_atom})
+    assert result == @data_atom
   end
 end

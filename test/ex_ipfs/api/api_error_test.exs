@@ -39,6 +39,6 @@ defmodule ExIpfs.ApiErrorTest do
 
   test "passes on error data" do
     data = {:error, %{"Message" => "message", "Code" => 0}}
-    assert {:error, data} = ApiError.new({:error, data})
+    assert {:error, _} = ApiError.new({:error, data})
   end
 end

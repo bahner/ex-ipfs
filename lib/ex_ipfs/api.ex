@@ -24,13 +24,29 @@ defmodule ExIpfs.Api do
   @typedoc """
   A type that represents the possible responses from the API.
   """
-  @type response :: binary | map | list | error_response
-
+  @type response :: binary | map | list | error_response | Tesla.Env.t()
   @typedoc """
   A an aggregate type that represents the possible errors that can be returned from the API.
   """
   @type error_response ::
-          {:error, ExIpfs.Api.error()} | {:error, Tesla.Env.t()} | {:error, atom}
+          {:error,
+           atom()
+           | %{
+               :__struct__ => ExIpfs.ApiError | Tesla.Env,
+               optional(:__client__) => Tesla.Client.t(),
+               optional(:__module__) => atom(),
+               optional(:body) => any(),
+               optional(:code) => integer(),
+               optional(:headers) => [{any(), any()}],
+               optional(:message) => binary(),
+               optional(:method) =>
+                 :delete | :get | :head | :options | :patch | :post | :put | :trace,
+               optional(:opts) => [{any(), any()}],
+               optional(:query) => [{any(), any()}],
+               optional(:status) => nil | integer(),
+               optional(:type) => binary(),
+               optional(:url) => binary()
+             }}
 
   # Middleware
   plug(Tesla.Middleware.BaseUrl, @api_url)

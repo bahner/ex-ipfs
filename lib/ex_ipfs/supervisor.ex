@@ -9,6 +9,7 @@ defmodule ExIpfs.Supervisor do
     Supervisor.start_link(__MODULE__, :ok, opts)
   end
 
+  # @spec init(:ok) :: {:ok, {:supervisor, [any()], :permanent}}
   def init(:ok) do
     children = []
 

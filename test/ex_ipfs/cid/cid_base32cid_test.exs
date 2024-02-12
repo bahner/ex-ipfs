@@ -29,6 +29,6 @@ defmodule ExIpfs.CidBase32CIDTest do
       "Code" => 0
     }
 
-    assert {:error, data} = Base32CID.new({:error, data})
+    assert {:error, _} = Base32CID.new({:error, data})
   end
 end

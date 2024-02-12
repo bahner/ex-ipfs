@@ -8,6 +8,7 @@ defmodule ExIpfs.Get do
   defstruct [:path, :fspath, :name, :content, archive: false]
 
   @doc false
+  @spec get(Path.t()) :: {:ok, Path.t()} | ExIpfs.Api.error_response()
   @spec get(Path.t(), list) :: {:ok, Path.t()} | ExIpfs.Api.error_response()
   def get(path, opts \\ []) do
     content = get_get_data(path, opts)
@@ -22,7 +23,6 @@ defmodule ExIpfs.Get do
     end
   end
 
-  # @spec get_get_data(path, opts) :: {:ok, fspath} | ExIpfs.Api.error_response
   defp get_get_data(path, opts) do
     options = create_query_opts(opts)
 

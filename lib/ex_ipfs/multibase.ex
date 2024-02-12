@@ -57,12 +57,14 @@ defmodule ExIpfs.Multibase do
   ## Options
     `b` - Multibase encoding to use.
   """
+  @spec encode!(binary) :: binary() | ExIpfs.Api.error_response()
   @spec encode!(binary, list) :: binary() | ExIpfs.Api.error_response()
   def encode!(data, opts \\ []) when is_binary(data) do
     multipart_content(data)
     |> post_multipart("/multibase/encode", query: opts)
   end
 
+  @spec encode(binary) :: {:ok, binary()} | ExIpfs.Api.error_response()
   @spec encode(binary, list) :: {:ok, binary()} | ExIpfs.Api.error_response()
   def encode(data, opts \\ [])
 
@@ -83,8 +85,8 @@ defmodule ExIpfs.Multibase do
     prefix - Only list encodings with the given prefix.
     numeric - Only list encodings with the given numeric code.
   """
-  @spec list(list()) ::
-          {:ok, [codec()]} | ExIpfs.Api.error_response()
+  @spec list() :: {:ok, [codec()]} | ExIpfs.Api.error_response()
+  @spec list(list()) :: {:ok, [codec()]} | ExIpfs.Api.error_response()
   def list(opts \\ []) do
     post_query("/multibase/list", query: opts)
     |> filter_empties()
@@ -103,6 +105,7 @@ defmodule ExIpfs.Multibase do
   ## Options
     `b` - Multibase encoding to use
   """
+  @spec transcode(binary) :: {:ok, any} | ExIpfs.Api.error_response()
   @spec transcode(binary, list()) :: {:ok, any} | ExIpfs.Api.error_response()
   def transcode(data, opts \\ []) do
     multipart_content(data)

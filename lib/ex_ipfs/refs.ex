@@ -41,7 +41,8 @@ defmodule ExIpfs.Refs do
   """
   # This is not suitable for unit testing.
   # coveralls-ignore-start
-  @spec refs(Path.t(), list()) :: {:ok, any} | ExIpfs.Api.error_response()
+  @spec refs(Path.t()) :: ExIpfs.Api.error_response()
+  @spec refs(Path.t(), list()) :: ExIpfs.Api.error_response()
   def refs(path, opts \\ []),
     do:
       post_query("/refs?arg=" <> path, query: opts)

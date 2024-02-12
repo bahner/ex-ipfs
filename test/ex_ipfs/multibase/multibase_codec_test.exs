@@ -26,7 +26,7 @@ defmodule ExIpfs.MultibaseCodecTest do
   end
 
   test "passed on error data" do
-    data = {:error}
+    _data = {:error}
     assert {:error, @data} = MultibaseCodec.new({:error, @data})
   end
 end

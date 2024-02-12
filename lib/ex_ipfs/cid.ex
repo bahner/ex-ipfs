@@ -37,6 +37,7 @@ defmodule ExIpfs.Cid do
   List available multibase encodings.
 
   """
+  @spec bases() :: {:ok, list} | ExIpfs.Api.error_response()
   @spec bases(list()) :: {:ok, list} | ExIpfs.Api.error_response()
   def bases(opts \\ []),
     do:
@@ -53,8 +54,8 @@ defmodule ExIpfs.Cid do
   `numeric` <bool> - Show codec numeric code.
   `supported` <bool> - Show only supported codecs.
   """
-  @spec codecs(list()) ::
-          {:ok, [ExIpfs.multi_codec()]} | ExIpfs.Api.error_response()
+  @spec codecs() :: {:ok, [ExIpfs.multi_codec()]} | ExIpfs.Api.error_response()
+  @spec codecs(list()) :: {:ok, [ExIpfs.multi_codec()]} | ExIpfs.Api.error_response()
   def codecs(opts \\ []),
     do:
       post_query("/cid/codecs", query: opts)
@@ -74,6 +75,7 @@ defmodule ExIpfs.Cid do
   `b` <string> - Multibase to display CID in.
   `mc` <string> - Multicodec.
   """
+  @spec format(binary()) :: {:ok, any} | ExIpfs.Api.error_response()
   @spec format(binary(), list()) :: {:ok, any} | ExIpfs.Api.error_response()
   def format(cid, opts \\ []),
     do:
@@ -89,8 +91,8 @@ defmodule ExIpfs.Cid do
 
   `supported` <bool> - Show only supported hashes.
   """
-  @spec hashes(list()) ::
-          {:ok, ExIpfs.multi_hash()} | ExIpfs.Api.error_response()
+  @spec hashes() :: {:ok, ExIpfs.multi_hash()} | ExIpfs.Api.error_response()
+  @spec hashes(list()) :: {:ok, ExIpfs.multi_hash()} | ExIpfs.Api.error_response()
   def hashes(opts \\ []),
     do:
       post_query("/cid/hashes", query: opts)

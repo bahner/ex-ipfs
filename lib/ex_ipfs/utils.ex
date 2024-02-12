@@ -84,6 +84,7 @@ defmodule ExIpfs.Utils do
   This pattern is used in the IPFS API. The file path is relative to the
   base directory. This is to avoid leaking irrelevant paths to the server.
   """
+  @dialyzer {:no_return, multipart_add_file: 3}
   @spec multipart_add_file(Multipart.t(), Path.t(), Path.t()) :: Multipart.t()
   def multipart_add_file(mp, fspath, basedir) do
     relative_filename = String.replace(fspath, basedir <> "/", "")
@@ -99,6 +100,7 @@ defmodule ExIpfs.Utils do
   Creates a multipart request from a binary. The filename should always be "file". Because
   the IPFS API expects this.
   """
+  @spec multipart_content(binary) :: Tesla.Multipart.t()
   @spec multipart_content(binary, binary) :: Multipart.t()
   def multipart_content(data, type \\ "file") when is_binary(data) and is_binary(type) do
     Multipart.new()
@@ -118,7 +120,7 @@ defmodule ExIpfs.Utils do
     - multipart: The multipart request to add the files to.
     - fspath: The path to the directory to add to the multipart request.
   """
-
+  @dialyzer {:no_return, multipart_add_files: 2}
   @spec multipart_add_files(Multipart.t(), Path.t()) :: Multipart.t()
   def multipart_add_files(multipart, fspath) do
     with basedir <- Path.dirname(fspath) do
@@ -174,6 +176,7 @@ defmodule ExIpfs.Utils do
   [{"content_type", "application/json"}, {"x_my_header", "value"}]
 
   """
+  @spec recase_headers(list()) :: list()
   @spec recase_headers(list, :kebab | :snake) :: list
   def recase_headers(headers, format \\ :snake) when is_list(headers) do
     case format do

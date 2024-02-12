@@ -21,7 +21,7 @@ defmodule ExIpfs.ApiTest do
     {:error, bin} = Ipfs.get("test_case")
 
     assert bin.message ===
-             "invalid path \"test_case\": invalid cid: illegal base32 data at input byte 3"
+             "invalid path \"test_case\": path does not have enough components"
 
     assert bin.code === 0
   end

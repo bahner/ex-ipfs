@@ -5,12 +5,6 @@ defmodule ExIpfs.ApiStreamingClient do
 
   require Logger
 
-  @spec new(
-          pid,
-          binary,
-          :infinity | integer,
-          list
-        ) :: {:error, any} | {:ok, any} | {:ok, integer, list} | {:ok, integer, list, any}
   @doc """
   Starts a stream client and returns a reference to the client.
   ## Parameters
@@ -19,6 +13,12 @@ defmodule ExIpfs.ApiStreamingClient do
   - timeout: The timeout for the stream. Defaults to infinity.
   - query_options: A list of query options to add to the url.
   """
+  @spec new(pid, binary) ::
+          {:error, any} | {:ok, any} | {:ok, integer, list} | {:ok, integer, list, any}
+  @spec new(pid, binary, :infinity | integer) ::
+          {:error, any} | {:ok, any} | {:ok, integer, list} | {:ok, integer, list, any}
+  @spec new(pid, binary, :infinity | integer, list) ::
+          {:error, any} | {:ok, any} | {:ok, integer, list} | {:ok, integer, list, any}
   def new(pid, url, timeout \\ :infinity, query_options \\ []) do
     Logger.debug(
       "Starting IPFS API stream client for #{url} with query options #{inspect(query_options)}"
