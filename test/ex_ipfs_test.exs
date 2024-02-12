@@ -19,7 +19,7 @@ defmodule ExIpfsTest do
     assert %ExIpfs.ApiError{} = response
 
     assert response.message ==
-             "could not resolve name: _dnslink subdomain at \"ipns.foo\" is missing a TXT record (https://docs.ipfs.tech/concepts/dnslink/)"
+             "DNSLink lookup for \"ipns.foo.\" failed: could not resolve name: DNSLink lookup could not find a TXT record (https://docs.ipfs.tech/concepts/dnslink/)"
 
     assert response.code == 0
     assert response.type == "error"
