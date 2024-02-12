@@ -24,6 +24,10 @@ More modules are under way. The following are implemented:
 * [IPLD](https://hex.pm/packages/ex_ipfs_ipld)
 * [IPNS](https://hex.pm/packages/ex_ipfs_ipns)
 
+## Requirements
+
+Only OTP 25 and newer are supported due to an underlying issue with SSL Certificate handling.
+
 ## Configuration
 
 The default should be OK, but you may override the API with the following environment variables.
