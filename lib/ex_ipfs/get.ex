@@ -65,7 +65,8 @@ defmodule ExIpfs.Get do
     IO.binwrite(fd, get.content)
 
     if get.archive do
-      File.rename!(tmp, get.fspath)
+      File.cp!(tmp, get.fspath)
+      File.rm!(tmp)
       {:ok, get.fspath}
     else
       extract_elem_from_tar_to(tmp, get.name, get.fspath)
@@ -79,7 +80,8 @@ defmodule ExIpfs.Get do
     with cwd when is_bitstring(cwd) <- Temp.path!(parent_tmp_dir),
          extract_result <- :erl_tar.extract(file, [{:cwd, ~c'#{cwd}'}]) do
       if :ok == extract_result do
-        File.rename!("#{cwd}/#{elem}", output)
+        File.cp!("#{cwd}/#{elem}", output)
+        File.rm!("#{cwd}/#{elem}")
         :ok
       end
     end
