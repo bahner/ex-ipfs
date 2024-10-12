@@ -53,7 +53,7 @@ defmodule ExIpfs.Mixfile do
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*", "AUTHORS*"],
       maintainers: ["Lars Bahner"],
-      licenses: ["GPLv3"],
+      licenses: ["GPL-3.0"],
       links: %{"GitHub" => "https://github.com/bahner/ex-ipfs"}
     ]
   end
