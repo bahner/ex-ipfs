@@ -62,11 +62,14 @@ templates:
 	envsubst < templates/Dockerfile > Dockerfile
 	envsubst < templates/testsuite.yaml > .github/workflows/testsuite.yaml
 
-test:
+test: lint
 	mix format --check-formatted
 	mix credo
 	mix dialyzer
 	mix test
+
+lint:
+	gh actionlint .github/workflows/*.yaml
 
 distclean: clean
 	rm -rf _build deps mix.lock
