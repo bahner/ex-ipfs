@@ -80,7 +80,7 @@ defmodule ExIpfs.Ping do
         send(
           state.pid,
           try do
-            Jason.decode!("#{data}")
+            JSON.decode!("#{data}")
             |> ExIpfs.PingReply.new()
           rescue
             _ -> data

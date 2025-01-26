@@ -122,9 +122,7 @@ defmodule ExIpfs.Api do
       error
       |> String.split("\n")
       |> filter_empties()
-      # Please note that Jason.decode *must* have input as a string.
-      # Hence the interpolation.
-      |> Enum.map(fn line -> Jason.decode!("#{line}") end)
+      |> Enum.map(fn line -> JSON.decode!("#{line}") end)
     rescue
       # coveralls-ignore-start
       _ ->

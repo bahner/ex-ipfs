@@ -5,8 +5,8 @@ defmodule ExIpfs.Mixfile do
   def project do
     [
       app: :ex_ipfs,
-      version: "0.1.7",
-      elixir: "~> 1.14",
+      version: "0.1.8",
+      elixir: "~> 1.18",
       name: "Elixir IPFS",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -32,16 +32,15 @@ defmodule ExIpfs.Mixfile do
 
   defp deps do
     [
-      {:hackney, "~> 1.18"},
-      {:jason, "~> 1.4"},
-      {:nanoid, "~> 2.0"},
-      {:recase, "~> 0.7.0"},
-      {:temp, "~> 0.4.7"},
-      {:tesla, "~> 1.5"},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.2", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.29", only: :dev, runtime: false},
-      {:excoveralls, "~> 0.15", only: :test, runtime: false}
+      {:hackney, "~> 1.20"},
+      {:nanoid, "~> 2.1"},
+      {:recase, "~> 0.8"},
+      {:temp, "~> 0.4"},
+      {:tesla, "~> 1.13"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.36", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.18", only: :test, runtime: false}
     ]
   end
 
