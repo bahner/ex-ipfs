@@ -51,8 +51,8 @@ defmodule ExIpfs.Cid do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cid-codecs
 
-  `numeric` <bool> - Show codec numeric code.
-  `supported` <bool> - Show only supported codecs.
+  `numeric` <bool> - Also include numeric codes.
+  `supported` <bool> - List only codecs supported by Kubo commands.
   """
   @spec codecs() :: {:ok, [ExIpfs.multi_codec()]} | ExIpfs.Api.error_response()
   @spec codecs(list()) :: {:ok, [ExIpfs.multi_codec()]} | ExIpfs.Api.error_response()
@@ -89,6 +89,7 @@ defmodule ExIpfs.Cid do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cid-hashes
 
+  `numeric` <bool> - Also include numeric codes.
   `supported` <bool> - Show only supported hashes.
   """
   @spec hashes() :: {:ok, ExIpfs.multi_hash()} | ExIpfs.Api.error_response()

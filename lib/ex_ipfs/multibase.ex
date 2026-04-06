@@ -27,6 +27,8 @@ defmodule ExIpfs.Multibase do
   @doc """
   Decode a multibase encoded string.
 
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-multibase-decode
+
   ## Parameters
     `data` - Data to decode.
   """
@@ -51,11 +53,13 @@ defmodule ExIpfs.Multibase do
   @doc """
   Encode a string to a multibase encoded string.
 
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-multibase-encode
+
   ## Parameters
     `data` - File to encode.
 
   ## Options
-    `b` - Multibase encoding to use.
+    `b` - Multibase encoding to use. Default: `base64url`.
   """
   @spec encode!(binary) :: binary() | ExIpfs.Api.error_response()
   @spec encode!(binary, list) :: binary() | ExIpfs.Api.error_response()
@@ -81,9 +85,11 @@ defmodule ExIpfs.Multibase do
   @doc """
   List available multibase encodings.
 
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-multibase-list
+
   ## Options
-    prefix - Only list encodings with the given prefix.
-    numeric - Only list encodings with the given numeric code.
+    `prefix` - Limit to entries with this multibase prefix.
+    `numeric` - Include numeric codes.
   """
   @spec list() :: {:ok, [codec()]} | ExIpfs.Api.error_response()
   @spec list(list()) :: {:ok, [codec()]} | ExIpfs.Api.error_response()
@@ -97,13 +103,13 @@ defmodule ExIpfs.Multibase do
   @doc """
   Transcode a multibase encoded string.
 
-  https://docs.ipfs.io/reference/http/api/#api-v0-multibase-transcode
+  https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-multibase-transcode
 
   ## Parameters
     `data` - Data to transcode.
 
   ## Options
-    `b` - Multibase encoding to use
+    `b` - Multibase encoding to use. Default: `base64url`.
   """
   @spec transcode(binary) :: {:ok, any} | ExIpfs.Api.error_response()
   @spec transcode(binary, list()) :: {:ok, any} | ExIpfs.Api.error_response()

@@ -104,9 +104,8 @@ defmodule ExIpfs do
   ```
   [
     recursive: true,
-    nocache: true,
-    dht-record-count: 10,
-    dht-timeout: 10
+    :'dht-record-count': 16,
+    :'dht-timeout': "1m0s"
   ]
   ```
   """
@@ -129,18 +128,21 @@ defmodule ExIpfs do
   Only options deemed relevant are listed here. See the link above for the full list.
   ```
   [
-    chunker: "size-262144", # Chunking algorithm, size-[bytes], rabin-[min]-[avg]-[max] or buzhash
-    cid-version: 0, # Defaults to 0 unless an option that depends on CIDv1 is passed. Passing version 1 will cause the raw-leaves option to default to true.
+    chunker: "size-262144", # Chunking algorithm: size-[bytes], rabin-[min]-[avg]-[max] or buzhash
+    :'cid-version': 0, # CID version. Many non-default options imply CIDv1.
     fscache: true, # Check the filestore for pre-existing blocks. (experimental)
-    hash: "sha2-256", # Hash function to use. Implies CIDv1 if not sha2-256. (experimental)
-    inline-limit: 32, # Maximum block size to inline. (experimental)
+    hash: "sha2-256", # Hash function to use. Implies CIDv1 if not sha2-256.
+    :'inline-limit': 32, # Maximum block size to inline. (experimental)
     inline: false, # Inline small blocks into CIDs. (experimental).
-    only-hash: false, # Only chunk and hash - do not write to disk.
+    :'only-hash': false, # Only chunk and hash - do not write to disk.
     pin: true, # Pin locally to protect added files from garbage collection.
-    raw-leaves: false, # Use raw blocks for leaf nodes. (experimental)
-    to-files: <<>>, #  Add reference to Files API (MFS) at the provided path.
+    :'raw-leaves': false, # Use raw blocks for leaf nodes.
+    :'to-files': <<>>, # Add reference to Files API (MFS) at the provided path.
     trickle: false, # Use trickle-dag format for dag generation.
-    wrap-with-directory: false, # Wrap files with a directory object.
+    :'wrap-with-directory': false, # Wrap files with a directory object.
+    :'max-file-links': 174,
+    :'max-directory-links': 174,
+    :'max-hamt-fanout': 256
 
   ```
   """
@@ -198,15 +200,15 @@ defmodule ExIpfs do
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-get
   ```
   [
-    output: <string>, # Output to file or directory name. Optional, default: <cid-ipfs-or-ipns-path>
-    archive: <bool>, # Output as a tarball. Optional, default: false
-    timeout: <int64>, # Timeout in seconds. Optional, default: 100
+    output: <string>, # Output file/directory name.
+    archive: <bool>, # Output as a tarball.
+    compress: <bool>, # Compress the output tarball.
+    :'compression-level': <int> # Compression level for gzip compression.
   ]
   ```
-  Compression is not implemented.
 
-  If you feel that you need more timeouts, you can use the `:timeout` option in the `opts` list.
-  But the default should be enough for most cases. More likely your content isn't available....
+  You can set adapter timeout (milliseconds) with `:timeout` in `opts`. This timeout is local to
+  the HTTP client and is not sent to Kubo as an RPC argument.
   """
   @spec get(Path.t(), list) :: {:ok, Path.t()} | ExIpfs.Api.error_response()
   defdelegate get(path, opts \\ []), to: ExIpfs.Get
@@ -257,9 +259,11 @@ defmodule ExIpfs do
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-ls
   ```
   [
-    headers: <bool>, # Print table headers (Hash, Size, Name). Optional, default: false
-    resolve-type: <bool>, # Resolve linked objects to find out their types. Optional, default: false
-    timeout: <int64>, # Timeout in seconds. Optional, default: 100
+    headers: <bool>, # Print table headers (Hash, Size, Name).
+    :'resolve-type': <bool>, # Resolve linked objects to find out their types. Default: true
+    size: <bool>, # Resolve linked objects to find out their file size. Default: true
+    stream: <bool>, # Enable experimental streaming of directory entries.
+    long: <bool> # Use long listing format (mode and modification time).
   ]
   ```
 

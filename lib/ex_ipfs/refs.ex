@@ -38,6 +38,16 @@ defmodule ExIpfs.Refs do
 
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-refs
+
+  ```
+  [
+    format: "<dst>", # Emit edges with given format. Available tokens: <src> <dst> <linkname>
+    edges: false, # Emit edge format: <from> -> <to>
+    unique: false, # Omit duplicate refs
+    recursive: false, # Recursively list child links
+    :'max-depth': -1 # Limit recursion depth (only used with recursive refs)
+  ]
+  ```
   """
   # This is not suitable for unit testing.
   # coveralls-ignore-start
