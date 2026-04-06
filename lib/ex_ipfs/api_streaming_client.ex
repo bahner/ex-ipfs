@@ -13,18 +13,60 @@ defmodule ExIpfs.ApiStreamingClient do
   - timeout: The timeout for the stream. Defaults to infinity.
   - query_options: A list of query options to add to the url.
   """
-  @spec new(pid, binary) ::
-          {:error, any} | {:ok, any} | {:ok, integer, list} | {:ok, integer, list, any}
-  @spec new(pid, binary, :infinity | integer) ::
-          {:error, any} | {:ok, any} | {:ok, integer, list} | {:ok, integer, list, any}
-  @spec new(pid, binary, :infinity | integer, list) ::
-          {:error, any} | {:ok, any} | {:ok, integer, list} | {:ok, integer, list, any}
+  @spec new(pid, binary) :: {:ok, pid()} | {:error, term()}
+  @spec new(pid, binary, :infinity | integer) :: {:ok, pid()} | {:error, term()}
+  @spec new(pid, binary, :infinity | integer, list) :: {:ok, pid()} | {:error, term()}
   def new(pid, url, timeout \\ :infinity, query_options \\ []) do
     Logger.debug(
       "Starting IPFS API stream client for #{url} with query options #{inspect(query_options)}"
     )
 
-    options = [stream_to: pid, async: true, recv_timeout: timeout, query: query_options]
-    :hackney.request(:post, url, [], <<>>, options)
+    full_url = merge_query_options(url, query_options)
+
+    Task.start(fn ->
+      request = Finch.build(:post, full_url)
+
+      case Finch.stream(request, ExIpfs.Finch, nil, &forward_chunk(pid, &1, &2),
+             receive_timeout: timeout
+           ) do
+        {:ok, _acc} ->
+          send(pid, {:finch_response, :done})
+          :ok
+
+        {:error, reason, _acc} ->
+          send(pid, {:finch_response, {:error, reason}})
+          {:error, reason}
+      end
+    end)
   end
+
+  defp forward_chunk(pid, chunk, acc) do
+    message =
+      case chunk do
+        {:status, status} -> {:status, status}
+        {:headers, headers} -> {:headers, headers}
+        {:data, data} -> data
+        {:trailers, trailers} -> {:trailers, trailers}
+      end
+
+    send(pid, {:finch_response, message})
+    {:cont, acc}
+  end
+
+  defp merge_query_options(url, []), do: url
+
+  defp merge_query_options(url, query_options) do
+    uri = URI.parse(url)
+
+    merged_query =
+      uri.query
+      |> to_query_map()
+      |> Map.merge(Map.new(query_options))
+      |> URI.encode_query()
+
+    URI.to_string(%URI{uri | query: merged_query})
+  end
+
+  defp to_query_map(nil), do: %{}
+  defp to_query_map(query), do: URI.decode_query(query)
 end

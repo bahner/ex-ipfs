@@ -30,7 +30,7 @@ defmodule ExIpfs.Get do
 
     case reply do
       {:error, reason} ->
-        Logger.error("Error getting data: #{inspect(reason)}")
+        Logger.debug("Error getting data: #{inspect(reason)}")
         {:error, reason}
 
       _ ->
@@ -44,7 +44,7 @@ defmodule ExIpfs.Get do
 
     [
       query: query_opts,
-      opts: [adapter: [recv_timeout: timeout]]
+      opts: [adapter: [receive_timeout: timeout]]
     ]
   end
 

@@ -2,7 +2,7 @@ defmodule ExIpfs.Api do
   @moduledoc """
   A module that contains the functions that are used to interact with the IPFS API.
   """
-  use Tesla, docs: false
+
   alias ExIpfs.ApiError
   require Logger
   import ExIpfs.Utils, only: [unokify: 1, filter_empties: 1]
@@ -48,22 +48,26 @@ defmodule ExIpfs.Api do
                optional(:url) => binary()
              }}
 
-  # Middleware
-  plug(Tesla.Middleware.BaseUrl, @api_url)
-  plug(Tesla.Middleware.JSON)
-  plug(Tesla.Middleware.Logger)
+  @middleware [
+    {Tesla.Middleware.BaseUrl, @api_url},
+    Tesla.Middleware.JSON,
+    {Tesla.Middleware.Logger, level: &__MODULE__.tesla_log_level/1, debug: false}
+  ]
+  @adapter {Tesla.Adapter.Finch, name: ExIpfs.Finch}
+
+  defp client, do: Tesla.client(@middleware, @adapter)
 
   @doc false
   @spec post_query(Path.t(), list()) :: response
   def post_query(path, opts \\ []) do
-    post(path, <<>>, opts)
+    Tesla.post(client(), path, <<>>, opts)
     |> handle_response()
   end
 
   @doc false
   @spec post_multipart(Tesla.Multipart.t(), binary, list()) :: response
   def post_multipart(mp, path, opts \\ []) do
-    post(path, mp, opts)
+    Tesla.post(client(), path, mp, opts)
     |> handle_response()
   end
 
@@ -130,4 +134,12 @@ defmodule ExIpfs.Api do
         # coveralls-ignore-stop
     end
   end
+
+  @doc false
+  @spec tesla_log_level({:ok, Tesla.Env.t()} | {:error, term()}) ::
+          :info | :warn | :warning | :error
+  def tesla_log_level({:ok, %Tesla.Env{status: status}}) when status >= 400, do: :info
+  def tesla_log_level({:ok, %Tesla.Env{status: status}}) when status >= 300, do: :warning
+  def tesla_log_level({:ok, _env}), do: :info
+  def tesla_log_level({:error, _reason}), do: :warning
 end

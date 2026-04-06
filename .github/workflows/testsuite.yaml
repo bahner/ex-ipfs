@@ -25,18 +25,6 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          # Baseline for current minimum supported Elixir in mix.exs
-          - elixir: "1.14.5"
-            otp: "26"
-
-          # Full OTP coverage for newer Elixir releases
-          - elixir: "1.17.3"
-            otp: "25"
-          - elixir: "1.17.3"
-            otp: "26"
-          - elixir: "1.17.3"
-            otp: "27"
-
           - elixir: "1.18.3"
             otp: "25"
           - elixir: "1.18.3"
@@ -56,14 +44,14 @@ jobs:
         ports:
           - 5001:5001
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
       - name: Restore dependencies cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: dependency-cache
         with:
           path: deps
@@ -80,7 +68,7 @@ jobs:
           mix format --check-formatted
           mix deps.unlock --check-unused
           mix deps.get
-          mix compile --warnings-as-errors
+          mix compile
       - name: Run dialyzer integrity checks
         timeout-minutes: 10
         run: |

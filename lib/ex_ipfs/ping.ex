@@ -61,9 +61,9 @@ defmodule ExIpfs.Ping do
     {:noreply, state}
   end
 
-  def handle_info({:hackney_response, _ref, data}, state) do
+  def handle_info({:finch_response, data}, state) do
     case data do
-      {:status, 200, _} ->
+      {:status, 200} ->
         Logger.info("Status 200 starting pinging #{state.peer_id}")
         {:noreply, state}
 
@@ -71,8 +71,23 @@ defmodule ExIpfs.Ping do
         Logger.info("Headers: #{inspect(headers)}")
         {:noreply, state}
 
+      {:trailers, trailers} ->
+        case find_stream_error(trailers) do
+          nil ->
+            Logger.info("Trailers: #{inspect(trailers)}")
+            {:noreply, state}
+
+          stream_error ->
+            Logger.error("Ping stream trailer error: #{stream_error}")
+            {:stop, {:stream_error, stream_error}, state}
+        end
+
       :done ->
-        {:stop, state}
+        {:stop, :normal, state}
+
+      {:error, reason} ->
+        Logger.error("Ping stream failed: #{inspect(reason)}")
+        {:stop, reason, state}
 
       data ->
         Logger.info("Received data: #{inspect(data)}")
@@ -89,8 +104,13 @@ defmodule ExIpfs.Ping do
 
         {:noreply, state}
     end
+  end
 
-    {:noreply, state}
+  defp find_stream_error(headers) do
+    headers
+    |> Enum.find_value(fn {key, value} ->
+      if String.downcase(to_string(key)) == "x-stream-error", do: to_string(value), else: nil
+    end)
   end
 
   # coveralls-ignore-stop

@@ -32,11 +32,12 @@ defmodule ExIpfs.Mixfile do
 
   defp deps do
     [
-      {:hackney, "~> 1.20"},
+      {:finch, "~> 0.20"},
       {:nanoid, "~> 2.1"},
       {:recase, "~> 0.8"},
       {:temp, "~> 0.4"},
       {:tesla, "~> 1.13"},
+      {:bypass, "~> 2.1", only: :test},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.36", only: :dev, runtime: false},
@@ -52,7 +53,7 @@ defmodule ExIpfs.Mixfile do
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*", "AUTHORS*"],
       maintainers: ["Lars Bahner"],
-      licenses: ["GPLv3"],
+      licenses: ["GPL-3.0"],
       links: %{"GitHub" => "https://github.com/bahner/ex-ipfs"}
     ]
   end

@@ -8,6 +8,7 @@ defmodule ExIpfs.ApiTest do
   NB! The tests are not mocked. They are designed to be run against a live IPFS node. This is
   """
   use ExUnit.Case, async: true
+  import ExUnit.CaptureLog
   alias ExIpfs, as: Ipfs
 
   test "get should return a binary when passed a valid key" do
@@ -18,20 +19,24 @@ defmodule ExIpfs.ApiTest do
   end
 
   test "get should return a :server when passed nothing or invalid key" do
-    {:error, bin} = Ipfs.get("test_case")
+    capture_log(fn ->
+      {:error, bin} = Ipfs.get("test_case")
 
-    assert bin.message ===
-             "invalid path \"test_case\": path does not have enough components"
+      assert bin.message ===
+               "invalid path \"test_case\": path does not have enough components"
 
-    assert bin.code === 0
+      assert bin.code === 0
+    end)
   end
 
   doctest ExIpfs.Api
 
   test "post_query returns 404" do
-    {:error, response} = Ipfs.Api.post_query("test")
-    assert %Tesla.Env{} = response
-    assert response.status == 404
+    capture_log(fn ->
+      {:error, response} = Ipfs.Api.post_query("test")
+      assert %Tesla.Env{} = response
+      assert response.status == 404
+    end)
   end
 
   test "post_query returns 400" do
