@@ -40,7 +40,12 @@ defmodule ExIpfs.Get do
 
   defp create_query_opts(opts) do
     timeout = Keyword.get(opts, :timeout, 10_000)
-    [opts: [adpapter: [:recv_timeout, timeout]]]
+    query_opts = Keyword.drop(opts, [:timeout])
+
+    [
+      query: query_opts,
+      opts: [adapter: [recv_timeout: timeout]]
+    ]
   end
 
   defp create_output_struct(path, content, opts) do
