@@ -82,6 +82,30 @@ defmodule ExIpfsTest do
     File.rm_rf!("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
   end
 
+  test "get writes to custom output path" do
+    output = "custom-output-hello-world.txt"
+    File.rm_rf!(output)
+
+    {:ok, ^output} = ExIpfs.get("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z", output: output)
+
+    assert File.exists?(output)
+    assert File.read!(output) == "Hello World!\r\n"
+    File.rm_rf!(output)
+  end
+
+  test "get archive writes to custom output path" do
+    output = "custom-output-hello-world.tar"
+    File.rm_rf!(output)
+
+    {:ok, ^output} =
+      ExIpfs.get("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z", output: output, archive: true)
+
+    assert File.exists?(output)
+    %{size: size} = File.stat!(output)
+    assert size > 0
+    File.rm_rf!(output)
+  end
+
   test "Get the ID of the local ipfs daemon" do
     {:ok, response} = ExIpfs.id()
 

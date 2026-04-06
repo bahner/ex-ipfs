@@ -35,6 +35,10 @@ defmodule ExIpfs.UtilsTest do
     assert Utils.okify("data") == {:ok, "data"}
   end
 
+  test "errify returns {:error, data}" do
+    assert Utils.errify("data") == {:error, "data"}
+  end
+
   test "okicy passes on :ok tuple" do
     assert Utils.okify({:ok, "data"}) == {:ok, "data"}
   end
@@ -75,8 +79,18 @@ defmodule ExIpfs.UtilsTest do
     assert tail == [{"x_ipfs_path", "/ipfs/QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXj9R1o1rTm7N"}]
   end
 
+  test "recase_headers supports kebab case" do
+    [recased_header | tail] = Utils.recase_headers(@headers, :kebab)
+    assert recased_header == {"content-type", "application/json"}
+    assert tail == [{"x-ipfs-path", "/ipfs/QmYyQSo1c1Ym7orWxLYvCrM2EmxFTANf8wXj9R1o1rTm7N"}]
+  end
+
   test "assert get_header_value gets correct value" do
     assert Utils.get_header_value(@headers, "content_type") == "application/json"
+  end
+
+  test "assert get_header_value is case insensitive" do
+    assert Utils.get_header_value(@headers, "ContentType") == "application/json"
   end
 
   test "assert get_header_value returns nil if header is not found" do
@@ -115,6 +129,40 @@ defmodule ExIpfs.UtilsTest do
     multipart = Utils.multipart_add_files(multipart, tmpfile)
     assert is_list(multipart.parts)
     assert %Tesla.Multipart.Part{} = List.last(multipart.parts)
+  end
+
+  test "multipart_add_file strips basedir from uploaded filename" do
+    Temp.track!()
+    {_pid, tmpfile} = Temp.open!("multipart_add_file")
+    basedir = Path.dirname(tmpfile)
+
+    multipart =
+      Tesla.Multipart.new()
+      |> Utils.multipart_add_file(tmpfile, basedir)
+
+    part = List.last(multipart.parts)
+    assert part.dispositions[:filename] == Path.basename(tmpfile)
+  end
+
+  test "map_has_keys? returns map when all keys exist" do
+    response = %{"Path" => "/ipfs/Qm...", "Type" => "ok"}
+    assert Utils.map_has_keys?(response, ["Path", "Type"]) == response
+  end
+
+  test "map_has_keys? raises on missing keys" do
+    assert_raise ArgumentError, ~r/Missing some of/, fn ->
+      Utils.map_has_keys?(%{"Path" => "/ipfs/Qm..."}, ["Path", "Type"])
+    end
+  end
+
+  test "map_get_key! returns key value" do
+    assert Utils.map_get_key!(%{"Path" => "/ipfs/Qm..."}, "Path") == "/ipfs/Qm..."
+  end
+
+  test "map_get_key! raises when key is missing" do
+    assert_raise ArgumentError, ~r/Problem extracting/, fn ->
+      Utils.map_get_key!(%{"Path" => "/ipfs/Qm..."}, "Type")
+    end
   end
 
   test "struct2json! returns a json string" do
