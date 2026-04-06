@@ -1,5 +1,4 @@
 # IPFS RPC API client for Elixir
-ooo
 
 ![IPFS logo](https://ipfs.io/ipfs/QmQJ68PFMDdAsgCZvA1UVzzn18asVcf7HVvCDgpjiSCAse)
 
@@ -26,7 +25,22 @@ More modules are under way. The following are implemented:
 
 ## Requirements
 
-Only OTP 25 and newer are supported due to an underlying issue with SSL Certificate handling.
+Minimum requirements:
+
+* Elixir `~> 1.18` (see `mix.exs`)
+* Erlang/OTP `>= 25`
+* A running Kubo daemon with RPC API available (default: `http://127.0.0.1:5001`)
+
+Optional (for local daemon/testing):
+
+* Docker with access to the Docker daemon
+* Kubo image example: `ipfs/kubo:v0.40.1`
+
+Tested example environment:
+
+* Elixir `1.19.x`
+* OTP `27/28`
+* Kubo `0.40.1`
 
 ## Configuration
 
@@ -46,7 +60,8 @@ The documentation is a little unbalanced. I am feeling my way forward as to how 
 
 ## Usage
 
-Make sure ipfs is running. This module does not provide handling of the IPFS daemon, but it does provide a docker container that matches the API.
+Make sure Kubo (IPFS daemon) is running. This module does not manage the daemon itself.
+Any reasonably recent Kubo version should work; examples below use `v0.40.1`.
 
 To use do:
 
@@ -59,30 +74,29 @@ iex(2)>
 
 ### Docker
 
-Install docker-compose and run
+If you want a local daemon quickly, you can run Docker.
 
 ```bash
-make image
-docker-compose up
+DOCKER_IMAGE=ipfs/kubo:v0.40.1 docker compose up -d
 ```
 
-See below for how to build special versions. This docker enables the experimental features. Otherwise you can use any IPFS installation.
+You can also use the repository image/build tooling below. In practice, you may use any Kubo setup you prefer.
 
 ## Development
 
-If you want to update the IPFS version and create your own docker image to be used for testing, then export the following environment variables.
+If you want to build and publish your own Kubo image for testing, set these variables:
 
 ```bash
-export KUBO_VERSION=0.17.0
+export KUBO_VERSION=v0.40.1
 export DOCKER_USER=bahner
 export DOCKER_IMAGE=${DOCKER_USER}/kubo:${KUBO_VERSION}
 make publish-image
 ```
 
-so a shorthand would be:
+Shorthand examples:
 
 ```bash
-KUBO_VERSION=v0.19.0rc2 DOCKER_USER=yourdockeraccount make publish-image # The simplest.
+KUBO_VERSION=v0.40.1 DOCKER_USER=yourdockeraccount make publish-image
 # or
-KUBO_VERSION=0.17.0 DOCKER_IMAGE=http://my.local.registry:5000/testing-buils/ipfs:testlabl make publish-image
+KUBO_VERSION=v0.40.1 DOCKER_IMAGE=my.local.registry:5000/testing-builds/ipfs:v0.40.1 make publish-image
 ```
