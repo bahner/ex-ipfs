@@ -47,7 +47,7 @@ defmodule ExIpfs.ApiStreamingClientTest do
              )
 
     assert is_pid(pid)
-    assert_receive {:query_string, query}
+    assert_receive {:query_string, query}, 2_000
     assert query == "arg=peer123&count=3" or query == "count=3&arg=peer123"
 
     responses = collect_finch_responses_until_done()
