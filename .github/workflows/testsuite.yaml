@@ -52,7 +52,7 @@ jobs:
             otp: "28"
     services:
       ipfs:
-        image: ipfs/kubo:v0.30.0
+        image: ipfs/kubo:v0.40.1
         ports:
           - 5001:5001
     steps:

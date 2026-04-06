@@ -203,7 +203,7 @@ defmodule ExIpfs.Utils do
   def struct2json!(struct) do
     struct
     |> Map.from_struct()
-    |> Jason.encode!()
+    |> JSON.encode!()
   end
 
   @spec timestamp :: integer
