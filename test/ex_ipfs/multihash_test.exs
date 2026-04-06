@@ -7,7 +7,7 @@ defmodule ExIpfs.MultihashTest do
   @data %{"Name" => "name", "Code" => 0}
 
   test "fails on missing data" do
-    catch_error(%Multihash{} = Multihash.new())
+    catch_error(%Multihash{} = Multihash.new(nil))
   end
 
   test "test creation of error" do

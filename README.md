@@ -5,9 +5,9 @@
 [![Unit and integration tests](https://github.com/bahner/ex-ipfs/actions/workflows/testsuite.yaml/badge.svg)](https://github.com/bahner/ex-ipfs/actions/workflows/testsuite.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/bahner/ex-ipfs/badge.svg)](https://coveralls.io/github/bahner/ex-ipfs)
 
-Core IPFS module for Elixir. This is the main package with the Api handler and most common types and structs. It suffices to for working with IPFS data as files, but IPLD will be a separate package.
+Core IPFS module for Elixir. This is the main package with the API handler and most common types and structs. It is sufficient for working with IPFS data as files, while IPLD is provided as a separate package.
 
-If you are unfamiliar with how IPFS works, it uses a daemon that has a RPC API exposed on localhost:5001. Working with IPFS is then done by interacting with the API. Some commands are executed and interpreted directly on the command line by the daemon. One such function is `key export`. But that is not a problem in practicality. (Key handling is part of the [ex_ipfs_ipns](https://hex.pm/packages/ex_ipfs_ipns) package.) This modules acts as a hybrid of those. The intention is to make it easy to work with IPFS in your Elixir applications.
+If you are unfamiliar with how IPFS works, it uses a daemon that exposes an RPC API on localhost:5001. Working with IPFS is done by interacting with that API. Some commands are still CLI-first on the daemon side (for example `key export`), but that is not a practical limitation for this package. (Key handling is part of the [ex_ipfs_ipns](https://hex.pm/packages/ex_ipfs_ipns) package.) This module acts as a convenient API wrapper to make IPFS workflows easy to integrate in Elixir applications.
 
 Feature requests are welcome. Features present in this module are:
 
@@ -16,7 +16,7 @@ Feature requests are welcome. Features present in this module are:
 * Multibase formatting
 * Multibase codecs and encodings
 * Ping swarm peers
-* Publishing and retreiving immutable data as files in IPFS
+* Publishing and retrieving immutable data as files in IPFS
 
 More modules are under way. The following are implemented:
 
@@ -29,7 +29,7 @@ Minimum requirements:
 
 * Elixir `~> 1.18` (see `mix.exs`)
 * Erlang/OTP `>= 25`
-* A running Kubo daemon with RPC API available (default: `http://127.0.0.1:5001`)
+* A running Kubo daemon with RPC API available (default: `http://127.0.0.1:5001/api/v0`)
 
 Optional (for local daemon/testing):
 
@@ -47,7 +47,7 @@ Tested example environment:
 The default should be OK, but you may override the API with the following environment variables.
 
 ```bash
-export EX_IPFS_API_URL="http://127.0.0.1:5001"
+export EX_IPFS_API_URL="http://127.0.0.1:5001/api/v0"
 ```
 
 ### Logger

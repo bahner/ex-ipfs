@@ -43,4 +43,11 @@ defmodule ExIpfs.ApiTest do
     {:error, response} = Ipfs.Api.post_query("/id?arg=foo")
     assert %ExIpfs.ApiError{} = response
   end
+
+  test "tesla_log_level/1 maps statuses and errors to expected levels" do
+    assert :info == Ipfs.Api.tesla_log_level({:ok, %Tesla.Env{status: 200}})
+    assert :warning == Ipfs.Api.tesla_log_level({:ok, %Tesla.Env{status: 302}})
+    assert :info == Ipfs.Api.tesla_log_level({:ok, %Tesla.Env{status: 404}})
+    assert :warning == Ipfs.Api.tesla_log_level({:error, :timeout})
+  end
 end

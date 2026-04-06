@@ -51,8 +51,8 @@ defmodule ExIpfs.Cid do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cid-codecs
 
-  `numeric` <bool> - Also include numeric codes.
-  `supported` <bool> - List only codecs supported by Kubo commands.
+  - `numeric` `<bool>` - Also include numeric codes.
+  - `supported` `<bool>` - List only codecs supported by Kubo commands.
   """
   @spec codecs() :: {:ok, [ExIpfs.multi_codec()]} | ExIpfs.Api.error_response()
   @spec codecs(list()) :: {:ok, [ExIpfs.multi_codec()]} | ExIpfs.Api.error_response()
@@ -70,10 +70,10 @@ defmodule ExIpfs.Cid do
 
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cid-format
-  `f` <string> - printf style format string. Default: `%s`.
-  `v` <string> - CID version.
-  `b` <string> - Multibase to display CID in.
-  `mc` <string> - Multicodec.
+  - `f` `<string>` - printf style format string. Default: `%s`.
+  - `v` `<string>` - CID version.
+  - `b` `<string>` - Multibase to display CID in.
+  - `mc` `<string>` - Multicodec.
   """
   @spec format(binary()) :: {:ok, any} | ExIpfs.Api.error_response()
   @spec format(binary(), list()) :: {:ok, any} | ExIpfs.Api.error_response()
@@ -89,11 +89,11 @@ defmodule ExIpfs.Cid do
   ## Options
   https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-cid-hashes
 
-  `numeric` <bool> - Also include numeric codes.
-  `supported` <bool> - Show only supported hashes.
+  - `numeric` `<bool>` - Also include numeric codes.
+  - `supported` `<bool>` - Show only supported hashes.
   """
-  @spec hashes() :: {:ok, ExIpfs.multi_hash()} | ExIpfs.Api.error_response()
-  @spec hashes(list()) :: {:ok, ExIpfs.multi_hash()} | ExIpfs.Api.error_response()
+  @spec hashes() :: {:ok, list(ExIpfs.multi_hash())} | ExIpfs.Api.error_response()
+  @spec hashes(list()) :: {:ok, list(ExIpfs.multi_hash())} | ExIpfs.Api.error_response()
   def hashes(opts \\ []),
     do:
       post_query("/cid/hashes", query: opts)

@@ -207,32 +207,11 @@ defmodule ExIpfs do
   ]
   ```
 
-  You can set adapter timeout (milliseconds) with `:timeout` in `opts`. This timeout is local to
-  the HTTP client and is not sent to Kubo as an RPC argument.
+  You can set local HTTP client timeout (milliseconds) with `:timeout` in `opts`.
+  This is mapped to Finch `receive_timeout` and is not sent to Kubo as an RPC argument.
   """
   @spec get(Path.t(), list) :: {:ok, Path.t()} | ExIpfs.Api.error_response()
   defdelegate get(path, opts \\ []), to: ExIpfs.Get
-  # # # @doc """
-  # # # Get a file or directory from IPFS.
-
-  # # # *NB! Unsafe (relative symlinks) will raise an error.* This is a limitation of the underlying library.
-
-  # # # ## Options
-  # # # https://docs.ipfs.tech/reference/kubo/rpc/#api-v0-get
-  # # # ```
-  # # # [
-  # # #   output: <string>, # Output to file or directory name. Optional, default: <cid-ipfs-or-ipns-path>
-  # # #   archive: <bool>, # Output as a tarball. Optional, default: false
-  # # #   timeout: <int64>, # Timeout in seconds. Optional, default: 100
-  # # # ]
-  # # # ```
-  # # # Compression is not implemented.
-
-  # # # If you feel that you need more timeouts, you can use the `:timeout` option in the `opts` list.
-  # # # But the default should be enough for most cases. More likely your content isn't available....
-  # # # """
-  # # # @spec get(Path.t(), list) :: {:ok, Path.t()} | ExIpfs.Api.error_response()
-  # # # defdelegate get(path, opts \\ []), to: ExIpfs.Get
 
   @doc """
   Show the id of the IPFS node.

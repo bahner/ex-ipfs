@@ -5,8 +5,8 @@ defmodule ExIpfs.ApiErrorTest do
 
   alias ExIpfs.ApiError
 
-  test "fails on missing data" do
-    catch_error(%ApiError{} = ApiError.new())
+  test "handles nil input" do
+    assert %ApiError{} = ApiError.new(nil)
   end
 
   test "test creation of error" do

@@ -14,7 +14,7 @@ defmodule ExIpfs.LinkTest do
   }
 
   test "fails on missing data" do
-    catch_error(%Link{} = Link.new())
+    catch_error(%Link{} = Link.new(nil))
   end
 
   test "test creation binary of link" do

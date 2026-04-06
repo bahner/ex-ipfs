@@ -7,17 +7,19 @@ defmodule ExIpfs.ApiStreamingClient do
 
   @doc """
   Starts a stream client and returns a reference to the client.
+
   ## Parameters
   - pid: The pid to stream the data to.
-  - url: The url to stream the data from.
-  - timeout: The timeout for the stream. Defaults to infinity.
-  - query_options: A list of query options to add to the url.
+  - url: The full RPC URL to stream from.
+  - timeout: Finch `receive_timeout` in milliseconds or `:infinity`.
+  - query_options: Keyword list of query options merged into the URL query string.
   """
   @spec new(pid, binary) :: {:ok, pid()} | {:error, term()}
   @spec new(pid, binary, :infinity | integer) :: {:ok, pid()} | {:error, term()}
   @spec new(pid, binary, :infinity | integer, list) :: {:ok, pid()} | {:error, term()}
   def new(pid, url, timeout \\ :infinity, query_options \\ []) do
     Logger.debug(
+      # coveralls-ignore-next-line
       "Starting IPFS API stream client for #{url} with query options #{inspect(query_options)}"
     )
 

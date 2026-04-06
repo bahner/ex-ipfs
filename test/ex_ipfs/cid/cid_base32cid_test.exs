@@ -6,7 +6,7 @@ defmodule ExIpfs.CidBase32CIDTest do
   alias ExIpfs.CidBase32CID, as: Base32CID
 
   test "fails on missing data" do
-    catch_error(%Base32CID{} = Base32CID.new())
+    catch_error(%Base32CID{} = Base32CID.new(nil))
   end
 
   test "create new Base32CID" do

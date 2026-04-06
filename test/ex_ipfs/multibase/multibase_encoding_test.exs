@@ -8,7 +8,7 @@ defmodule ExIpfs.MultibaseEncodingTest do
   @data %{"Name" => "name", "Code" => 0}
 
   test "fails on missing data" do
-    catch_error(%MultibaseEncoding{} = MultibaseEncoding.new())
+    catch_error(%MultibaseEncoding{} = MultibaseEncoding.new(nil))
   end
 
   test "test creation of error" do

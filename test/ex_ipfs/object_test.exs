@@ -8,7 +8,7 @@ defmodule ExIpfs.ObjectTest do
   @data %{"Hash" => "hash", "Links" => [%{"Hash" => "hash", "Links" => []}]}
 
   test "fails on missing data" do
-    catch_error(%Object{} = Object.new())
+    catch_error(%Object{} = Object.new(nil))
   end
 
   test "test creation of hash" do

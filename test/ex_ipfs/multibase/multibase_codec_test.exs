@@ -13,7 +13,7 @@ defmodule ExIpfs.MultibaseCodecTest do
   }
 
   test "fails on missing data" do
-    catch_error(%MultibaseCodec{} = MultibaseCodec.new())
+    catch_error(%MultibaseCodec{} = MultibaseCodec.new(nil))
   end
 
   test "test creation of error" do

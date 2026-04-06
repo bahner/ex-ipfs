@@ -8,7 +8,7 @@ defmodule ExIpfs.KeyValueTest do
   @data %{"Key" => "key", "Value" => "value"}
 
   test "fails on missing data" do
-    catch_error(%KeyValue{} = KeyValue.new())
+    catch_error(%KeyValue{} = KeyValue.new(nil))
   end
 
   test "test creation of error" do

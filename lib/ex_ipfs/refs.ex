@@ -26,7 +26,7 @@ defmodule ExIpfs.Refs do
 
   Response is a list of ExIpfs.ref().
   """
-  @spec local :: {:ok, t()} | ExIpfs.Api.error_response()
+  @spec local :: {:ok, list(t())} | ExIpfs.Api.error_response()
   def local,
     do:
       post_query("/refs/local")
@@ -51,8 +51,8 @@ defmodule ExIpfs.Refs do
   """
   # This is not suitable for unit testing.
   # coveralls-ignore-start
-  @spec refs(Path.t()) :: ExIpfs.Api.error_response()
-  @spec refs(Path.t(), list()) :: ExIpfs.Api.error_response()
+  @spec refs(Path.t()) :: {:ok, list(map())} | ExIpfs.Api.error_response()
+  @spec refs(Path.t(), list()) :: {:ok, list(map())} | ExIpfs.Api.error_response()
   def refs(path, opts \\ []),
     do:
       post_query("/refs?arg=" <> path, query: opts)

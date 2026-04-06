@@ -14,7 +14,7 @@ defmodule ExIpfs.IdTest do
   }
 
   test "fails on missing data" do
-    catch_error(%Id{} = Id.new())
+    catch_error(%Id{} = Id.new(nil))
   end
 
   test "passes on error dara" do

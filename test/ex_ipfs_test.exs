@@ -7,8 +7,6 @@ defmodule ExIpfsTest do
 
   NB! The tests are not mocked. They are designed to be run against a live IPFS node.
   """
-  alias ExUnit.DocTest
-
   use ExUnit.Case, async: false
 
   ExUnit.configure(seed: 0)
@@ -78,7 +76,7 @@ defmodule ExIpfsTest do
       ExIpfs.get("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z", archive: true)
 
     assert File.exists?("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
-    stat = File.stat!("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
+    _stat = File.stat!("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
     File.rm_rf!("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z")
   end
 
