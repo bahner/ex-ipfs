@@ -5,7 +5,7 @@ defmodule ExIpfs.Mixfile do
   def project do
     [
       app: :ex_ipfs,
-      version: "0.2.0",
+      version: "0.2.1",
       elixir: "~> 1.18",
       name: "Elixir IPFS",
       start_permanent: Mix.env() == :prod,
